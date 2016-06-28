@@ -46,7 +46,7 @@ private:
             throw Exceptions::InvalidArgumentException("MIDIWriterImpl::AppendHeader() : too many tracks");
         }
 
-		AppendUInt16BE(static_cast<std::uint16_t>(midi.Tracks.size()));
+        AppendUInt16BE(static_cast<std::uint16_t>(midi.Tracks.size()));
         AppendUInt16BE(midi.Header.GetUnitsPerBeat());
     }
 
