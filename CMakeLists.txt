@@ -19,6 +19,10 @@ add_definitions(
     -DYAMML_VERSION_BUILD=${PROJECT_VERSION_TWEAK}
 )
 
+if(${MSVC14} AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 19.00.23918))
+    add_definitions(-D_HAS_VARIABLE_TEMPLATES=1)
+endif()
+
 if(YAMMLStaticCRT)
     # http://stackoverflow.com/questions/14172856/cmake-compile-with-mt-instead-of-md
     set(CompilerFlags
