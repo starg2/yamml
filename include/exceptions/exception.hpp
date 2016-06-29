@@ -13,11 +13,11 @@ namespace Exceptions
 class Exception : public std::exception
 {
 public:
-    Exception(const char* pMessage) : m_Message(pMessage)
+    explicit Exception(const char* pMessage) : m_Message(pMessage)
     {
     }
     
-    Exception(const std::string& message) : m_Message(message)
+    explicit Exception(const std::string& message) : m_Message(message)
     {
     }
     
