@@ -78,7 +78,7 @@ public:
     {
         std::vector<std::uint8_t> ret{0xF0};
 
-        auto length = ToVariableLengthValue(ev.Message.size());
+        auto length = ToVariableLengthValue(static_cast<std::uint32_t>(ev.Message.size()));
         std::copy(length.begin(), length.end(), std::back_inserter(ret));
 
         std::copy(ev.Message.begin(), ev.Message.end(), std::back_inserter(ret));
@@ -92,7 +92,7 @@ public:
     {
 		std::vector<std::uint8_t> ret{0xFF, ToUInt8(static_cast<std::uint8_t>(ev.Kind), 127)};
 
-        auto length = ToVariableLengthValue(ev.Value.size());
+        auto length = ToVariableLengthValue(static_cast<std::uint32_t>(ev.Value.size()));
         std::copy(length.begin(), length.end(), std::back_inserter(ret));
 
         std::copy(ev.Value.begin(), ev.Value.end(), std::back_inserter(ret));

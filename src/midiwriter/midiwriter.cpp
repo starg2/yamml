@@ -59,7 +59,7 @@ private:
 
         auto events = trackEventWriter.GetBuffer();
 
-        AppendUInt32BE(events.size());
+        AppendUInt32BE(static_cast<std::uint32_t>(events.size()));
         AppendBuffer(events);
     }
 };
