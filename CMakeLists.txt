@@ -8,6 +8,9 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 include(cmake/common.cmake)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(PEGTLIncludeDir "../PEGTL" CACHE PATH "PEGTL include directory")
 set(YAMMLStaticLink FALSE CACHE BOOL "Link libraries statically")
 set(YAMMLStaticCRT FALSE CACHE BOOL "Use static link CRT")
@@ -19,7 +22,7 @@ add_definitions(
     -DYAMML_VERSION_BUILD=${PROJECT_VERSION_TWEAK}
 )
 
-if(${MSVC14} AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 19.00.23918))
+if((${MSVC14} EQUAL true) AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 19.00.23918))
     add_definitions(-D_HAS_VARIABLE_TEMPLATES=1)
 endif()
 
