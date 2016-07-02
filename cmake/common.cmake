@@ -31,9 +31,9 @@ function(yamml_add_library Name LinkType SourcesVar HeadersVar)
 endfunction(yamml_add_library)
 
 function(yamml_add_test Name SourcesVar HeadersVar)
-    yamml_add_executable(${Name} ${SourcesVar} ${HeadersVar})
-    add_test(NAME ${Name}_Test COMMAND $<TARGET_FILE:${Name}>)
-    target_link_libraries(${Name} Boost::unit_test_framework)
+    yamml_add_executable(${Name}_Exe ${SourcesVar} ${HeadersVar})
+    add_test(NAME ${Name} COMMAND $<TARGET_FILE:${Name}_Exe>)
+    target_link_libraries(${Name}_Exe Boost::unit_test_framework)
 endfunction(yamml_add_test)
 
 function(yamml_add_test_one Name SourceFile HeadersVar)

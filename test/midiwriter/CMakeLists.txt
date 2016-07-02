@@ -5,10 +5,10 @@ set(MIDIWriterTestHeaders
 )
 
 yamml_add_test_one(MIDIWriterTest midiwritertest.cpp MIDIWriterTestHeaders)
-target_link_libraries(MIDIWriterTest MIDIWriter)
+target_link_libraries(MIDIWriterTest_Exe MIDIWriter)
 
 yamml_add_test_one(VLVTest vlvtest.cpp MIDIWriterTestHeaders)
-target_link_libraries(VLVTest MIDIWriter)
+target_link_libraries(VLVTest_Exe MIDIWriter)
 
 yamml_add_test_one(VLVExceptTest vlvexcepttest.cpp MIDIWriterTestHeaders)
-target_link_libraries(VLVExceptTest MIDIWriter)
+target_link_libraries(VLVExceptTest_Exe MIDIWriter)
