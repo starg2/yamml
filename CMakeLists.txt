@@ -6,14 +6,20 @@ project(YAMML VERSION ${PROJECT_VERSION})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
-include(cmake/common.cmake)
-
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PEGTLIncludeDir "../PEGTL" CACHE PATH "PEGTL include directory")
 set(YAMMLStaticLink FALSE CACHE BOOL "Link libraries statically")
 set(YAMMLStaticCRT FALSE CACHE BOOL "Use static link CRT")
+
+if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+    set(UsePCH TRUE CACHE BOOL "Use precompiled headers")
+else()
+    set(UsePCH FALSE CACHE BOOL "Use precompiled headers")
+endif()
+
+include(cmake/common.cmake)
 
 add_definitions(
     -DYAMML_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}

@@ -1,7 +1,7 @@
 
 # http://stackoverflow.com/questions/148570/using-pre-compiled-headers-with-cmake
 MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
-  IF(MSVC)
+  IF(${UsePCH})
     GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
     SET(PrecompiledBinary "$(IntDir)/${PrecompiledBasename}.pch")
     SET(Sources ${${SourcesVar}})
@@ -14,7 +14,7 @@ MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar
                                            OBJECT_DEPENDS "${PrecompiledBinary}")  
     # Add precompiled header to SourcesVar
     LIST(APPEND ${SourcesVar} ${PrecompiledSource} ${PrecompiledHeader})
-  ENDIF(MSVC)
+  ENDIF()
 ENDMACRO(ADD_MSVC_PRECOMPILED_HEADER)
 
 #ADD_MSVC_PRECOMPILED_HEADER("stdafx.h" "stdafx.cpp" MY_SRCS)
