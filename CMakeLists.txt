@@ -60,7 +60,7 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 include(cmake/common.cmake)
 
-include_directories("include" ${Boost_INCLUDE_DIRS})
+include_directories("include" ${Boost_INCLUDE_DIRS} ${PEGTLIncludeDir})
 link_directories(${Boost_LIBRARY_DIRS})
 
 add_subdirectory(src)

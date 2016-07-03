@@ -13,7 +13,12 @@ namespace Parser
 
 class YAMMLParser
 {
-    
+public:
+
+
+
+private:
+    std::string m_Name;
 };
 
 } // namespace Parser
