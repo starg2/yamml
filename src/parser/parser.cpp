@@ -3,6 +3,8 @@
 
 #include <parser/parser.hpp>
 
+#include "parser_module.hpp"
+
 namespace YAMML
 {
 

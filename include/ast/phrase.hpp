@@ -16,10 +16,17 @@ namespace YAMML
 namespace AST
 {
 
+class Rest final
+{
+public:
+    SourceLocation Location;
+};
+
 class NoteName final
 {
 public:
     char Name;
+    int Minor;
     SourceLocation Location;
 };
 
@@ -77,8 +84,8 @@ public:
 class NoteAndDuration final
 {
 public:
-    NoteNumber Note;
-    boost::optional<DurationSet> Duration;
+    boost::variant<Rest, NoteNumber, SimpleChord> Note;
+    boost::optional<boost::variant<SimpleDurationWithModifier, DurationSet>> Duration;
     SourceLocation Location;
 };
 
@@ -96,14 +103,14 @@ class NoteRepeatEachExpression final
 {
 public:
     std::size_t Count;
-    std::vector<NoteRepeatExpression> Notes;
+    std::vector<boost::variant<NoteAndDuration, NoteRepeatExpression, boost::recursive_wrapper<NoteSequence>>> Notes;
     SourceLocation Location;
 };
 
 class NoteAndExpression final
 {
 public:
-    std::vector<NoteRepeatEachExpression> Notes;
+    std::vector<boost::variant<NoteAndDuration, NoteRepeatEachExpression, NoteRepeatExpression, boost::recursive_wrapper<NoteSequence>>> Notes;
     SourceLocation Location;
 };
 
@@ -114,11 +121,20 @@ public:
     SourceLocation Location;
 };
 
+class NoteSequenceBlock;
+
+class NoteSequenceBlockWithoutAttributes final
+{
+public:
+    std::vector<boost::variant<NoteSequence, boost::recursive_wrapper<NoteSequenceBlock>>> Sequences;
+    SourceLocation Location;
+};
+
 class NoteSequenceBlock final
 {
 public:
     std::vector<Attribute> Attributes;
-    std::vector<NoteSequence> Sequences;
+    std::vector<NoteSequenceBlockWithoutAttributes> Sequences;
     SourceLocation Location;
 };
 
@@ -127,7 +143,7 @@ class Phrase final
 public:
     std::string Name;
     std::vector<Attribute> Attributes;
-    std::vector<boost::variant<NoteSequence, NoteSequenceBlock>> Statements;
+    std::vector<NoteSequenceBlockWithoutAttributes> Statements;
     SourceLocation Location;
 };
 
