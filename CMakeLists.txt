@@ -4,8 +4,6 @@ enable_testing()
 
 project(YAMML VERSION ${PROJECT_VERSION})
 
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -19,8 +17,6 @@ else()
     set(UsePCH FALSE CACHE BOOL "Use precompiled headers")
 endif()
 
-include(cmake/common.cmake)
-
 add_definitions(
     -DYAMML_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
     -DYAMML_VERSION_MINOR=${PROJECT_VERSION_MINOR}
@@ -32,7 +28,7 @@ if((${MSVC14} EQUAL 1) AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 19.00.
     add_definitions(-D_HAS_VARIABLE_TEMPLATES=1)
 endif()
 
-if(YAMMLStaticCRT)
+if(${YAMMLStaticCRT})
     # http://stackoverflow.com/questions/14172856/cmake-compile-with-mt-instead-of-md
     set(CompilerFlags
         CMAKE_CXX_FLAGS
@@ -49,12 +45,20 @@ if(YAMMLStaticCRT)
     set(Boost_USE_STATIC_RUNTIME ON)
 endif()
 
-if(YAMMLStaticLink)
+if(${YAMMLStaticLink})
     set(YAMMLLibLinkType "STATIC")
     set(Boost_USE_STATIC_LIBS ON)
 else()
     set(YAMMLLibLinkType "SHARED")
 endif()
+
+if("${CMAKE_BUILD_TYPE}" MATCHES "Rel")
+    set(Boost_USE_DEBUG_RUNTIME OFF)
+endif()
+
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+
+include(cmake/common.cmake)
 
 include_directories("include" ${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
