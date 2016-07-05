@@ -16,7 +16,7 @@ namespace Grammar
 {
 
 class AttributeArgumentList
-    : public pegtl::seq<pegtl::one<'('>, pegtl::pad_opt<pegtl::list_must<Value, pegtl::one<','>, Separator>, Separator>, pegtl::one<')'>>
+    : public pegtl::if_must<pegtl::one<'('>, pegtl::pad_opt<pegtl::list_must<Value, pegtl::one<','>, Separator>, Separator>, pegtl::one<')'>>
 {
 };
 
@@ -25,7 +25,9 @@ class Attribute
         pegtl::one<'['>,
         pegtl::pad<
             pegtl::list_must<
-                pegtl::seq<Identifier, pegtl::pad_opt<AttributeArgumentList, Separator>>, pegtl::one<','>, Separator
+                pegtl::seq<Identifier, pegtl::pad_opt<AttributeArgumentList, Separator>>,
+                pegtl::one<','>,
+                Separator
             >,
             Separator
         >,

@@ -34,6 +34,7 @@ public:
 class TrackBlock final
 {
 public:
+    std::vector<Attribute> Attributes;
     int TrackNumber;
     std::vector<TrackItem> Items;
     SourceLocation Location;
@@ -52,7 +53,7 @@ class Composition final
 public:
     std::string Name;
     std::vector<Attribute> Attributes;
-    std::vector<boost::variant<Command, Attribute, TrackListBlock>> Statements;
+    std::vector<boost::variant<Command, TrackListBlock>> Statements;
     SourceLocation Location;
 };
 

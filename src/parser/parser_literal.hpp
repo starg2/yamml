@@ -14,7 +14,11 @@ namespace Parser
 namespace Grammar
 {
 
-class UnsignedInteger : public pegtl::seq<pegtl::range<'1', '9'>, pegtl::star<pegtl::digit>>
+class UnsignedInteger
+    : public pegtl::sor<
+        pegtl::seq<pegtl::one<'0'>, pegtl::not_at<pegtl::digit>>,
+        pegtl::seq<pegtl::range<'1', '9'>, pegtl::star<pegtl::digit>>
+    >
 {
 };
 

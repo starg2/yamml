@@ -13,3 +13,4 @@ yamml_add_test_one(ParserTest parsertest.cpp ParserTestHeaders)
 target_link_libraries(ParserTest_Exe Parser)
 
 yamml_add_test_one(PhraseParserTest phraseparsertest.cpp ParserTestHeaders)
+yamml_add_test_one(CompositionParserTest compositionparsertest.cpp ParserTestHeaders)
