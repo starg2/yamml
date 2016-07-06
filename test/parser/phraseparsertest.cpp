@@ -45,7 +45,25 @@ BOOST_AUTO_TEST_CASE(PhraseTest1)
 phrase Foo
 {
     CDEF GABR;
-    2%(C/8D/8 E/8F/8);
+    2%(4%4*(C/8 D/8) E/8F/8);
+}
+
+)";
+
+    bool result = pegtl::parse<pegtl::must<Phrase, Separators, pegtl::eof>>(data, "source");
+    BOOST_CHECK(result);
+}
+
+BOOST_AUTO_TEST_CASE(PhraseTest2)
+{
+    std::string data = R"(
+
+phrase Bar
+{
+    [transform(velocity, set, 100), foo]
+    {
+        4%(C/8 D/8) & E/2;
+    }
 }
 
 )";
