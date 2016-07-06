@@ -16,7 +16,7 @@ namespace Grammar
 
 class UnsignedInteger
     : public pegtl::sor<
-        pegtl::seq<pegtl::one<'0'>, pegtl::not_at<pegtl::digit>>,
+        pegtl::if_must<pegtl::one<'0'>, pegtl::not_at<pegtl::digit>>,
         pegtl::seq<pegtl::range<'1', '9'>, pegtl::star<pegtl::digit>>
     >
 {
@@ -97,14 +97,36 @@ class Identifier : public pegtl::seq<IdentifierCharFirst, pegtl::star<Identifier
 {
 };
 
+// https://github.com/ColinH/PEGTL/blob/master/examples/unescape.cc
+class EscapeX2 : public pegtl::seq<pegtl::one<'x'>, pegtl::rep<2, pegtl::must<pegtl::xdigit>>>
+{
+};
+
+class EscapeU4 : public pegtl::seq<pegtl::one<'u'>, pegtl::rep<4, pegtl::must<pegtl::xdigit>>>
+{
+};
+
+class EscapeU8 : public pegtl::seq<pegtl::one<'U'>, pegtl::rep<8, pegtl::must<pegtl::xdigit>>>
+{
+};
+
+class EscapeC : public pegtl::one<'\'', '"', '?', '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v'>
+{
+};
+
+class Escape : public pegtl::sor<EscapeX2, EscapeU4, EscapeU8, EscapeC>
+{
+};
+
+class CharcterOrEscapeSequence : public pegtl::if_must_else<pegtl::one<'\\'>, Escape, pegtl::utf8::range<0x20, 0x10FFFF>>
+{
+};
+
 template<char TQuoteChar>
 class QuotedStringLiteral
     : public pegtl::if_must<
         pegtl::one<TQuoteChar>,
-        pegtl::star<
-            pegtl::if_then_else<pegtl::one<'\\'>, pegtl::must<pegtl::utf8::any>, pegtl::utf8::not_one<TQuoteChar>>
-        >,
-        pegtl::one<TQuoteChar>
+        pegtl::until<pegtl::one<TQuoteChar>, CharcterOrEscapeSequence>
     >
 {
 };
@@ -113,7 +135,11 @@ class DoubleQuotedStringLiteral : public QuotedStringLiteral<'"'>
 {
 };
 
-class Value : public pegtl::sor<UnsignedInteger, Identifier, DoubleQuotedStringLiteral>
+class SingleQuotedStringLiteral : public QuotedStringLiteral<'\''>
+{
+};
+
+class Value : public pegtl::sor<SignedInteger, Identifier, DoubleQuotedStringLiteral, SingleQuotedStringLiteral>
 {
 };
 
