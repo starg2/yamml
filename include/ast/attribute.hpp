@@ -13,11 +13,19 @@ namespace YAMML
 namespace AST
 {
 
+class AttributeArgument final
+{
+public:
+    boost::optional<std::string> Name;
+    Literal Value;
+    SourceLocation Location;
+};
+
 class Attribute final
 {
 public:
     std::string Name;
-    std::vector<Literal> Arguments;
+    std::vector<AttributeArgument> Arguments;
     SourceLocation Location;
 };
 

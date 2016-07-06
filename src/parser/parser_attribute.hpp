@@ -15,8 +15,20 @@ namespace Parser
 namespace Grammar
 {
 
+class AttributeArgument
+    : public pegtl::seq<
+        pegtl::opt<pegtl::pad<Identifier, Separator>, pegtl::pad<pegtl::one<'='>, Separator>>,
+        pegtl::pad<Value, Separator>
+    >
+{
+};
+
 class AttributeArgumentList
-    : public pegtl::if_must<pegtl::one<'('>, pegtl::pad_opt<pegtl::list_must<Value, pegtl::one<','>, Separator>, Separator>, pegtl::one<')'>>
+    : public pegtl::if_must<
+        pegtl::one<'('>,
+        pegtl::pad_opt<pegtl::list_must<AttributeArgument, pegtl::one<','>, Separator>, Separator>,
+        pegtl::one<')'>
+    >
 {
 };
 
