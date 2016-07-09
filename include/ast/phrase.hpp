@@ -55,14 +55,14 @@ public:
 class SimpleDuration final
 {
 public:
-    int Number;
+    unsigned long Number;
     SourceLocation Location;
 };
 
 class SimpleDurationModifier final
 {
 public:
-    int Number;
+    unsigned long Number;
     SourceLocation Location;
 };
 
@@ -121,12 +121,20 @@ public:
     SourceLocation Location;
 };
 
+class NoteSequenceStatement final
+{
+public:
+    std::vector<Attribute> Attributes;
+    boost::optional<NoteSequence> NoteSeq;
+    SourceLocation Location;
+};
+
 class NoteSequenceBlock;
 
 class NoteSequenceBlockWithoutAttributes final
 {
 public:
-    std::vector<boost::variant<NoteSequence, boost::recursive_wrapper<NoteSequenceBlock>>> Sequences;
+    std::vector<boost::variant<NoteSequenceStatement, boost::recursive_wrapper<NoteSequenceBlock>>> Sequences;
     SourceLocation Location;
 };
 
@@ -143,7 +151,7 @@ class Phrase final
 public:
     std::string Name;
     std::vector<Attribute> Attributes;
-    std::vector<NoteSequenceBlockWithoutAttributes> Statements;
+    NoteSequenceBlockWithoutAttributes Block;
     SourceLocation Location;
 };
 

@@ -14,7 +14,7 @@ namespace Parser
 namespace Grammar
 {
 
-class UnsignedInteger
+class UnsignedIntegerBase
     : public pegtl::sor<
         pegtl::if_must<pegtl::one<'0'>, pegtl::not_at<pegtl::digit>>,
         pegtl::seq<pegtl::range<'1', '9'>, pegtl::star<pegtl::digit>>
@@ -22,7 +22,11 @@ class UnsignedInteger
 {
 };
 
-class SignedInteger : public pegtl::seq<pegtl::opt<pegtl::one<'+', '-'>>, Separators, UnsignedInteger>
+class UnsignedInteger : public UnsignedIntegerBase
+{
+};
+
+class SignedInteger : public pegtl::seq<pegtl::opt<pegtl::one<'+', '-'>>, UnsignedIntegerBase>
 {
 };
 
@@ -118,7 +122,11 @@ class Escape : public pegtl::sor<EscapeX2, EscapeU4, EscapeU8, EscapeC>
 {
 };
 
-class CharcterOrEscapeSequence : public pegtl::if_must_else<pegtl::one<'\\'>, Escape, pegtl::utf8::range<0x20, 0x10FFFF>>
+class AnyChar : public pegtl::utf8::range<0x20, 0x10FFFF>
+{
+};
+
+class CharcterOrEscapeSequence : public pegtl::if_must_else<pegtl::one<'\\'>, Escape, AnyChar>
 {
 };
 

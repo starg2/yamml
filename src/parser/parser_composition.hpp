@@ -16,7 +16,11 @@ namespace Parser
 namespace Grammar
 {
 
-class Command : public pegtl::seq<Identifier, pegtl::pad_opt<pegtl::list_must<Value, pegtl::one<','>, Separator>, Separator>, pegtl::one<';'>>
+class CommandArgument : public Value
+{
+};
+
+class Command : public pegtl::seq<Identifier, pegtl::pad_opt<pegtl::list_must<CommandArgument, pegtl::one<','>, Separator>, Separator>, pegtl::one<';'>>
 {
 };
 
@@ -30,7 +34,7 @@ class TrackBlock
         pegtl::if_must<
             UnsignedInteger,
             pegtl::pad<pegtl::one<'{'>, Separator>,
-            pegtl::star<TrackItem>,
+            pegtl::star<pegtl::pad<TrackItem, Separator>>,
             pegtl::pad<pegtl::one<'}'>, Separator>
         >
     >

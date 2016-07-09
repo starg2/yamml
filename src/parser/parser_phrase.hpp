@@ -20,15 +20,19 @@ class Rest : public pegtl::one<'R'>
 {
 };
 
-class NoteName
-    : public pegtl::seq<
-        pegtl::range<'A', 'G'>,
-        pegtl::opt<pegtl::sor<pegtl::plus<pegtl::one<'s'>>, pegtl::plus<pegtl::one<'f'>>>>
-    >
+class NoteNameBase : public pegtl::range<'A', 'G'>
 {
 };
 
-class NoteOctave : public UnsignedInteger
+class NoteNameKey : public pegtl::plus<pegtl::one<'s', 'f'>>
+{
+};
+
+class NoteName : public pegtl::seq<NoteNameBase, pegtl::opt<NoteNameKey>>
+{
+};
+
+class NoteOctave : public SignedInteger
 {
 };
 
@@ -110,7 +114,7 @@ class NoteSequence : public pegtl::star<pegtl::pad<NoteAndExpression, Separator>
 {
 };
 
-class NoteSequenceStatement : public pegtl::seq<pegtl::pad_opt<NoteSequence, Separator>, pegtl::one<';'>>
+class NoteSequenceStatement : public pegtl::seq<AttributeOptionalSequence, pegtl::pad_opt<NoteSequence, Separator>, pegtl::one<';'>>
 {
 };
 

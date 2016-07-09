@@ -3,6 +3,7 @@
 
 #include <parser/parser.hpp>
 
+#include "control.hpp"
 #include "parser_module.hpp"
 
 namespace YAMML
@@ -23,8 +24,22 @@ YAMMLParser::YAMMLParser(std::string name, std::string source, std::function<Cal
 
 bool YAMMLParser::Parse()
 {
+    try
+    {
+        AST::Module ast;
+        bool result = pegtl::parse<Grammar::Module, pegtl::nothing, Control>(m_Source, m_Name, ast);
 
-    return false;
+        if (result)
+        {
+            m_AST = std::move(ast);
+        }
+
+        return result;
+    }
+    catch (const std::exception&)
+    {
+        return false;
+    }
 }
 
 boost::optional<AST::Module>& YAMMLParser::GetAST()

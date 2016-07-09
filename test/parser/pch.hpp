@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <string>
 
 #include <boost/test/unit_test.hpp>

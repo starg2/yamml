@@ -16,6 +16,15 @@ namespace AST
 class Module final
 {
 public:
+    void Add(const Composition& c)
+    {
+        m_Composition[c.Name] = c;
+    }
+
+    void Add(const Phrase& ph)
+    {
+        m_Phrases[ph.Name] = ph;
+    }
 
 private:
     std::string m_Name;
