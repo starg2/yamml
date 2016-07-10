@@ -5,7 +5,6 @@ enable_testing()
 project(YAMML VERSION ${PROJECT_VERSION})
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PEGTLIncludeDir "../PEGTL" CACHE PATH "PEGTL include directory")
 set(YAMMLStaticLink FALSE CACHE BOOL "Link libraries statically")
@@ -23,10 +22,17 @@ add_definitions(
     -DYAMML_VERSION_DATE=${PROJECT_VERSION_PATCH}
     -DYAMML_VERSION_BUILD=${PROJECT_VERSION_TWEAK}
     
+    -DWIN32_LEAN_AND_MEAN
+    -D_HAS_AUTO_PTR_ETC=1
     -D_CRT_SECURE_NO_WARNINGS
 )
 
-if((${MSVC14} EQUAL 1) AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 19.00.23918))
+if("${MSVC}" AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 19.00.23918))
+    set(MSVC14_3_OR_GREATER 1)
+    add_compile_options(/std:c++latest)
+endif()
+
+if("${MSVC14}" AND "${MSVC14_3_OR_GREATER}")
     add_definitions(-D_HAS_VARIABLE_TEMPLATES=1)
 endif()
 
