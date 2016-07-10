@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <ast/literal.hpp>
 #include <ast/sourcelocation.hpp>
 
