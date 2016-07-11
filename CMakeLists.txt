@@ -64,6 +64,10 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Rel")
     set(Boost_USE_DEBUG_RUNTIME OFF)
 endif()
 
+if("${CYGWIN}" OR "${MINGW}")
+    list(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
+endif()
+
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 include(cmake/common.cmake)
