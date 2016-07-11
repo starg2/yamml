@@ -1,10 +1,21 @@
 
 #include <utility>
 
+#include <exceptions/parseexception.hpp>
+#include <message/kind.hpp>
+#include <message/message.hpp>
 #include <parser/parser.hpp>
 
 #include "control.hpp"
 #include "parser_module.hpp"
+
+#include "error_attribute.hpp"
+#include "error_common.hpp"
+#include "error_composition.hpp"
+#include "error_literal.hpp"
+#include "error_module.hpp"
+#include "error_phrase.hpp"
+
 
 namespace YAMML
 {
@@ -36,10 +47,16 @@ bool YAMMLParser::Parse()
 
         return result;
     }
-    catch (const std::exception&)
+    catch (const Exceptions::ParseException& e)
     {
+        AddMessage({Message::MessageKind::Error, e.ID, e.Source, {e.Line, e.Column}});
         return false;
     }
+}
+
+void YAMMLParser::AddMessage(Message::MessageItem msg)
+{
+    m_Messages.push_back(msg);
 }
 
 boost::optional<AST::Module>& YAMMLParser::GetAST()

@@ -15,4 +15,5 @@
 #include <pegtl.hh>
 #include <pegtl/contrib/changes.hh>
 #include <pegtl/contrib/unescape.hh>
+#include <pegtl/internal/demangle.hh>
 

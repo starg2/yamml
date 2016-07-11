@@ -16,7 +16,11 @@ class SingleLineComment : public pegtl::seq<pegtl::string<'/', '/'>, pegtl::unti
 {
 };
 
-class BlockComment : public pegtl::if_must<pegtl::string<'/', '*'>, pegtl::until<pegtl::string<'*', '/'>>>
+class UntilBlockCommentEnd : public pegtl::until<pegtl::string<'*', '/'>>
+{
+};
+
+class BlockComment : public pegtl::if_must<pegtl::string<'/', '*'>, UntilBlockCommentEnd>
 {
 };
 

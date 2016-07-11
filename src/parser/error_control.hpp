@@ -2,9 +2,9 @@
 #pragma once
 
 #include <pegtl.hh>
+#include <pegtl/internal/demangle.hh>
 
 #include <exceptions/parseexception.hpp>
-#include <message/id.hpp>
 
 namespace YAMML
 {
@@ -13,9 +13,9 @@ namespace Parser
 {
 
 template<typename TInput>
-void ThrowParseException(const TInput& in, Message::MessageID id)
+void ThrowParseException(const std::string& ruleName, const TInput& in, Message::MessageID id)
 {
-    throw Exceptions::ParseException(in.source(), in.line(), in.column(), id);
+    throw Exceptions::ParseException(ruleName, in.source(), in.line(), in.column(), id);
 }
 
 template<typename TRule>
@@ -27,7 +27,7 @@ public:
     template<typename TInput, typename... TStates>
     static void raise(const TInput& in, TStates&&...)
     {
-        ThrowParseException(in, ID);
+        ThrowParseException(pegtl::internal::demangle<TRule>(), in, ID);
     }
 };
 

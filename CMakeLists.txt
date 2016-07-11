@@ -65,7 +65,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Rel")
 endif()
 
 if("${CYGWIN}" OR "${MINGW}")
-    list(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
 endif()
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)

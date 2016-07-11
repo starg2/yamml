@@ -4,6 +4,7 @@
 #include <pegtl.hh>
 
 #include "parser_attribute.hpp"
+#include "parser_common.hpp"
 #include "parser_literal.hpp"
 #include "parser_skips.hpp"
 
@@ -28,16 +29,24 @@ class TrackItem : public pegtl::seq<AttributeOptionalSequence, pegtl::pad_opt<Id
 {
 };
 
+class SpaceSeparatedOptionalTrackItems : public pegtl::star<pegtl::pad<TrackItem, Separator>>
+{
+};
+
 class TrackBlock
     : public pegtl::seq<
         AttributeOptionalSequence,
         pegtl::if_must<
             UnsignedInteger,
-            pegtl::pad<pegtl::one<'{'>, Separator>,
-            pegtl::star<pegtl::pad<TrackItem, Separator>>,
-            pegtl::pad<pegtl::one<'}'>, Separator>
+            BlockBegin,
+            SpaceSeparatedOptionalTrackItems,
+            BlockEnd
         >
     >
+{
+};
+
+class OneOrMoreTrackBlocks : public pegtl::plus<TrackBlock>
 {
 };
 
@@ -46,11 +55,15 @@ class TrackListBlock
         AttributeOptionalSequence,
         pegtl::if_must<
             pegtl_string_t("tracks"),
-            pegtl::pad<pegtl::one<'{'>, Separator>,
-            pegtl::star<TrackBlock>,
-            pegtl::pad<pegtl::one<'}'>, Separator>
+            BlockBegin,
+            OneOrMoreTrackBlocks,
+            BlockEnd
         >
     >
+{
+};
+
+class CommandsAndTrackListBlocks : public pegtl::star<pegtl::sor<pegtl::pad<Command, Separator>, TrackListBlock>>
 {
 };
 
@@ -61,9 +74,9 @@ class Composition
             pegtl_string_t("composition"),
             Separator,
             Identifier,
-            pegtl::pad<pegtl::one<'{'>, Separator>,
-            pegtl::star<pegtl::sor<pegtl::pad<Command, Separator>, TrackListBlock>>,
-            pegtl::pad<pegtl::one<'}'>, Separator>
+            BlockBegin,
+            CommandsAndTrackListBlocks,
+            BlockEnd
         >
     >
 {

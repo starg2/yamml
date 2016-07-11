@@ -4,6 +4,7 @@
 #include <pegtl.hh>
 
 #include "parser_attribute.hpp"
+#include "parser_common.hpp"
 #include "parser_literal.hpp"
 #include "parser_skips.hpp"
 
@@ -56,19 +57,31 @@ class SimpleDurationWithModifier : public pegtl::seq<SimpleDuration, pegtl::opt<
 {
 };
 
-class DurationSet : public pegtl::if_must<pegtl::one<'('>, pegtl::plus<pegtl::pad<SimpleDurationWithModifier, Separator>>, pegtl::one<')'>>
+class SpaceDelimitedDurations : public pegtl::plus<pegtl::pad<SimpleDurationWithModifier, Separator>>
+{
+};
+
+class DurationSet : public pegtl::if_must<pegtl::one<'('>, SpaceDelimitedDurations, pegtl::one<')'>>
+{
+};
+
+class DurationOrDurationSet : public pegtl::sor<DurationSet, SimpleDurationWithModifier>
+{
+};
+
+class SpaceDelimitedChords : public pegtl::pad<SimpleChord, Separator>
 {
 };
 
 class NoteAndDuration
     : public pegtl::seq<
         pegtl::sor<
-            pegtl::if_must<pegtl::one<'('>, pegtl::pad<SimpleChord, Separator>, pegtl::one<')'>>,
+            pegtl::if_must<pegtl::one<'('>, SpaceDelimitedChords, pegtl::one<')'>>,
             Rest,
             NoteNumber
         >,
         pegtl::pad_opt<
-            pegtl::if_must<pegtl::pad<pegtl::one<'/'>, Separator>, pegtl::sor<DurationSet, SimpleDurationWithModifier>>,
+            pegtl::if_must<pegtl::pad<pegtl::one<'/'>, Separator>, DurationOrDurationSet>,
             Separator
         >
     >
@@ -77,7 +90,11 @@ class NoteAndDuration
 
 class NoteSequence;
 
-class NoteSequenceInParentheses : public pegtl::if_must<pegtl::one<'('>, pegtl::pad<NoteSequence, Separator>, pegtl::one<')'>>
+class NoteSequenceAndSeparators : public pegtl::pad<NoteSequence, Separator>
+{
+};
+
+class NoteSequenceInParentheses : public pegtl::if_must<pegtl::one<'('>, NoteSequenceAndSeparators, pegtl::one<')'>>
 {
 };
 
@@ -103,7 +120,7 @@ class NoteRepeatEachExpression : public NoteRepeatExpressionBase<'%', NoteRepeat
 
 class NoteAndExpression
     : public pegtl::list_must<
-        pegtl::sor<NoteAndDuration, NoteRepeatEachExpression, NoteRepeatExpression, NoteSequenceInParentheses>,
+        pegtl::sor<NoteSequenceInParentheses, NoteRepeatEachExpression, NoteRepeatExpression, NoteAndDuration>,
         pegtl::one<'&'>,
         Separator
     >
@@ -120,17 +137,24 @@ class NoteSequenceStatement : public pegtl::seq<AttributeOptionalSequence, pegtl
 
 class NoteSequenceBlock;
 
+class NoteSequenceStatementsAndBlocks : public pegtl::star<pegtl::sor<NoteSequenceStatement, NoteSequenceBlock>>
+{
+};
+
 class NoteSequenceBlockWithoutAttributes
     : public pegtl::if_must<
-        pegtl::one<'{'>,
-        pegtl::star<pegtl::sor<NoteSequenceStatement, NoteSequenceBlock>>,
-        Separators,
-        pegtl::one<'}'>
+        BlockBegin,
+        NoteSequenceStatementsAndBlocks,
+        BlockEnd
     >
 {
 };
 
 class NoteSequenceBlock : public pegtl::seq<AttributeOptionalSequence, NoteSequenceBlockWithoutAttributes>
+{
+};
+
+class PhraseName : public pegtl::pad<Identifier, Separator>
 {
 };
 
@@ -140,7 +164,7 @@ class Phrase
         pegtl::if_must<
             pegtl_string_t("phrase"),
             Separator,
-            pegtl::pad<Identifier, Separator>,
+            PhraseName,
             NoteSequenceBlockWithoutAttributes
         >
     >

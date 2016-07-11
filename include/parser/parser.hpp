@@ -33,6 +33,7 @@ public:
     ~YAMMLParser() = default;
 
     bool Parse();
+    void AddMessage(Message::MessageItem msg);
 
     boost::optional<AST::Module>& GetAST();
     const boost::optional<AST::Module>& GetAST() const;

@@ -16,7 +16,11 @@ namespace Parser
 namespace Grammar
 {
 
-class Module : public pegtl::must<pegtl::star<pegtl::pad<pegtl::sor<Composition, Phrase>, Separator>>, Separators, pegtl::eof>
+class PhrasesAndCompositions : public pegtl::star<pegtl::pad<pegtl::sor<Composition, Phrase>, Separator>>
+{
+};
+
+class Module : public pegtl::must<PhrasesAndCompositions, Separators, pegtl::eof>
 {
 };
 
