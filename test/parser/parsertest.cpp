@@ -3,6 +3,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <ast/module.hpp>
 #include <parser/parser.hpp>
 
 using namespace YAMML::Parser;
@@ -35,6 +36,10 @@ composition Main
 
     bool result = parser.Parse();
     BOOST_CHECK(result);
+
+    auto module = parser.GetAST();
+
+    BOOST_CHECK(module->Phrases.find("Foo") != module->Phrases.end());
 }
 
 BOOST_AUTO_TEST_CASE(ParserTest2)
