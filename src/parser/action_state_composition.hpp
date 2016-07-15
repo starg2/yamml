@@ -19,7 +19,8 @@ namespace Parser
 class CompositionState
 {
 public:
-    void success(AST::Module& mod)
+    template<typename... TCommonStates>
+    void success(AST::Module& mod, TCommonStates&...)
     {
         mod.Add(ASTNode);
     }
@@ -36,7 +37,8 @@ template<>
 class CompositionAction<Grammar::Composition>
 {
 public:
-    static void apply(const pegtl::input& in, CompositionState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, CompositionState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -45,8 +47,8 @@ public:
 class TrackListBlockState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Statements.emplace_back(ASTNode);
     }
@@ -63,7 +65,8 @@ template<>
 class TrackListBlockAction<Grammar::TrackListBlock>
 {
 public:
-    static void apply(const pegtl::input& in, TrackListBlockState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, TrackListBlockState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -72,8 +75,8 @@ public:
 class TrackBlockState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Tracks.push_back(ASTNode);
     }
@@ -90,7 +93,8 @@ template<>
 class TrackBlockAction<Grammar::TrackListBlock>
 {
 public:
-    static void apply(const pegtl::input& in, TrackBlockState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, TrackBlockState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -100,7 +104,8 @@ template<>
 class TrackBlockAction<Grammar::UnsignedInteger>
 {
 public:
-    static void apply(const pegtl::input& in, TrackBlockState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, TrackBlockState& st, TCommonStates&...)
     {
         st.ASTNode.TrackNumber = std::stoul(in.string());
     }
@@ -109,8 +114,8 @@ public:
 class TrackItemState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Items.push_back(ASTNode);
     }
@@ -127,7 +132,8 @@ template<>
 class TrackItemAction<Grammar::TrackItem>
 {
 public:
-    static void apply(const pegtl::input& in, TrackItemState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, TrackItemState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -137,7 +143,8 @@ template<>
 class TrackItemAction<Grammar::Identifier>
 {
 public:
-    static void apply(const pegtl::input& in, TrackItemState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, TrackItemState& st, TCommonStates&...)
     {
         st.ASTNode.PhraseName = in.string();
     }
@@ -146,8 +153,8 @@ public:
 class CommandState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Statements.push_back(ASTNode);
     }
@@ -164,7 +171,8 @@ template<>
 class CommandAction<Grammar::Command>
 {
 public:
-    static void apply(const pegtl::input& in, CommandState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, CommandState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -174,7 +182,8 @@ template<>
 class CommandAction<Grammar::Identifier>
 {
 public:
-    static void apply(const pegtl::input& in, CommandState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, CommandState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
@@ -183,8 +192,8 @@ public:
 class CommandArgumentState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Arguments.push_back(ASTNode);
     }
@@ -201,7 +210,8 @@ template<>
 class CommandArgumentAction<Grammar::CommandArgument>
 {
 public:
-    static void apply(const pegtl::input& in, CommandArgumentState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, CommandArgumentState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }

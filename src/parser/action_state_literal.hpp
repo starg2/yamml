@@ -20,8 +20,8 @@ namespace Parser
 class ValueState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Value = ASTNode;
     }
@@ -38,8 +38,8 @@ template<>
 class ValueAction<Grammar::Value>
 {
 public:
-    template<typename TState>
-    static void apply(const pegtl::input& in, TState& st)
+    template<typename TState, typename... TCommonStates>
+    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -49,8 +49,8 @@ template<>
 class ValueAction<Grammar::SignedInteger>
 {
 public:
-    template<typename TState>
-    static void apply(const pegtl::input& in, TState& st)
+    template<typename TState, typename... TCommonStates>
+    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
     {
         st.ASTNode.Value = std::stol(in.string());
     }
@@ -60,8 +60,8 @@ template<>
 class ValueAction<Grammar::Identifier>
 {
 public:
-    template<typename TState>
-    static void apply(const pegtl::input& in, TState& st)
+    template<typename TState, typename... TCommonStates>
+    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
     {
         st.ASTNode.Value = in.string();
     }
@@ -100,8 +100,8 @@ class EscapeAction<Grammar::EscapeC> : public pegtl::unescape::unescape_c<Gramma
 class EscapeState : public pegtl::unescape::state
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Value = std::move(unescaped);
     }

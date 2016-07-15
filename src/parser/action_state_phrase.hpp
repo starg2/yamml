@@ -21,7 +21,8 @@ namespace Parser
 class PhraseState
 {
 public:
-    void success(AST::Module& mod)
+    template<typename... TCommonStates>
+    void success(AST::Module& mod, TCommonStates&...)
     {
         mod.Add(ASTNode);
     }
@@ -43,7 +44,8 @@ template<>
 class PhraseAction<Grammar::Phrase>
 {
 public:
-    static void apply(const pegtl::input& in, PhraseState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, PhraseState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -53,7 +55,8 @@ template<>
 class PhraseAction<Grammar::Identifier>
 {
 public:
-    static void apply(const pegtl::input& in, PhraseState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, PhraseState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
@@ -62,8 +65,8 @@ public:
 class NoteSequenceBlockState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Sequences.emplace_back(ASTNode);
     }
@@ -85,7 +88,8 @@ template<>
 class NoteSequenceBlockAction<Grammar::NoteSequenceBlock>
 {
 public:
-    static void apply(const pegtl::input& in, NoteSequenceBlockState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteSequenceBlockState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -94,8 +98,8 @@ public:
 class NoteSequenceBlockWithoutAttributesState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.OnParse(ASTNode);
     }
@@ -112,7 +116,8 @@ template<>
 class NoteSequenceBlockWithoutAttributesAction<Grammar::NoteSequenceBlockWithoutAttributes>
 {
 public:
-    static void apply(const pegtl::input& in, NoteSequenceBlockWithoutAttributesState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteSequenceBlockWithoutAttributesState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -121,8 +126,8 @@ public:
 class NoteSequenceStatementState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Sequences.emplace_back(ASTNode);
     }
@@ -144,7 +149,8 @@ template<>
 class NoteSequenceStatementAction<Grammar::NoteSequence>
 {
 public:
-    static void apply(const pegtl::input& in, NoteSequenceStatementState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteSequenceStatementState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -153,8 +159,8 @@ public:
 class NoteSequenceState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.OnParse(ASTNode);
     }
@@ -171,7 +177,8 @@ template<>
 class NoteSequenceAction<Grammar::NoteSequence>
 {
 public:
-    static void apply(const pegtl::input& in, NoteSequenceState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteSequenceState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -180,8 +187,8 @@ public:
 class NoteAndExpressionState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Notes.push_back(ASTNode);
     }
@@ -203,7 +210,8 @@ template<>
 class NoteAndExpressionAction<Grammar::NoteAndExpression>
 {
 public:
-    static void apply(const pegtl::input& in, NoteAndExpressionState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteAndExpressionState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -212,8 +220,8 @@ public:
 class NoteRepeatEachExpressionState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Notes.emplace_back(ASTNode);
     }
@@ -235,7 +243,8 @@ template<>
 class NoteRepeatEachExpressionAction<Grammar::NoteRepeatEachExpression>
 {
 public:
-    static void apply(const pegtl::input& in, NoteRepeatEachExpressionState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteRepeatEachExpressionState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -245,7 +254,8 @@ template<>
 class NoteRepeatEachExpressionAction<Grammar::UnsignedInteger>
 {
 public:
-    static void apply(const pegtl::input& in, NoteRepeatEachExpressionState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteRepeatEachExpressionState& st, TCommonStates&...)
     {
         st.ASTNode.Count = std::stoul(in.string());
     }
@@ -254,8 +264,8 @@ public:
 class NoteRepeatExpressionState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Notes.emplace_back(ASTNode);
     }
@@ -277,7 +287,8 @@ template<>
 class NoteRepeatExpressionAction<Grammar::NoteRepeatExpression>
 {
 public:
-    static void apply(const pegtl::input& in, NoteRepeatExpressionState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteRepeatExpressionState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -287,7 +298,8 @@ template<>
 class NoteRepeatExpressionAction<Grammar::UnsignedInteger>
 {
 public:
-    static void apply(const pegtl::input& in, NoteRepeatExpressionState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteRepeatExpressionState& st, TCommonStates&...)
     {
         st.ASTNode.Count = std::stoul(in.string());
     }
@@ -296,8 +308,8 @@ public:
 class NoteAndDurationState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Notes.emplace_back(ASTNode);
     }
@@ -324,7 +336,8 @@ template<>
 class NoteAndDurationAction<Grammar::NoteAndDuration>
 {
 public:
-    static void apply(const pegtl::input& in, NoteAndDurationState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteAndDurationState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -333,8 +346,8 @@ public:
 class DurationSetState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Duration = ASTNode;
     }
@@ -356,7 +369,8 @@ template<>
 class DurationSetAction<Grammar::DurationSet>
 {
 public:
-    static void apply(const pegtl::input& in, DurationSetState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, DurationSetState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -365,8 +379,8 @@ public:
 class SimpleDurationWithModifierState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.OnParse(ASTNode);
     }
@@ -383,7 +397,8 @@ template<>
 class SimpleDurationWithModifierAction<Grammar::SimpleDurationWithModifier>
 {
 public:
-    static void apply(const pegtl::input& in, SimpleDurationWithModifierState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationWithModifierState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -392,8 +407,8 @@ public:
 class SimpleDurationModifierState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Modifier = ASTNode;
     }
@@ -410,7 +425,8 @@ template<>
 class SimpleDurationModifierAction<Grammar::SimpleDurationModifier>
 {
 public:
-    static void apply(const pegtl::input& in, SimpleDurationModifierState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationModifierState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -420,7 +436,8 @@ template<>
 class SimpleDurationModifierAction<Grammar::UnsignedInteger>
 {
 public:
-    static void apply(const pegtl::input& in, SimpleDurationModifierState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationModifierState& st, TCommonStates&...)
     {
         st.ASTNode.Number = std::stoul(in.string());
     }
@@ -429,8 +446,8 @@ public:
 class SimpleDurationState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Base = ASTNode;
     }
@@ -447,7 +464,8 @@ template<>
 class SimpleDurationAction<Grammar::SimpleDuration>
 {
 public:
-    static void apply(const pegtl::input& in, SimpleDurationState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -457,7 +475,8 @@ template<>
 class SimpleDurationAction<Grammar::UnsignedInteger>
 {
 public:
-    static void apply(const pegtl::input& in, SimpleDurationState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationState& st, TCommonStates&...)
     {
         st.ASTNode.Number = std::stoul(in.string());
     }
@@ -466,8 +485,8 @@ public:
 class SimpleChordState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Note = ASTNode;
     }
@@ -489,7 +508,8 @@ template<>
 class SimpleChordAction<Grammar::SimpleChord>
 {
 public:
-    static void apply(const pegtl::input& in, SimpleChordState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleChordState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -498,8 +518,8 @@ public:
 class NoteNumberState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.OnParse(ASTNode);
     }
@@ -516,7 +536,8 @@ template<>
 class NoteNumberAction<Grammar::NoteNumber>
 {
 public:
-    static void apply(const pegtl::input& in, NoteNumberState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteNumberState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -525,8 +546,8 @@ public:
 class NoteOctaveState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Octave = ASTNode;
     }
@@ -543,7 +564,8 @@ template<>
 class NoteOctaveAction<Grammar::NoteOctave>
 {
 public:
-    static void apply(const pegtl::input& in, NoteOctaveState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteOctaveState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -553,7 +575,8 @@ template<>
 class NoteOctaveAction<Grammar::SignedInteger>
 {
 public:
-    static void apply(const pegtl::input& in, NoteOctaveState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteOctaveState& st, TCommonStates&...)
     {
         st.ASTNode.Value = std::stoi(in.string());
     }
@@ -562,8 +585,8 @@ public:
 class NoteNameState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Name = ASTNode;
     }
@@ -580,7 +603,8 @@ template<>
 class NoteNameAction<Grammar::NoteName>
 {
 public:
-    static void apply(const pegtl::input& in, NoteNameState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteNameState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -590,7 +614,8 @@ template<>
 class NoteNameAction<Grammar::NoteNameBase>
 {
 public:
-    static void apply(const pegtl::input& in, NoteNameState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteNameState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string().at(0);
     }
@@ -600,7 +625,8 @@ template<>
 class NoteNameAction<Grammar::NoteNameKey>
 {
 public:
-    static void apply(const pegtl::input& in, NoteNameState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteNameState& st, TCommonStates&...)
     {
         st.ASTNode.Minor = 0;
 
@@ -612,8 +638,8 @@ public:
 class RestState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Note = ASTNode;
     }
@@ -630,7 +656,8 @@ template<>
 class RestAction<Grammar::Rest>
 {
 public:
-    static void apply(const pegtl::input& in, RestState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, RestState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }

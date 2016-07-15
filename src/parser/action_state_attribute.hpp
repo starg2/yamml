@@ -17,8 +17,8 @@ namespace Parser
 class AttributeState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Attributes.push_back(ASTNode);
     }
@@ -35,7 +35,8 @@ template<>
 class AttributeAction<Grammar::Attribute>
 {
 public:
-    static void apply(const pegtl::input& in, AttributeState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, AttributeState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -45,7 +46,8 @@ template<>
 class AttributeAction<Grammar::Identifier>
 {
 public:
-    static void apply(const pegtl::input& in, AttributeState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, AttributeState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
@@ -54,8 +56,8 @@ public:
 class AttributeArgumentState
 {
 public:
-    template<typename TState>
-    void success(TState& st)
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
     {
         st.ASTNode.Arguments.push_back(ASTNode);
     }
@@ -72,7 +74,8 @@ template<>
 class AttributeArgumentAction<Grammar::AttributeArgument>
 {
 public:
-    static void apply(const pegtl::input& in, AttributeArgumentState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, AttributeArgumentState& st, TCommonStates&...)
     {
         st.ASTNode.Location = {in.line(), in.column()};
     }
@@ -87,7 +90,8 @@ template<>
 class AttributeKeyAction<Grammar::Identifier>
 {
 public:
-    static void apply(const pegtl::input& in, AttributeArgumentState& st)
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, AttributeArgumentState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
