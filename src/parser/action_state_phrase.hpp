@@ -26,6 +26,11 @@ public:
         mod.Add(ASTNode);
     }
 
+    void OnParse(AST::NoteSequenceBlockWithoutAttributes node)
+    {
+        ASTNode.Block = node;
+    }
+
     AST::Phrase ASTNode;
 };
 
@@ -63,6 +68,11 @@ public:
         st.ASTNode.Sequences.emplace_back(ASTNode);
     }
 
+    void OnParse(AST::NoteSequenceBlockWithoutAttributes node)
+    {
+        ASTNode.Sequences.emplace_back(node);
+    }
+
     AST::NoteSequenceBlock ASTNode;
 };
 
@@ -87,23 +97,9 @@ public:
     template<typename TState>
     void success(TState& st)
     {
-        success(st, std::is_same<TState, PhraseState>{});
+        st.OnParse(ASTNode);
     }
 
-private:
-    template<typename TState>
-    void success(TState& st, std::true_type)
-    {
-        st.ASTNode.Block = ASTNode;
-    }
-
-    template<typename TState>
-    void success(TState& st, std::false_type)
-    {
-        st.ASTNode.Sequences.emplace_back(ASTNode);
-    }
-
-public:
     AST::NoteSequenceBlockWithoutAttributes ASTNode;
 };
 
@@ -131,7 +127,11 @@ public:
         st.ASTNode.Sequences.emplace_back(ASTNode);
     }
 
-public:
+    void OnParse(AST::NoteSequence node)
+    {
+        ASTNode.NoteSeq = node;
+    }
+
     AST::NoteSequenceStatement ASTNode;
 };
 
@@ -156,23 +156,9 @@ public:
     template<typename TState>
     void success(TState& st)
     {
-        success(st, std::is_same<TState, NoteSequenceStatementState>{});
+        st.OnParse(ASTNode);
     }
 
-private:
-    template<typename TState>
-    void success(TState& st, std::true_type)
-    {
-        st.ASTNode.NoteSeq = ASTNode;
-    }
-
-    template<typename TState>
-    void success(TState& st, std::false_type)
-    {
-        st.ASTNode.Notes.emplace_back(ASTNode);
-    }
-
-public:
     AST::NoteSequence ASTNode;
 };
 
@@ -200,6 +186,11 @@ public:
         st.ASTNode.Notes.push_back(ASTNode);
     }
 
+    void OnParse(AST::NoteSequence node)
+    {
+        ASTNode.Notes.emplace_back(node);
+    }
+
     AST::NoteAndExpression ASTNode;
 };
 
@@ -225,6 +216,11 @@ public:
     void success(TState& st)
     {
         st.ASTNode.Notes.emplace_back(ASTNode);
+    }
+
+    void OnParse(AST::NoteSequence node)
+    {
+        ASTNode.Notes.emplace_back(node);
     }
 
     AST::NoteRepeatEachExpression ASTNode;
@@ -264,6 +260,11 @@ public:
         st.ASTNode.Notes.emplace_back(ASTNode);
     }
 
+    void OnParse(AST::NoteSequence node)
+    {
+        ASTNode.Notes.emplace_back(node);
+    }
+
     AST::NoteRepeatExpression ASTNode;
 };
 
@@ -301,6 +302,16 @@ public:
         st.ASTNode.Notes.emplace_back(ASTNode);
     }
 
+    void OnParse(AST::SimpleDurationWithModifier node)
+    {
+        ASTNode.Duration = node;
+    }
+
+    void OnParse(AST::NoteNumber node)
+    {
+        ASTNode.Note = node;
+    }
+
     AST::NoteAndDuration ASTNode;
 };
 
@@ -328,6 +339,11 @@ public:
         st.ASTNode.Duration = ASTNode;
     }
 
+    void OnParse(AST::SimpleDurationWithModifier node)
+    {
+        ASTNode.Durations.push_back(node);
+    }
+
     AST::DurationSet ASTNode;
 };
 
@@ -352,23 +368,9 @@ public:
     template<typename TState>
     void success(TState& st)
     {
-        success(st, std::is_same<TState, DurationSetState>{});
+        st.OnParse(ASTNode);
     }
 
-private:
-    template<typename TState>
-    void success(TState& st, std::true_type)
-    {
-        st.ASTNode.Durations.push_back(ASTNode);
-    }
-
-    template<typename TState>
-    void success(TState& st, std::false_type)
-    {
-        st.ASTNode.Duration = ASTNode;
-    }
-
-public:
     AST::SimpleDurationWithModifier ASTNode;
 };
 
@@ -470,6 +472,11 @@ public:
         st.ASTNode.Note = ASTNode;
     }
 
+    void OnParse(AST::NoteNumber node)
+    {
+        ASTNode.Notes.push_back(node);
+    }
+
     AST::SimpleChord ASTNode;
 };
 
@@ -494,23 +501,9 @@ public:
     template<typename TState>
     void success(TState& st)
     {
-        success(st, std::is_same<TState, SimpleChordState>{});
+        st.OnParse(ASTNode);
     }
 
-private:
-    template<typename TState>
-    void success(TState& st, std::true_type)
-    {
-        st.ASTNode.Notes.push_back(ASTNode);
-    }
-
-    template<typename TState>
-    void success(TState& st, std::false_type)
-    {
-        st.ASTNode.Note = ASTNode;
-    }
-
-public:
     AST::NoteNumber ASTNode;
 };
 
