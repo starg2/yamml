@@ -2,12 +2,14 @@
 #pragma once
 
 #include <pegtl.hh>
-#include <pegtl/contrib/changes.hh>
 
 #include "action_state_attribute.hpp"
 #include "action_state_composition.hpp"
 #include "action_state_literal.hpp"
 #include "action_state_phrase.hpp"
+
+#include "changes.hpp"
+
 #include "error_control.hpp"
 #include "parser_attribute.hpp"
 #include "parser_composition.hpp"
@@ -27,7 +29,7 @@ class Control : public ErrorControl<TRule>
 
 template<>
 class Control<Grammar::Composition>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::Composition,
         CompositionState,
         CompositionAction,
@@ -38,7 +40,7 @@ class Control<Grammar::Composition>
 
 template<>
 class Control<Grammar::Attribute>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::Attribute,
         AttributeState,
         AttributeAction,
@@ -49,7 +51,7 @@ class Control<Grammar::Attribute>
 
 template<>
 class Control<Grammar::AttributeArgument>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::AttributeArgument,
         AttributeArgumentState,
         AttributeArgumentAction,
@@ -70,7 +72,7 @@ class Control<Grammar::AttributeKey>
 
 template<>
 class Control<Grammar::Value>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::Value,
         ValueState,
         ValueAction,
@@ -81,7 +83,7 @@ class Control<Grammar::Value>
 
 template<char TQuote>
 class Control<Grammar::QuotedStringLiteral<TQuote>>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::QuotedStringLiteral<TQuote>,
         EscapeState,
         EscapeAction,
@@ -92,7 +94,7 @@ class Control<Grammar::QuotedStringLiteral<TQuote>>
 
 template<>
 class Control<Grammar::TrackListBlock>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::TrackListBlock,
         TrackListBlockState,
         TrackListBlockAction,
@@ -103,7 +105,7 @@ class Control<Grammar::TrackListBlock>
 
 template<>
 class Control<Grammar::TrackBlock>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::TrackBlock,
         TrackBlockState,
         TrackBlockAction,
@@ -114,7 +116,7 @@ class Control<Grammar::TrackBlock>
 
 template<>
 class Control<Grammar::TrackItem>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::TrackItem,
         TrackItemState,
         TrackItemAction,
@@ -125,7 +127,7 @@ class Control<Grammar::TrackItem>
 
 template<>
 class Control<Grammar::Command>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::Command,
         CommandState,
         CommandAction,
@@ -136,7 +138,7 @@ class Control<Grammar::Command>
 
 template<>
 class Control<Grammar::CommandArgument>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::CommandArgument,
         CommandArgumentState,
         CommandArgumentAction,
@@ -147,7 +149,7 @@ class Control<Grammar::CommandArgument>
 
 template<>
 class Control<Grammar::Phrase>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::Phrase,
         PhraseState,
         PhraseAction,
@@ -158,7 +160,7 @@ class Control<Grammar::Phrase>
 
 template<>
 class Control<Grammar::NoteSequenceBlock>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteSequenceBlock,
         NoteSequenceBlockState,
         NoteSequenceBlockAction,
@@ -169,7 +171,7 @@ class Control<Grammar::NoteSequenceBlock>
 
 template<>
 class Control<Grammar::NoteSequenceBlockWithoutAttributes>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteSequenceBlockWithoutAttributes,
         NoteSequenceBlockWithoutAttributesState,
         NoteSequenceBlockWithoutAttributesAction,
@@ -180,7 +182,7 @@ class Control<Grammar::NoteSequenceBlockWithoutAttributes>
 
 template<>
 class Control<Grammar::NoteSequenceStatement>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteSequenceStatement,
         NoteSequenceStatementState,
         NoteSequenceStatementAction,
@@ -191,7 +193,7 @@ class Control<Grammar::NoteSequenceStatement>
 
 template<>
 class Control<Grammar::NoteSequence>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteSequence,
         NoteSequenceState,
         NoteSequenceAction,
@@ -202,7 +204,7 @@ class Control<Grammar::NoteSequence>
 
 template<>
 class Control<Grammar::NoteAndExpression>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteAndExpression,
         NoteAndExpressionState,
         NoteAndExpressionAction,
@@ -213,7 +215,7 @@ class Control<Grammar::NoteAndExpression>
 
 template<>
 class Control<Grammar::NoteRepeatEachExpression>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteRepeatEachExpression,
         NoteRepeatEachExpressionState,
         NoteRepeatEachExpressionAction,
@@ -224,7 +226,7 @@ class Control<Grammar::NoteRepeatEachExpression>
 
 template<>
 class Control<Grammar::NoteRepeatExpression>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteRepeatExpression,
         NoteRepeatExpressionState,
         NoteRepeatExpressionAction,
@@ -235,7 +237,7 @@ class Control<Grammar::NoteRepeatExpression>
 
 template<>
 class Control<Grammar::NoteAndDuration>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteAndDuration,
         NoteAndDurationState,
         NoteAndDurationAction,
@@ -246,7 +248,7 @@ class Control<Grammar::NoteAndDuration>
 
 template<>
 class Control<Grammar::DurationSet>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::DurationSet,
         DurationSetState,
         DurationSetAction,
@@ -257,7 +259,7 @@ class Control<Grammar::DurationSet>
 
 template<>
 class Control<Grammar::SimpleDurationWithModifier>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::SimpleDurationWithModifier,
         SimpleDurationWithModifierState,
         SimpleDurationWithModifierAction,
@@ -268,7 +270,7 @@ class Control<Grammar::SimpleDurationWithModifier>
 
 template<>
 class Control<Grammar::SimpleDurationModifier>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::SimpleDurationModifier,
         SimpleDurationModifierState,
         SimpleDurationModifierAction,
@@ -279,7 +281,7 @@ class Control<Grammar::SimpleDurationModifier>
 
 template<>
 class Control<Grammar::SimpleDuration>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::SimpleDuration,
         SimpleDurationState,
         SimpleDurationAction,
@@ -290,7 +292,7 @@ class Control<Grammar::SimpleDuration>
 
 template<>
 class Control<Grammar::SimpleChord>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::SimpleChord,
         SimpleChordState,
         SimpleChordAction,
@@ -301,7 +303,7 @@ class Control<Grammar::SimpleChord>
 
 template<>
 class Control<Grammar::NoteNumber>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteNumber,
         NoteNumberState,
         NoteNumberAction,
@@ -312,7 +314,7 @@ class Control<Grammar::NoteNumber>
 
 template<>
 class Control<Grammar::NoteOctave>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteOctave,
         NoteOctaveState,
         NoteOctaveAction,
@@ -323,7 +325,7 @@ class Control<Grammar::NoteOctave>
 
 template<>
 class Control<Grammar::NoteName>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::NoteName,
         NoteNameState,
         NoteNameAction,
@@ -334,7 +336,7 @@ class Control<Grammar::NoteName>
 
 template<>
 class Control<Grammar::Rest>
-    : public pegtl::change_state_and_action<
+    : public ChangeStateAndAction<
         Grammar::Rest,
         RestState,
         RestAction,

@@ -5,6 +5,7 @@ set(ParserHeaders
     action_state_composition.hpp
     action_state_literal.hpp
     action_state_phrase.hpp
+    changes.hpp
     control.hpp
     error_attribute.hpp
     error_common.hpp
