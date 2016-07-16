@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(ParserTest3)
 {
     std::string source = R"(
 
-[foo(bar="abc")]
+[foo(bar="abc\u2661")]
 composition Main
 {
 }
@@ -186,7 +186,7 @@ composition Main
 
     auto argValue = arg.Value.Value;
 
-    BOOST_CHECK_EQUAL(boost::get<std::string>(argValue), "abc");
+    BOOST_CHECK_EQUAL(boost::get<std::string>(argValue), u8"abc\u2661");
 
     BOOST_CHECK_EQUAL(arg.Location.Line, 3);
     BOOST_CHECK_EQUAL(arg.Location.Column, 5);
