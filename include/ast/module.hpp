@@ -16,14 +16,31 @@ namespace AST
 class Module final
 {
 public:
-    void Add(const Composition& c)
+    // returns false if an item with the same name already exists
+    bool TryAdd(const Composition& c)
     {
-        Compositions[c.Name] = c;
+        if (Compositions.find(c.Name) == Compositions.end())
+        {
+            Compositions[c.Name] = c;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    void Add(const Phrase& ph)
+    bool TryAdd(const Phrase& ph)
     {
-        Phrases[ph.Name] = ph;
+        if (Phrases.find(ph.Name) == Phrases.end())
+        {
+            Phrases[ph.Name] = ph;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     std::string Name;

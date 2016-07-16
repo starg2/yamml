@@ -9,7 +9,9 @@ namespace Message
 
 enum class MessageID
 {
-    Unknown
+    Unknown,
+    DuplicatedCompositionName,
+    DuplicatedPhraseName
 };
 
 } // namespace Message

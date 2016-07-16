@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <utility>
 
 #include <exceptions/parseexception.hpp>
@@ -38,14 +39,23 @@ bool YAMMLParser::Parse()
     try
     {
         AST::Module ast;
-        bool result = pegtl::parse<Grammar::Module, pegtl::nothing, Control>(m_Source, m_Name, ast);
+        bool result = pegtl::parse<Grammar::Module, pegtl::nothing, Control>(m_Source, m_Name, ast, *this);
 
-        if (result)
+        bool hasErrors = std::find_if(
+            m_Messages.begin(),
+            m_Messages.end(),
+            [] (auto&& i) { return i.Kind == Message::MessageKind::Error || i.Kind == Message::MessageKind::FetalError; }
+        ) != m_Messages.end();
+
+        if (result && !hasErrors)
         {
             m_AST = std::move(ast);
+            return true;
         }
-
-        return result;
+        else
+        {
+            return false;
+        }
     }
     catch (const Exceptions::ParseException& e)
     {
@@ -57,6 +67,11 @@ bool YAMMLParser::Parse()
 void YAMMLParser::AddMessage(Message::MessageItem msg)
 {
     m_Messages.push_back(msg);
+}
+
+const std::string & YAMMLParser::GetSourceName() const
+{
+    return m_Source;
 }
 
 boost::optional<AST::Module>& YAMMLParser::GetAST()

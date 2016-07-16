@@ -35,6 +35,8 @@ public:
     bool Parse();
     void AddMessage(Message::MessageItem msg);
 
+    const std::string& GetSourceName() const;
+
     boost::optional<AST::Module>& GetAST();
     const boost::optional<AST::Module>& GetAST() const;
     

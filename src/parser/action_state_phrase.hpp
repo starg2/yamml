@@ -9,6 +9,7 @@
 
 #include <ast/module.hpp>
 #include <ast/phrase.hpp>
+#include <parser/parser.hpp>
 
 #include "parser_phrase.hpp"
 
@@ -22,9 +23,20 @@ class PhraseState
 {
 public:
     template<typename... TCommonStates>
-    void success(AST::Module& mod, TCommonStates&...)
+    void success(AST::Module& mod, YAMMLParser& parser, TCommonStates&...)
     {
-        mod.Add(ASTNode);
+        if (!mod.TryAdd(ASTNode))
+        {
+            parser.AddMessage(
+                {
+                    Message::MessageKind::Error,
+                    Message::MessageID::DuplicatedPhraseName,
+                    parser.GetSourceName(),
+                    ASTNode.Location,
+                    {ASTNode.Name}
+                }
+            );
+        }
     }
 
     void OnParse(AST::NoteSequenceBlockWithoutAttributes node)

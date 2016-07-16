@@ -7,6 +7,7 @@
 
 #include <ast/composition.hpp>
 #include <ast/module.hpp>
+#include <parser/parser.hpp>
 
 #include "parser_composition.hpp"
 
@@ -20,9 +21,20 @@ class CompositionState
 {
 public:
     template<typename... TCommonStates>
-    void success(AST::Module& mod, TCommonStates&...)
+    void success(AST::Module& mod, YAMMLParser& parser, TCommonStates&...)
     {
-        mod.Add(ASTNode);
+        if (!mod.TryAdd(ASTNode))
+        {
+            parser.AddMessage(
+                {
+                    Message::MessageKind::Error,
+                    Message::MessageID::DuplicatedCompositionName,
+                    parser.GetSourceName(),
+                    ASTNode.Location,
+                    {ASTNode.Name}
+                }
+            );
+        }
     }
 
     AST::Composition ASTNode;
