@@ -56,6 +56,17 @@ public:
     }
 };
 
+template<>
+class CompositionAction<Grammar::Identifier>
+{
+public:
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, CompositionState& st, TCommonStates&...)
+    {
+        st.ASTNode.Name = in.string();
+    }
+};
+
 class TrackListBlockState
 {
 public:
@@ -102,7 +113,7 @@ class TrackBlockAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class TrackBlockAction<Grammar::TrackListBlock>
+class TrackBlockAction<Grammar::TrackBlock>
 {
 public:
     template<typename... TCommonStates>
