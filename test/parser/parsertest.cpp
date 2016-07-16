@@ -146,4 +146,53 @@ composition Main
     BOOST_CHECK(!result);
 }
 
+BOOST_AUTO_TEST_CASE(ParserTest3)
+{
+    std::string source = R"(
+
+[foo(bar="abc")]
+composition Main
+{
+}
+
+)";
+
+    YAMMLParser parser("test.ym1", source);
+
+    bool result = parser.Parse();
+    BOOST_REQUIRE(result);
+
+    auto module = parser.GetAST();
+    BOOST_REQUIRE(module.is_initialized());
+
+    auto itComposition = module->Compositions.find("Main");
+    BOOST_REQUIRE(itComposition != module->Compositions.end());
+
+    BOOST_CHECK_EQUAL(itComposition->first, "Main");
+    BOOST_CHECK_EQUAL(itComposition->second.Attributes.size(), 1);
+    
+    auto attr = itComposition->second.Attributes.at(0);
+
+    BOOST_CHECK_EQUAL(attr.Name, "foo");
+    BOOST_CHECK_EQUAL(attr.Location.Line, 3);
+    BOOST_CHECK_EQUAL(attr.Location.Column, 0);
+
+    BOOST_CHECK_EQUAL(attr.Arguments.size(), 1);
+
+    auto arg = attr.Arguments.at(0);
+
+    BOOST_REQUIRE(arg.Name.is_initialized());
+    BOOST_CHECK_EQUAL(arg.Name.value(), "bar");
+
+    auto argValue = arg.Value.Value;
+
+    BOOST_CHECK_EQUAL(boost::get<std::string>(argValue), "abc");
+
+    BOOST_CHECK_EQUAL(arg.Location.Line, 3);
+    BOOST_CHECK_EQUAL(arg.Location.Column, 5);
+
+    BOOST_CHECK_EQUAL(arg.Value.Location.Line, 3);
+    BOOST_CHECK_EQUAL(arg.Value.Location.Column, 9);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

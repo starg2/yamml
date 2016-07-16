@@ -81,13 +81,24 @@ class Control<Grammar::Value>
 {
 };
 
-template<char TQuote>
-class Control<Grammar::QuotedStringLiteral<TQuote>>
+template<>
+class Control<Grammar::DoubleQuotedStringLiteral>
     : public ChangeStateAndAction<
-        Grammar::QuotedStringLiteral<TQuote>,
-        EscapeState,
-        EscapeAction,
-        ErrorControl
+    Grammar::DoubleQuotedStringLiteral,
+    EscapeState,
+    EscapeAction,
+    ErrorControl
+    >
+{
+};
+
+template<>
+class Control<Grammar::SingleQuotedStringLiteral>
+    : public ChangeStateAndAction<
+    Grammar::SingleQuotedStringLiteral,
+    EscapeState,
+    EscapeAction,
+    ErrorControl
     >
 {
 };
