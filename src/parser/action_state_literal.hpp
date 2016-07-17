@@ -19,6 +19,7 @@
 
 #include <ast/literal.hpp>
 
+#include "action.hpp"
 #include "parser_literal.hpp"
 
 namespace YAMML
@@ -45,14 +46,8 @@ class ValueAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class ValueAction<Grammar::Value>
+class ValueAction<Grammar::Value> : public AssignLocationAction
 {
-public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 template<>

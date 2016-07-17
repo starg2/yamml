@@ -1,6 +1,7 @@
 
 set(ParserHeaders
     ../../include/parser/parser.hpp
+    action.hpp
     action_state_attribute.hpp
     action_state_composition.hpp
     action_state_literal.hpp

@@ -9,6 +9,7 @@
 #include <ast/module.hpp>
 #include <parser/parser.hpp>
 
+#include "action.hpp"
 #include "parser_composition.hpp"
 
 namespace YAMML
@@ -46,14 +47,8 @@ class CompositionAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class CompositionAction<Grammar::Composition>
+class CompositionAction<Grammar::Composition> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, CompositionState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 template<>
@@ -85,14 +80,8 @@ class TrackListBlockAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class TrackListBlockAction<Grammar::TrackListBlock>
+class TrackListBlockAction<Grammar::TrackListBlock> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, TrackListBlockState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 class TrackBlockState
@@ -113,14 +102,8 @@ class TrackBlockAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class TrackBlockAction<Grammar::TrackBlock>
+class TrackBlockAction<Grammar::TrackBlock> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, TrackBlockState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 template<>
@@ -152,14 +135,8 @@ class TrackItemAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class TrackItemAction<Grammar::TrackItem>
+class TrackItemAction<Grammar::TrackItem> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, TrackItemState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 template<>
@@ -191,14 +168,8 @@ class CommandAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class CommandAction<Grammar::Command>
+class CommandAction<Grammar::Command> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, CommandState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 template<>
@@ -230,14 +201,8 @@ class CommandArgumentAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class CommandArgumentAction<Grammar::CommandArgument>
+class CommandArgumentAction<Grammar::CommandArgument> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, CommandArgumentState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 } // namespace Parser

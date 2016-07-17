@@ -5,6 +5,7 @@
 
 #include <ast/attribute.hpp>
 
+#include "action.hpp"
 #include "parser_attribute.hpp"
 
 
@@ -32,14 +33,8 @@ class AttributeAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class AttributeAction<Grammar::Attribute>
+class AttributeAction<Grammar::Attribute> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, AttributeState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 template<>
@@ -71,14 +66,8 @@ class AttributeArgumentAction : public pegtl::nothing<TRule>
 };
 
 template<>
-class AttributeArgumentAction<Grammar::AttributeArgument>
+class AttributeArgumentAction<Grammar::AttributeArgument> : public AssignLocationAction
 {
-public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, AttributeArgumentState& st, TCommonStates&...)
-    {
-        st.ASTNode.Location = {in.line(), in.column()};
-    }
 };
 
 template<typename TRule>
