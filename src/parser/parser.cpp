@@ -30,7 +30,7 @@ YAMMLParser::YAMMLParser(std::string name, std::string source)
 }
 
 YAMMLParser::YAMMLParser(std::string name, std::string source, std::function<CallbackFunctionType> callback)
-    : m_Name(std::move(name)), m_Source(std::move(source)), m_Callback(std::move(callback))
+    : CompilerBase(callback), m_Name(std::move(name)), m_Source(std::move(source))
 {
 }
 
@@ -41,13 +41,7 @@ bool YAMMLParser::Parse()
         AST::Module ast;
         bool result = pegtl::parse<Grammar::Module, pegtl::nothing, Control>(m_Source, m_Name, ast, *this);
 
-        bool hasErrors = std::find_if(
-            m_Messages.begin(),
-            m_Messages.end(),
-            [] (auto&& i) { return i.Kind == Message::MessageKind::Error || i.Kind == Message::MessageKind::FetalError; }
-        ) != m_Messages.end();
-
-        if (result && !hasErrors)
+        if (result && !HasErrors())
         {
             m_AST = std::move(ast);
             return true;
@@ -64,16 +58,6 @@ bool YAMMLParser::Parse()
     }
 }
 
-void YAMMLParser::AddMessage(Message::MessageItem msg)
-{
-    m_Messages.push_back(msg);
-
-    if (m_Callback)
-    {
-        m_Callback(msg);
-    }
-}
-
 const std::string & YAMMLParser::GetSourceName() const
 {
     return m_Name;
@@ -87,16 +71,6 @@ boost::optional<AST::Module>& YAMMLParser::GetAST()
 const boost::optional<AST::Module>& YAMMLParser::GetAST() const
 {
     return m_AST;
-}
-
-std::vector<Message::MessageItem>& YAMMLParser::GetMessages()
-{
-    return m_Messages;
-}
-
-const std::vector<Message::MessageItem>& YAMMLParser::GetMessages() const
-{
-    return m_Messages;
 }
 
 } // namespace Parser
