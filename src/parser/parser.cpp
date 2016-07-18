@@ -67,6 +67,11 @@ bool YAMMLParser::Parse()
 void YAMMLParser::AddMessage(Message::MessageItem msg)
 {
     m_Messages.push_back(msg);
+
+    if (m_Callback)
+    {
+        m_Callback(msg);
+    }
 }
 
 const std::string & YAMMLParser::GetSourceName() const
