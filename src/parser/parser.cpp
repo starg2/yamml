@@ -76,7 +76,7 @@ void YAMMLParser::AddMessage(Message::MessageItem msg)
 
 const std::string & YAMMLParser::GetSourceName() const
 {
-    return m_Source;
+    return m_Name;
 }
 
 boost::optional<AST::Module>& YAMMLParser::GetAST()
