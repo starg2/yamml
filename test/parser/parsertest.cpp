@@ -4,6 +4,9 @@
 #include <boost/test/unit_test.hpp>
 
 #include <ast/module.hpp>
+#include <message/id.hpp>
+#include <message/kind.hpp>
+#include <message/message.hpp>
 #include <parser/parser.hpp>
 
 using namespace YAMML;
@@ -193,6 +196,41 @@ composition Main
 
     BOOST_CHECK_EQUAL(arg.Value.Location.Line, 3);
     BOOST_CHECK_EQUAL(arg.Value.Location.Column, 9);
+}
+
+BOOST_AUTO_TEST_CASE(DuplicatedCompositionName)
+{
+    std::string sourceName = "test.ym1";
+    std::string source = R"(
+
+composition Foo
+{
+}
+
+composition Foo
+{
+}
+
+)";
+
+    YAMMLParser parser(sourceName, source);
+
+    bool result = parser.Parse();
+    BOOST_REQUIRE(!result);
+
+    auto messages = parser.GetMessages();
+    BOOST_REQUIRE(messages.size() == 1);
+
+    auto msg = messages.at(0);
+
+    BOOST_CHECK(msg.Kind == Message::MessageKind::Error);
+    BOOST_CHECK(msg.ID == Message::MessageID::DuplicatedCompositionName);
+    BOOST_CHECK_EQUAL(msg.SourceName, sourceName);
+    BOOST_CHECK_EQUAL(msg.Location.Line, 7);
+    BOOST_CHECK_EQUAL(msg.Location.Column, 0);
+
+    BOOST_REQUIRE_EQUAL(msg.Arguments.size(), 1);
+    BOOST_CHECK_EQUAL(msg.Arguments.at(0), "Foo");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
