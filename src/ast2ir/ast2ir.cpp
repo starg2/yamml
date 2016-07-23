@@ -1,6 +1,7 @@
 
 #include <ast2ir/ast2ir.hpp>
 
+#include "module2ir.hpp"
 
 namespace YAMML
 {
@@ -10,7 +11,8 @@ namespace AST2IR
 
 bool AST2IRCompiler::Compile(const AST::Module& mod)
 {
-    return false;
+    GetIR() = Module2IRCompiler(*this).Compile(mod);
+    return !HasErrors();
 }
 
 boost::optional<IR::Module>& AST2IRCompiler::GetIR()

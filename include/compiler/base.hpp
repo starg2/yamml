@@ -22,7 +22,7 @@ public:
     CompilerBase() = default;
 
     template<typename T>
-    CompilerBase(T func) : m_Callback(std::move(func))
+    CompilerBase(T func) : m_Callback(func)
     {
     }
 
