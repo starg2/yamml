@@ -22,20 +22,9 @@ class CompositionState
 {
 public:
     template<typename... TCommonStates>
-    void success(AST::Module& mod, YAMMLParser& parser, TCommonStates&...)
+    void success(AST::Module& mod, TCommonStates&...)
     {
-        if (!mod.TryAdd(ASTNode))
-        {
-            parser.AddMessage(
-                {
-                    Message::MessageKind::Error,
-                    Message::MessageID::DuplicatedCompositionName,
-                    parser.GetSourceName(),
-                    ASTNode.Location,
-                    {ASTNode.Name}
-                }
-            );
-        }
+        mod.Compositions.push_back(ASTNode);
     }
 
     AST::Composition ASTNode;

@@ -41,13 +41,11 @@ composition Main
     auto module = parser.GetAST();
 
     {
-        auto itPhrase = module->Phrases.find("Foo");
+        auto itPhrase = module->Phrases.begin();
 
         BOOST_REQUIRE(itPhrase != module->Phrases.end());
 
-        BOOST_CHECK_EQUAL(itPhrase->first, "Foo");
-
-        auto phrase = itPhrase->second;
+        auto phrase = *itPhrase;
 
         BOOST_CHECK_EQUAL(phrase.Name, "Foo");
         BOOST_CHECK(phrase.Attributes.empty());
@@ -93,12 +91,10 @@ composition Main
     }
 
     {
-        auto itComposition = module->Compositions.find("Main");
+        auto itComposition = module->Compositions.begin();
         BOOST_REQUIRE(itComposition != module->Compositions.end());
 
-        BOOST_CHECK_EQUAL(itComposition->first, "Main");
-
-        auto composition = itComposition->second;
+        auto composition = *itComposition;
 
         BOOST_CHECK_EQUAL(composition.Name, "Main");
         BOOST_CHECK(composition.Attributes.empty());
@@ -165,13 +161,13 @@ composition Main
     auto module = parser.GetAST();
     BOOST_REQUIRE(module.is_initialized());
 
-    auto itComposition = module->Compositions.find("Main");
+    auto itComposition = module->Compositions.begin();
     BOOST_REQUIRE(itComposition != module->Compositions.end());
 
-    BOOST_CHECK_EQUAL(itComposition->first, "Main");
-    BOOST_CHECK_EQUAL(itComposition->second.Attributes.size(), 1);
+    BOOST_CHECK_EQUAL(itComposition->Name, "Main");
+    BOOST_CHECK_EQUAL(itComposition->Attributes.size(), 1);
     
-    auto attr = itComposition->second.Attributes.at(0);
+    auto attr = itComposition->Attributes.at(0);
 
     BOOST_CHECK_EQUAL(attr.Name, "foo");
     BOOST_CHECK_EQUAL(attr.Location.Line, 3);

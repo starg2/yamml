@@ -24,20 +24,9 @@ class PhraseState
 {
 public:
     template<typename... TCommonStates>
-    void success(AST::Module& mod, YAMMLParser& parser, TCommonStates&...)
+    void success(AST::Module& mod, TCommonStates&...)
     {
-        if (!mod.TryAdd(ASTNode))
-        {
-            parser.AddMessage(
-                {
-                    Message::MessageKind::Error,
-                    Message::MessageID::DuplicatedPhraseName,
-                    parser.GetSourceName(),
-                    ASTNode.Location,
-                    {ASTNode.Name}
-                }
-            );
-        }
+        mod.Phrases.push_back(ASTNode);
     }
 
     void OnParse(AST::NoteSequenceBlockWithoutAttributes node)
