@@ -19,17 +19,23 @@ namespace YAMML
 namespace AST2IR
 {
 
-class Phrase2IRCompiler final : public Compiler::NestedCompilerBase, public boost::static_visitor<bool>
+class Phrase2IRCompiler final : public Compiler::NestedCompilerBase, public boost::static_visitor<IR::BlockReference>
 {
 public:
     Phrase2IRCompiler(Compiler::CompilerBase& parentCompiler, IR::Module& ir);
 
-    // Compiles ast into m_IR.Blocks[index]
-    bool Compile(const AST::Phrase& ast, std::size_t index);
+    // Compiles ast into m_IR.Blocks[index.ID]
+    bool Compile(const AST::Phrase& ast, IR::BlockReference index);
 
-    bool operator()(const AST::NoteSequenceBlockWithoutAttributes& ast);
+    IR::BlockReference operator()(const AST::NoteSequenceStatement& ast);
+    IR::BlockReference operator()(const AST::NoteSequenceBlock& ast);
+
+    IR::BlockReference operator()(const AST::NoteSequence& ast);
+    IR::BlockReference operator()(const AST::NoteAndExpression& ast);
 
 private:
+    void Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index);
+
     IR::Module& m_IR;
     std::deque<std::vector<AST::Attribute>> m_AttributeStack;
 };

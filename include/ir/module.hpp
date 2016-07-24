@@ -16,7 +16,7 @@ namespace IR
 class Module final
 {
 public:
-    std::unordered_map<std::string, std::size_t> BlockNameMap;
+    std::unordered_map<std::string, BlockReference> BlockNameMap;
     std::vector<Block> Blocks;
     std::string Name;
 };

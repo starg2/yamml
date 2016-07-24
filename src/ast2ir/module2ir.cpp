@@ -1,4 +1,5 @@
 
+#include <ir/block.hpp>
 #include <message/message.hpp>
 
 #include "module2ir.hpp"
@@ -32,8 +33,9 @@ bool ProcessItem(TParentCompiler& parentCompiler, IR::Module& ir, const TItem& i
         return false;
     }
 
-    auto newIndex = ir.Blocks.size();
+    auto newIndex = IR::BlockReference{ir.Blocks.size()};
     ir.BlockNameMap[item.Name] = newIndex;
+    ir.Blocks.emplace_back();
 
     return TCompiler(parentCompiler, ir).Compile(item, newIndex);
 }

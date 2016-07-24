@@ -34,7 +34,7 @@ private:
 template<typename T>
 auto Concat(const T& container)
 {
-    std::vector<typename T::value_type> v;
+    std::vector<typename T::value_type::value_type> v;
 
     for (auto&& i : container)
     {

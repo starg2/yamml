@@ -10,6 +10,7 @@ namespace Message
 enum class MessageID
 {
     Unknown,
+    UnknownInPhrase2IR,
     DuplicatedCompositionName,
     DuplicatedPhraseName
 };

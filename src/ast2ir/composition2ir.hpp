@@ -5,6 +5,7 @@
 
 #include <ast/composition.hpp>
 #include <compiler/nested.hpp>
+#include <ir/block.hpp>
 #include <ir/module.hpp>
 
 namespace YAMML
@@ -18,7 +19,7 @@ class Composition2IRCompiler final : public Compiler::NestedCompilerBase
 public:
     Composition2IRCompiler(Compiler::CompilerBase& parentCompiler, IR::Module& ir);
 
-    bool Compile(const AST::Composition& ast, std::size_t index);
+    bool Compile(const AST::Composition& ast, IR::BlockReference index);
 
 private:
     IR::Module& m_IR;

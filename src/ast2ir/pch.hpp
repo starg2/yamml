@@ -1,8 +1,11 @@
 
 #pragma once
 
+#include <cassert>
+
 #include <algorithm>
 #include <deque>
+#include <exception>
 #include <functional>
 #include <string>
 #include <utility>
