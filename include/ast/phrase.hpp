@@ -142,7 +142,7 @@ class NoteSequenceBlock final
 {
 public:
     std::vector<Attribute> Attributes;
-    std::vector<NoteSequenceBlockWithoutAttributes> Sequences;
+    NoteSequenceBlockWithoutAttributes Block;
     SourceLocation Location;
 };
 

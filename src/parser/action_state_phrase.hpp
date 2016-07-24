@@ -29,11 +29,6 @@ public:
         mod.Phrases.push_back(ASTNode);
     }
 
-    void OnParse(AST::NoteSequenceBlockWithoutAttributes node)
-    {
-        ASTNode.Block = node;
-    }
-
     AST::Phrase ASTNode;
 };
 
@@ -67,11 +62,6 @@ public:
         st.ASTNode.Sequences.emplace_back(ASTNode);
     }
 
-    void OnParse(AST::NoteSequenceBlockWithoutAttributes node)
-    {
-        ASTNode.Sequences.emplace_back(node);
-    }
-
     AST::NoteSequenceBlock ASTNode;
 };
 
@@ -91,7 +81,7 @@ public:
     template<typename TParentState, typename... TCommonStates>
     void success(TParentState& st, TCommonStates&...)
     {
-        st.OnParse(ASTNode);
+        st.ASTNode.Block = ASTNode;
     }
 
     AST::NoteSequenceBlockWithoutAttributes ASTNode;
