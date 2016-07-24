@@ -31,10 +31,14 @@ public:
     IR::BlockReference operator()(const AST::NoteSequenceBlock& ast);
 
     IR::BlockReference operator()(const AST::NoteSequence& ast);
-    IR::BlockReference operator()(const AST::NoteAndExpression& ast);
+
+    IR::BlockReference operator()(const AST::NoteAndDuration& ast);
+    IR::BlockReference operator()(const AST::NoteRepeatExpression& ast);
+    IR::BlockReference operator()(const AST::NoteRepeatEachExpression& ast);
 
 private:
     void Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index);
+    void LimitRepeatCount(std::size_t count, const AST::SourceLocation& location);
 
     IR::Module& m_IR;
     std::deque<std::vector<AST::Attribute>> m_AttributeStack;

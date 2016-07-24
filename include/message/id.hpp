@@ -12,7 +12,8 @@ enum class MessageID
     Unknown,
     UnknownInPhrase2IR,
     DuplicatedCompositionName,
-    DuplicatedPhraseName
+    DuplicatedPhraseName,
+    TooLargeRepeatCount
 };
 
 } // namespace Message
