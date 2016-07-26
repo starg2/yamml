@@ -25,8 +25,10 @@ public:
 class Block final
 {
 public:
+    using EventType = boost::variant<Event, BlockReference>;
+
     std::vector<AST::Attribute> Attributes;
-    std::vector<boost::variant<Event, BlockReference>> Events;
+    std::vector<EventType> Events;
 };
 
 } // namespace IR

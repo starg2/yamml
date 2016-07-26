@@ -58,31 +58,27 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
     }
 }
 
-IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteSequenceStatement& ast)
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequenceStatement& ast)
 {
-    auto newIndex = IR::BlockReference{m_IR.Blocks.size()};
-    m_IR.Blocks.emplace_back();
+    auto newIndex = AllocBlock();
 
+    m_AttributeStack.push_back(ast.Attributes);
+    AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
+
+    // with bounds checking
+    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
+
+    if (ast.NoteSeq.is_initialized())
     {
-        m_AttributeStack.push_back(ast.Attributes);
-        AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
-
-        // with bounds checking
-        m_IR.Blocks.at(newIndex.ID).Attributes = Concat(m_AttributeStack);
-
-        if (ast.NoteSeq.is_initialized())
-        {
-            m_IR.Blocks[newIndex.ID].Events.emplace_back((*this)(*ast.NoteSeq));
-        }
+        m_IR.Blocks[newIndex.ID].Events.emplace_back((*this)(*ast.NoteSeq));
     }
 
     return newIndex;
 }
 
-IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteSequenceBlock& ast)
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequenceBlock& ast)
 {
-    auto newIndex = IR::BlockReference{m_IR.Blocks.size()};
-    m_IR.Blocks.emplace_back();
+    auto newIndex = AllocBlock();
 
     m_AttributeStack.push_back(ast.Attributes);
     AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
@@ -91,13 +87,10 @@ IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteSequenceBlock& a
     return newIndex;
 }
 
-IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteSequence& ast)
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequence& ast)
 {
-    auto newIndex = IR::BlockReference{m_IR.Blocks.size()};
-    m_IR.Blocks.emplace_back();
-
-    // with bounds checking
-    m_IR.Blocks.at(newIndex.ID).Attributes = Concat(m_AttributeStack);
+    auto newIndex = AllocBlock();
+    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
 
     for (auto&& i : ast.Notes)
     {
@@ -110,58 +103,59 @@ IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteSequence& ast)
     return newIndex;
 }
 
-IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteAndDuration& ast)
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteAndDuration& ast)
 {
     return {};
 }
 
-IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteRepeatExpression& ast)
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatExpression& ast)
 {
-    auto newIndex = IR::BlockReference{m_IR.Blocks.size()};
-    m_IR.Blocks.emplace_back();
-
-    // with bounds checking
-    m_IR.Blocks.at(newIndex.ID).Attributes = Concat(m_AttributeStack);
+    auto newIndex = AllocBlock();
+    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
 
     LimitRepeatCount(ast.Count, ast.Location);
 
-    std::vector<IR::BlockReference> childBlockRefArray(ast.Notes.size());
+    std::vector<IR::Block::EventType> childBlockEventArray(ast.Notes.size());
     std::transform(
         ast.Notes.begin(),
         ast.Notes.end(),
-        childBlockRefArray.begin(),
+        childBlockEventArray.begin(),
         [this] (auto&& x) { return x.apply_visitor(*this); }
     );
 
     for (std::size_t i = 0; i < ast.Count; i++)
     {
         auto& events = m_IR.Blocks[newIndex.ID].Events;
-        events.insert(events.end(), childBlockRefArray.begin(), childBlockRefArray.end());
+        events.insert(events.end(), childBlockEventArray.begin(), childBlockEventArray.end());
     }
 
     return newIndex;
 }
 
-IR::BlockReference Phrase2IRCompiler::operator()(const AST::NoteRepeatEachExpression& ast)
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatEachExpression& ast)
 {
-    auto newIndex = IR::BlockReference{m_IR.Blocks.size()};
-    m_IR.Blocks.emplace_back();
-
-    // with bounds checking
-    m_IR.Blocks.at(newIndex.ID).Attributes = Concat(m_AttributeStack);
+    auto newIndex = AllocBlock();
+    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
 
     LimitRepeatCount(ast.Count, ast.Location);
 
     for (auto&& i : ast.Notes)
     {
-        auto childBlockRef = i.apply_visitor(*this);
+        auto childBlockItem = i.apply_visitor(*this);
 
         for (std::size_t j = 0; j < ast.Count; j++)
         {
-            m_IR.Blocks[newIndex.ID].Events.emplace_back(childBlockRef);
+            m_IR.Blocks[newIndex.ID].Events.emplace_back(childBlockItem);
         }
     }
 
+    return newIndex;
+}
+
+IR::BlockReference Phrase2IRCompiler::AllocBlock()
+{
+    auto newIndex = IR::BlockReference{m_IR.Blocks.size()};
+    m_IR.Blocks.emplace_back();
     return newIndex;
 }
 
