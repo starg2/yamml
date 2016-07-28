@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <exceptions/invalidarg.hpp>
+
 namespace YAMML
 {
 
@@ -31,6 +33,29 @@ enum class NoteName
 class NoteNumber final
 {
 public:
+    NoteNumber() : Name(NoteName::C), Octave(4)
+    {
+    }
+
+    NoteNumber(NoteName name, int octave) : Name(name), Octave(octave)
+    {
+    }
+
+    NoteNumber(char name, int minor, int octave)
+    {
+        int n = (name == 'C') ? 0
+            : (name == 'D') ? 2
+            : (name == 'E') ? 4
+            : (name == 'F') ? 5
+            : (name == 'G') ? 7
+            : (name == 'A') ? 9
+            : (name == 'B') ? 11
+            : throw Exceptions::InvalidArgumentException("YAMML::MIDI::NoteNumber::NoteNumber: invalid name");
+
+        Name = static_cast<NoteName>(n + minor);
+        Octave = octave;
+    }
+
     int GetMIDINoteNumber() const
     {
         return static_cast<int>(Name) + Octave * 12;
