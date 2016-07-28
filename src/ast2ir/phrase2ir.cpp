@@ -27,6 +27,52 @@ namespace YAMML
 namespace AST2IR
 {
 
+class DurationCalculator final : public boost::static_visitor<>
+{
+public:
+    void operator()(const AST::SimpleDurationWithModifier& ast)
+    {
+        if (ast.Modifier.is_initialized())
+        {
+            m_Duration += 960 / (ast.Base.Number / 2) / ast.Modifier.get().Number;
+        }
+        else
+        {
+            m_Duration += 960 / ast.Base.Number;
+        }
+    }
+
+    void operator()(const AST::DurationSet& ast)
+    {
+        for (auto&& i : ast.Durations)
+        {
+            (*this)(i);
+        }
+    }
+
+    int GetDuration() const
+    {
+        return m_Duration;
+    }
+
+private:
+    int m_Duration = 0;
+};
+
+int CalculateDuration(const AST::NoteAndDuration& ast)
+{
+    if (ast.Duration.is_initialized())
+    {
+        DurationCalculator dc;
+        ast.Duration->apply_visitor(dc);
+        return dc.GetDuration();
+    }
+    else
+    {
+        return 480;
+    }
+}
+
 Phrase2IRCompiler::Phrase2IRCompiler(Compiler::CompilerBase& parentCompiler, IR::Module& ir)
     : NestedCompilerBase(parentCompiler), m_IR(ir)
 {
@@ -105,7 +151,13 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequence& ast)
 
 IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteAndDuration& ast)
 {
-    return {};
+    int duration = CalculateDuration(ast);
+    boost::variant<int> varDuration = duration;
+
+    auto newEvent = boost::apply_visitor(*this, ast.Note, varDuration);
+
+    m_DeltaTime += duration;
+    return newEvent;
 }
 
 IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatExpression& ast)
@@ -147,6 +199,37 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatEachExpr
         {
             m_IR.Blocks[newIndex.ID].Events.emplace_back(childBlockItem);
         }
+    }
+
+    return newIndex;
+}
+
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::Rest& ast, int duration)
+{
+    return IR::Event{m_DeltaTime, IR::Rest{}};
+}
+
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteNumber& ast, int duration)
+{
+    return IR::Event{
+        m_DeltaTime,
+        IR::Note{
+            MIDI::NoteNumber(ast.Name.Name, ast.Name.Minor, ast.Octave.get_value_or(AST::NoteOctave{4, ast.Location}).Value),
+            100,
+            duration,
+            100
+        }
+    };
+}
+
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::SimpleChord& ast, int duration)
+{
+    auto newIndex = AllocBlock();
+    m_IR.Blocks.at(newIndex.ID).Attributes = Concat(m_AttributeStack);
+
+    for (auto&& i : ast.Notes)
+    {
+        m_IR.Blocks[newIndex.ID].Events.emplace_back((*this)(i, duration));
     }
 
     return newIndex;

@@ -37,6 +37,10 @@ public:
     IR::Block::EventType operator()(const AST::NoteRepeatExpression& ast);
     IR::Block::EventType operator()(const AST::NoteRepeatEachExpression& ast);
 
+    IR::Block::EventType operator()(const AST::Rest& ast, int duration);
+    IR::Block::EventType operator()(const AST::NoteNumber& ast, int duration);
+    IR::Block::EventType operator()(const AST::SimpleChord& ast, int duration);
+
 private:
     IR::BlockReference AllocBlock();
     void Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index);
@@ -44,6 +48,7 @@ private:
 
     IR::Module& m_IR;
     std::deque<std::vector<AST::Attribute>> m_AttributeStack;
+    int m_DeltaTime = 0;
 };
 
 } // namespace AST2IR

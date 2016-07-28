@@ -12,12 +12,17 @@ namespace YAMML
 namespace IR
 {
 
+class Rest final
+{
+};
+
 class Event final
 {
 public:
     int Time;
     boost::variant<
         Note,
+        Rest,
         MIDI::PolyphonicAftertouch,
         MIDI::ControlChange,
         MIDI::ProgramChange,
