@@ -11,6 +11,7 @@ enum class MessageID
 {
     Unknown,
     UnknownInPhrase2IR,
+    UnknownInComposition2IR,
     DuplicatedCompositionName,
     DuplicatedPhraseName,
     TooLargeRepeatCount
