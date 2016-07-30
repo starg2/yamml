@@ -9,8 +9,8 @@
 #include <ast/attribute.hpp>
 #include <ast/composition.hpp>
 #include <compiler/nested.hpp>
-#include <ir/block.hpp>
 #include <ir/module.hpp>
+#include <ir/track.hpp>
 
 namespace YAMML
 {
@@ -24,7 +24,7 @@ public:
     Composition2IRCompiler(Compiler::CompilerBase& parentCompiler, IR::Module& ir);
 
     // Compiles ast into m_IR.Blocks[index.ID]
-    bool Compile(const AST::Composition& ast, IR::BlockReference index);
+    bool Compile(const AST::Composition& ast, IR::TrackBlockReference index);
 
 private:
     IR::Module& m_IR;

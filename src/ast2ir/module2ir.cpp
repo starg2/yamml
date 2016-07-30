@@ -1,5 +1,6 @@
 
 #include <ir/block.hpp>
+#include <ir/track.hpp>
 #include <message/message.hpp>
 
 #include "module2ir.hpp"
@@ -13,33 +14,6 @@ namespace YAMML
 namespace AST2IR
 {
 
-template<typename TCompiler, Message::MessageID TMessageID, typename TParentCompiler, typename TItem>
-bool ProcessItem(TParentCompiler& parentCompiler, IR::Module& ir, const TItem& item)
-{
-    auto itName = ir.BlockNameMap.find(item.Name);
-
-    if (itName != ir.BlockNameMap.end())
-    {
-        parentCompiler.AddMessage(
-            {
-                Message::MessageKind::Error,
-                TMessageID,
-                ir.Name,
-                item.Location,
-                {item.Name}
-            }
-        );
-
-        return false;
-    }
-
-    auto newIndex = IR::BlockReference{ir.Blocks.size()};
-    ir.BlockNameMap[item.Name] = newIndex;
-    ir.Blocks.emplace_back();
-
-    return TCompiler(parentCompiler, ir).Compile(item, newIndex);
-}
-
 boost::optional<IR::Module> Module2IRCompiler::Compile(const AST::Module& ast)
 {
     IR::Module ir;
@@ -47,7 +21,28 @@ boost::optional<IR::Module> Module2IRCompiler::Compile(const AST::Module& ast)
 
     for (auto&& i : ast.Phrases)
     {
-        if (!ProcessItem<Phrase2IRCompiler, Message::MessageID::DuplicatedPhraseName>(*this, ir, i))
+        auto itName = ir.BlockNameMap.find(i.Name);
+
+        if (itName != ir.BlockNameMap.end())
+        {
+            AddMessage(
+            {
+                Message::MessageKind::Error,
+                Message::MessageID::DuplicatedPhraseName,
+                ir.Name,
+                i.Location,
+                {i.Name}
+            }
+            );
+
+            return {};
+        }
+
+        auto newIndex = IR::BlockReference{ir.Blocks.size()};
+        ir.BlockNameMap[i.Name] = newIndex;
+        ir.Blocks.emplace_back();
+
+        if (!Phrase2IRCompiler(*this, ir).Compile(i, newIndex))
         {
             return {};
         }
@@ -55,7 +50,28 @@ boost::optional<IR::Module> Module2IRCompiler::Compile(const AST::Module& ast)
 
     for (auto&& i : ast.Compositions)
     {
-        if (!ProcessItem<Composition2IRCompiler, Message::MessageID::DuplicatedCompositionName>(*this, ir, i))
+        auto itName = ir.TrackBlockNameMap.find(i.Name);
+
+        if (itName != ir.TrackBlockNameMap.end())
+        {
+            AddMessage(
+            {
+                Message::MessageKind::Error,
+                Message::MessageID::DuplicatedCompositionName,
+                ir.Name,
+                i.Location,
+                {i.Name}
+            }
+            );
+
+            return {};
+        }
+
+        auto newIndex = IR::TrackBlockReference{ir.TrackBlocks.size()};
+        ir.TrackBlockNameMap[i.Name] = newIndex;
+        ir.TrackBlocks.emplace_back();
+
+        if (!Composition2IRCompiler(*this, ir).Compile(i, newIndex))
         {
             return {};
         }

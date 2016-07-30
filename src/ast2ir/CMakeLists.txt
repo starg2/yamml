@@ -3,6 +3,11 @@ set(AST2IRHeaders
     ../../include/ast2ir/ast2ir.hpp
     ../../include/compiler/base.hpp
     ../../include/compiler/nested.hpp
+    ../../include/ir/block.hpp
+    ../../include/ir/event.hpp
+    ../../include/ir/module.hpp
+    ../../include/ir/note.hpp
+    ../../include/ir/track.hpp
     composition2ir.hpp
     containerutil.hpp
     module2ir.hpp

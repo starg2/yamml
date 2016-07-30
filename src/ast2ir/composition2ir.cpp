@@ -15,7 +15,7 @@ Composition2IRCompiler::Composition2IRCompiler(Compiler::CompilerBase& parentCom
 {
 }
 
-bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::BlockReference index)
+bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlockReference index)
 {
     try
     {
