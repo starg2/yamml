@@ -27,6 +27,8 @@ namespace YAMML
 namespace AST2IR
 {
 
+constexpr int TickPerQuarter = 960;
+
 class DurationCalculator final : public boost::static_visitor<>
 {
 public:
@@ -34,11 +36,11 @@ public:
     {
         if (ast.Modifier.is_initialized())
         {
-            m_Duration += 960 / (ast.Base.Number / 2) / ast.Modifier.get().Number;
+            m_Duration += TickPerQuarter * 4 / (ast.Base.Number / 2) / ast.Modifier.get().Number;
         }
         else
         {
-            m_Duration += 960 / ast.Base.Number;
+            m_Duration += TickPerQuarter * 4 / ast.Base.Number;
         }
     }
 
@@ -69,7 +71,7 @@ int CalculateDuration(const AST::NoteAndDuration& ast)
     }
     else
     {
-        return 480;
+        return TickPerQuarter;
     }
 }
 
