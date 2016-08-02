@@ -114,7 +114,7 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequenceStatem
     AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
 
     // with bounds checking
-    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
+    m_IR.Blocks[newIndex.ID].Attributes = m_AttributeStack.back();
 
     if (ast.NoteSeq.is_initialized())
     {
@@ -138,7 +138,7 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequenceBlock&
 IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequence& ast)
 {
     auto newIndex = AllocBlock();
-    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
+    m_IR.Blocks[newIndex.ID].Attributes = m_AttributeStack.back();
 
     for (auto&& i : ast.Notes)
     {
@@ -165,7 +165,7 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteAndDuration& a
 IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatExpression& ast)
 {
     auto newIndex = AllocBlock();
-    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
+    m_IR.Blocks[newIndex.ID].Attributes = m_AttributeStack.back();
 
     LimitRepeatCount(ast.Count, ast.Location);
 
@@ -189,7 +189,7 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatExpressi
 IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatEachExpression& ast)
 {
     auto newIndex = AllocBlock();
-    m_IR.Blocks[newIndex.ID].Attributes = Concat(m_AttributeStack);
+    m_IR.Blocks[newIndex.ID].Attributes = m_AttributeStack.back();
 
     LimitRepeatCount(ast.Count, ast.Location);
 
@@ -227,7 +227,7 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteNumber& ast, i
 IR::Block::EventType Phrase2IRCompiler::operator()(const AST::SimpleChord& ast, int duration)
 {
     auto newIndex = AllocBlock();
-    m_IR.Blocks.at(newIndex.ID).Attributes = Concat(m_AttributeStack);
+    m_IR.Blocks.at(newIndex.ID).Attributes = m_AttributeStack.back();
 
     for (auto&& i : ast.Notes)
     {
@@ -247,7 +247,7 @@ IR::BlockReference Phrase2IRCompiler::AllocBlock()
 void Phrase2IRCompiler::Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index)
 {
     // with bounds checking
-    m_IR.Blocks.at(index.ID).Attributes = Concat(m_AttributeStack);
+    m_IR.Blocks.at(index.ID).Attributes = m_AttributeStack.back();
 
     for (auto&& i : ast.Sequences)
     {
