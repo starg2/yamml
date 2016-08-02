@@ -33,7 +33,7 @@ class Track final
 public:
     std::vector<AST::Attribute> Attributes;
     int Number;
-    std::vector<TrackItem> Blocks;
+    std::vector<TrackItem> Items;
 };
 
 class TrackList final

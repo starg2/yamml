@@ -14,6 +14,7 @@ enum class MessageID
     UnknownInComposition2IR,
     DuplicatedCompositionName,
     DuplicatedPhraseName,
+    NoSuchPhraseName,
     TooLargeRepeatCount
 };
 

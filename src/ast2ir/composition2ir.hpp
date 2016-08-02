@@ -30,6 +30,9 @@ public:
     IR::TrackBlock::BlockType operator()(const AST::TrackListBlock& ast);
 
 private:
+    IR::Track Compile(const AST::TrackBlock& ast);
+    IR::TrackItem Compile(const AST::TrackItem& ast);
+
     IR::Module& m_IR;
     std::deque<std::vector<AST::Attribute>> m_AttributeStack;
 };

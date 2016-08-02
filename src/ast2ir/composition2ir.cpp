@@ -1,4 +1,8 @@
 
+#include <algorithm>
+#include <iterator>
+
+#include <exceptions/messageexception.hpp>
 #include <message/message.hpp>
 
 #include "composition2ir.hpp"
@@ -55,14 +59,56 @@ IR::TrackBlock::BlockType Composition2IRCompiler::operator()(const AST::TrackLis
 {
     IR::TrackList trackList;
     trackList.Attributes = ast.Attributes;
-    trackList.Tracks.reserve(ast.Tracks.size());
 
-    for (auto&& i : ast.Tracks)
-    {
-
-    }
+    std::transform(
+        ast.Tracks.begin(),
+        ast.Tracks.end(),
+        std::back_inserter(trackList.Tracks),
+        [this] (auto&& x) { return this->Compile(x); }
+    );
 
     return trackList;
+}
+
+IR::Track Composition2IRCompiler::Compile(const AST::TrackBlock& ast)
+{
+    std::vector<IR::TrackItem> items;
+
+    std::transform(
+        ast.Items.begin(),
+        ast.Items.end(),
+        std::back_inserter(items),
+        [this] (auto&& x) { return this->Compile(x); }
+    );
+
+    return IR::Track{
+        ast.Attributes,
+        ast.TrackNumber,
+        items
+    };
+}
+
+IR::TrackItem Composition2IRCompiler::Compile(const AST::TrackItem& ast)
+{
+    auto itName = m_IR.BlockNameMap.find(ast.PhraseName);
+
+    if (itName == m_IR.BlockNameMap.end())
+    {
+        throw Exceptions::MessageException(
+            {
+                Message::MessageKind::Error,
+                Message::MessageID::NoSuchPhraseName,
+                m_IR.Name,
+                ast.Location,
+                {ast.PhraseName}
+            }
+        );
+    }
+
+    return IR::TrackItem{
+        ast.Attributes,
+        IR::BlockReference{static_cast<std::size_t>(std::distance(m_IR.BlockNameMap.begin(), itName))}
+    };
 }
 
 } // namespace AST2IR
