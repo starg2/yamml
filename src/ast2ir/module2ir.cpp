@@ -26,13 +26,13 @@ boost::optional<IR::Module> Module2IRCompiler::Compile(const AST::Module& ast)
         if (itName != ir.BlockNameMap.end())
         {
             AddMessage(
-            {
-                Message::MessageKind::Error,
-                Message::MessageID::DuplicatedPhraseName,
-                ir.Name,
-                i.Location,
-                {i.Name}
-            }
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::DuplicatedPhraseName,
+                    ir.Name,
+                    i.Location,
+                    {i.Name}
+                }
             );
 
             return {};
@@ -55,13 +55,13 @@ boost::optional<IR::Module> Module2IRCompiler::Compile(const AST::Module& ast)
         if (itName != ir.TrackBlockNameMap.end())
         {
             AddMessage(
-            {
-                Message::MessageKind::Error,
-                Message::MessageID::DuplicatedCompositionName,
-                ir.Name,
-                i.Location,
-                {i.Name}
-            }
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::DuplicatedCompositionName,
+                    ir.Name,
+                    i.Location,
+                    {i.Name}
+                }
             );
 
             return {};
