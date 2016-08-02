@@ -21,11 +21,19 @@ public:
     std::size_t ID;
 };
 
+class TrackItem final
+{
+public:
+    std::vector<AST::Attribute> Attributes;
+    IR::BlockReference Block;
+};
+
 class Track final
 {
 public:
+    std::vector<AST::Attribute> Attributes;
     int Number;
-    std::vector<IR::BlockReference> Blocks;
+    std::vector<TrackItem> Blocks;
 };
 
 class TrackList final
