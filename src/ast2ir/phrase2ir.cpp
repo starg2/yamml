@@ -90,6 +90,11 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
         Compile(ast.Block, index);
         return true;
     }
+    catch (const Exceptions::MessageException& e)
+    {
+        AddMessage(e.Item);
+        return false;
+    }
     catch (const std::exception& e)
     {
         AddMessage(

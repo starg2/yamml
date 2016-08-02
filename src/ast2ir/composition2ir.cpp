@@ -32,6 +32,11 @@ bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlock
 
         return true;
     }
+    catch (const Exceptions::MessageException& e)
+    {
+        AddMessage(e.Item);
+        return false;
+    }
     catch (const std::exception& e)
     {
         AddMessage(
