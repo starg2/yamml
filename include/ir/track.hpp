@@ -31,6 +31,7 @@ public:
 class TrackList final
 {
 public:
+    std::vector<AST::Attribute> Attributes;
     std::vector<Track> Tracks;
 };
 

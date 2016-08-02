@@ -21,6 +21,12 @@ bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlock
     {
         m_AttributeStack.push_back(ast.Attributes);
         AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
+        m_IR.TrackBlocks.at(index.ID).Attributes = m_AttributeStack.back();
+
+        for (auto&& i : ast.Statements)
+        {
+            m_IR.TrackBlocks[index.ID].Blocks.push_back(i.apply_visitor(*this));
+        }
 
         return true;
     }
@@ -38,6 +44,25 @@ bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlock
 
         return false;
     }
+}
+
+IR::TrackBlock::BlockType Composition2IRCompiler::operator()(const AST::Command& ast)
+{
+    return ast;
+}
+
+IR::TrackBlock::BlockType Composition2IRCompiler::operator()(const AST::TrackListBlock& ast)
+{
+    IR::TrackList trackList;
+    trackList.Attributes = ast.Attributes;
+    trackList.Tracks.reserve(ast.Tracks.size());
+
+    for (auto&& i : ast.Tracks)
+    {
+
+    }
+
+    return trackList;
 }
 
 } // namespace AST2IR
