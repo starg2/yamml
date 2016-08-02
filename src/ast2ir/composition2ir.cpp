@@ -23,9 +23,7 @@ bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlock
 {
     try
     {
-        m_AttributeStack.push_back(ast.Attributes);
-        AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
-        m_IR.TrackBlocks.at(index.ID).Attributes = m_AttributeStack.back();
+        m_IR.TrackBlocks.at(index.ID).Attributes = ast.Attributes;
 
         for (auto&& i : ast.Statements)
         {

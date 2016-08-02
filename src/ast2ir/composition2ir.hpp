@@ -1,9 +1,6 @@
 
 #pragma once
 
-#include <deque>
-#include <vector>
-
 #include <boost/variant.hpp>
 
 #include <ast/attribute.hpp>
@@ -34,7 +31,6 @@ private:
     IR::TrackItem Compile(const AST::TrackItem& ast);
 
     IR::Module& m_IR;
-    std::deque<std::vector<AST::Attribute>> m_AttributeStack;
 };
 
 } // namespace AST2IR
