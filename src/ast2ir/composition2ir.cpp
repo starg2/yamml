@@ -37,13 +37,13 @@ bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlock
     catch (const std::exception& e)
     {
         AddMessage(
-        {
-            Message::MessageKind::FetalError,
-            Message::MessageID::UnknownInComposition2IR,
-            m_IR.Name,
-            ast.Location,
-            {ast.Name, e.what()}
-        }
+            Message::MessageItem{
+                Message::MessageKind::FetalError,
+                Message::MessageID::UnknownInComposition2IR,
+                m_IR.Name,
+                ast.Location,
+                {ast.Name, e.what()}
+            }
         );
 
         return false;

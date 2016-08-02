@@ -93,13 +93,13 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
     catch (const std::exception& e)
     {
         AddMessage(
-        {
-            Message::MessageKind::FetalError,
-            Message::MessageID::UnknownInPhrase2IR,
-            m_IR.Name,
-            ast.Location,
-            {ast.Name, e.what()}
-        }
+            Message::MessageItem{
+                Message::MessageKind::FetalError,
+                Message::MessageID::UnknownInPhrase2IR,
+                m_IR.Name,
+                ast.Location,
+                {ast.Name, e.what()}
+            }
         );
 
         return false;
@@ -263,12 +263,12 @@ void Phrase2IRCompiler::LimitRepeatCount(std::size_t count, const AST::SourceLoc
     {
         throw Exceptions::MessageException(
             Message::MessageItem{
-            Message::MessageKind::Error,
-            Message::MessageID::TooLargeRepeatCount,
-            m_IR.Name,
-            location,
-            {std::to_string(count), std::to_string(MaxRepeatCount)}
-        }
+                Message::MessageKind::Error,
+                Message::MessageID::TooLargeRepeatCount,
+                m_IR.Name,
+                location,
+                {std::to_string(count), std::to_string(MaxRepeatCount)}
+            }
         );
     }
 }
