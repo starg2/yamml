@@ -11,6 +11,8 @@ namespace YAMML
 namespace IR2MIDI
 {
 
+constexpr int TrackNumberSafeLimit = 256;
+
 bool IR2MIDICompiler::Compile(const IR::Module& ir, const std::string& entryPoint)
 {
     try
@@ -56,7 +58,7 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
     for (auto&& i : ir.Tracks)
     {
         CheckForUnprocessedAttributes(i.Attributes);
-
+        EnsureTrackInitialized(i.Number);
 
     }
 }
@@ -115,6 +117,27 @@ void IR2MIDICompiler::CheckForUnprocessedAttributes(const std::vector<AST::Attri
                 {attributes.at(0).Name}
             }
         );
+    }
+}
+
+void IR2MIDICompiler::EnsureTrackInitialized(int number)
+{
+    if (!(0 <= number && number < TrackNumberSafeLimit))
+    {
+        throw Exceptions::MessageException(
+            Message::MessageItem{
+                Message::MessageKind::FetalError,
+                Message::MessageID::TrackNumberIsOutOfSafeRange,
+                m_Name,
+                {0, 0},
+                {std::to_string(number), std::to_string(TrackNumberSafeLimit)}
+            }
+        );
+    }
+
+    if (static_cast<std::size_t>(number) >= m_MIDI.Tracks.size())
+    {
+        m_MIDI.Tracks.resize(number + 1);
     }
 }
 

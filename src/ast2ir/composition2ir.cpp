@@ -1,6 +1,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <string>
 
 #include <exceptions/messageexception.hpp>
 #include <message/message.hpp>
@@ -13,6 +14,8 @@ namespace YAMML
 
 namespace AST2IR
 {
+
+constexpr int TrackNumberLimit = 16;
 
 Composition2IRCompiler::Composition2IRCompiler(Compiler::CompilerBase& parentCompiler, IR::Module& ir)
     : NestedCompilerBase(parentCompiler), m_IR(ir)
@@ -75,6 +78,19 @@ IR::TrackBlock::BlockType Composition2IRCompiler::operator()(const AST::TrackLis
 
 IR::Track Composition2IRCompiler::Compile(const AST::TrackBlock& ast)
 {
+    if (!(0 <= ast.TrackNumber && ast.TrackNumber < TrackNumberLimit))
+    {
+        throw Exceptions::MessageException(
+            Message::MessageItem{
+                Message::MessageKind::Error,
+                Message::MessageID::TrackNumberIsOutOfPreferredRange,
+                m_IR.Name,
+                ast.Location,
+                {std::to_string(ast.TrackNumber), std::to_string(TrackNumberLimit)}
+            }
+        );
+    }
+
     std::vector<IR::TrackItem> items;
 
     std::transform(

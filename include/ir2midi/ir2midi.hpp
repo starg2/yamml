@@ -31,6 +31,7 @@ public:
 private:
     bool CompileTrackBlock(const IR::Module& ir, const std::string& trackBlockName);
     void CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes);
+    void EnsureTrackInitialized(int number);
 
     std::string m_Name;
     MIDI::MIDIFile m_MIDI;

@@ -19,6 +19,8 @@ enum class MessageID
     DuplicatedPhraseName,
     NoSuchPhraseName,
     NoSuchCompositionName,
+    TrackNumberIsOutOfSafeRange,
+    TrackNumberIsOutOfPreferredRange,
     TooLargeRepeatCount
 };
 
