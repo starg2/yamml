@@ -20,7 +20,9 @@ namespace IR2MIDI
 class IR2MIDICompiler : public Compiler::CompilerBase, public boost::static_visitor<>
 {
 public:
-    bool Compile(const IR::Module& ir, const std::string& entryPoint);
+    IR2MIDICompiler(const IR::Module& ir);
+
+    bool Compile(const std::string& entryPoint);
 
     MIDI::MIDIFile& GetMIDI();
     const MIDI::MIDIFile& GetMIDI() const;
@@ -29,11 +31,11 @@ public:
     void operator()(const AST::Command& ast);
 
 private:
-    bool CompileTrackBlock(const IR::Module& ir, const std::string& trackBlockName);
+    bool CompileTrackBlock(const std::string& trackBlockName);
     void CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes);
     void EnsureTrackInitialized(int number);
 
-    std::string m_Name;
+    const IR::Module& m_IR;
     MIDI::MIDIFile m_MIDI;
 };
 

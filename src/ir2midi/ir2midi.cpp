@@ -13,12 +13,15 @@ namespace IR2MIDI
 
 constexpr int TrackNumberSafeLimit = 256;
 
-bool IR2MIDICompiler::Compile(const IR::Module& ir, const std::string& entryPoint)
+IR2MIDICompiler::IR2MIDICompiler(const IR::Module& ir) : m_IR(ir)
+{
+}
+
+bool IR2MIDICompiler::Compile(const std::string& entryPoint)
 {
     try
     {
-        m_Name = ir.Name;
-        return CompileTrackBlock(ir, entryPoint);
+        return CompileTrackBlock(entryPoint);
     }
     catch (const Exceptions::MessageException& e)
     {
@@ -31,7 +34,7 @@ bool IR2MIDICompiler::Compile(const IR::Module& ir, const std::string& entryPoin
             Message::MessageItem{
                 Message::MessageKind::FetalError,
                 Message::MessageID::UnknownInIR2MIDI,
-                ir.Name,
+                m_IR.Name,
                 {0, 0},
                 {e.what()}
             }
@@ -69,24 +72,24 @@ void IR2MIDICompiler::operator()(const AST::Command& ast)
         Message::MessageItem{
             Message::MessageKind::FetalError,
             Message::MessageID::UnprocessedCommand,
-            m_Name,
+            m_IR.Name,
             ast.Location,
             {ast.Name}
         }
     );
 }
 
-bool IR2MIDICompiler::CompileTrackBlock(const IR::Module& ir, const std::string& trackBlockName)
+bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
 {
-    auto itTrack = ir.TrackBlockNameMap.find(trackBlockName);
+    auto itTrack = m_IR.TrackBlockNameMap.find(trackBlockName);
 
-    if (itTrack == ir.TrackBlockNameMap.end())
+    if (itTrack == m_IR.TrackBlockNameMap.end())
     {
         throw Exceptions::MessageException(
             Message::MessageItem{
                 Message::MessageKind::Error,
                 Message::MessageID::NoSuchCompositionName,
-                ir.Name,
+                m_IR.Name,
                 {0, 0},
                 {trackBlockName}
             }
@@ -94,9 +97,9 @@ bool IR2MIDICompiler::CompileTrackBlock(const IR::Module& ir, const std::string&
     }
 
     // with bounds checking
-    CheckForUnprocessedAttributes(ir.TrackBlocks.at(itTrack->second.ID).Attributes);
+    CheckForUnprocessedAttributes(m_IR.TrackBlocks.at(itTrack->second.ID).Attributes);
 
-    for (auto&& i : ir.TrackBlocks[itTrack->second.ID].Blocks)
+    for (auto&& i : m_IR.TrackBlocks[itTrack->second.ID].Blocks)
     {
         i.apply_visitor(*this);
     }
@@ -112,7 +115,7 @@ void IR2MIDICompiler::CheckForUnprocessedAttributes(const std::vector<AST::Attri
             Message::MessageItem{
                 Message::MessageKind::FetalError,
                 Message::MessageID::UnprocessedAttribute,
-                m_Name,
+                m_IR.Name,
                 attributes.at(0).Location,
                 {attributes.at(0).Name}
             }
@@ -128,7 +131,7 @@ void IR2MIDICompiler::EnsureTrackInitialized(int number)
             Message::MessageItem{
                 Message::MessageKind::FetalError,
                 Message::MessageID::TrackNumberIsOutOfSafeRange,
-                m_Name,
+                m_IR.Name,
                 {0, 0},
                 {std::to_string(number), std::to_string(TrackNumberSafeLimit)}
             }
