@@ -15,6 +15,7 @@ bool IR2MIDICompiler::Compile(const IR::Module& ir, const std::string& entryPoin
 {
     try
     {
+        m_Name = ir.Name;
         return CompileTrackBlock(ir, entryPoint);
     }
     catch (const Exceptions::MessageException& e)
@@ -48,9 +49,73 @@ const MIDI::MIDIFile& IR2MIDICompiler::GetMIDI() const
     return m_MIDI;
 }
 
-bool IR2MIDICompiler::CompileTrackBlock(const IR::Module& ir, const std::string& trackBlock)
+void IR2MIDICompiler::operator()(const IR::TrackList& ir)
 {
-    return false;
+    CheckForUnprocessedAttributes(ir.Attributes);
+
+    for (auto&& i : ir.Tracks)
+    {
+        CheckForUnprocessedAttributes(i.Attributes);
+
+
+    }
+}
+
+void IR2MIDICompiler::operator()(const AST::Command& ast)
+{
+    throw Exceptions::MessageException(
+        Message::MessageItem{
+            Message::MessageKind::FetalError,
+            Message::MessageID::UnprocessedCommand,
+            m_Name,
+            ast.Location,
+            {ast.Name}
+        }
+    );
+}
+
+bool IR2MIDICompiler::CompileTrackBlock(const IR::Module& ir, const std::string& trackBlockName)
+{
+    auto itTrack = ir.TrackBlockNameMap.find(trackBlockName);
+
+    if (itTrack == ir.TrackBlockNameMap.end())
+    {
+        throw Exceptions::MessageException(
+            Message::MessageItem{
+                Message::MessageKind::Error,
+                Message::MessageID::NoSuchCompositionName,
+                ir.Name,
+                {0, 0},
+                {trackBlockName}
+            }
+        );
+    }
+
+    // with bounds checking
+    CheckForUnprocessedAttributes(ir.TrackBlocks.at(itTrack->second.ID).Attributes);
+
+    for (auto&& i : ir.TrackBlocks[itTrack->second.ID].Blocks)
+    {
+        i.apply_visitor(*this);
+    }
+
+    return true;
+}
+
+void IR2MIDICompiler::CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes)
+{
+    if (!attributes.empty())
+    {
+        throw Exceptions::MessageException(
+            Message::MessageItem{
+                Message::MessageKind::FetalError,
+                Message::MessageID::UnprocessedAttribute,
+                m_Name,
+                attributes.at(0).Location,
+                {attributes.at(0).Name}
+            }
+        );
+    }
 }
 
 } // namespace IR2MIDI
