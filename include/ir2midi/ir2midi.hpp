@@ -28,11 +28,15 @@ public:
 class TrackCompilerContext final
 {
 public:
+    void EnterBlock();
     void PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev);
+    void SortEvents();
+    const std::vector<AbsoluteMIDIEvent>& GetEvents() const;
 
 private:
     std::vector<AbsoluteMIDIEvent> m_Events;
     int m_BaseTimeForCurrentBlock = 0;
+    int m_LastEventTime = 0;
 };
 
 class IR2MIDICompiler : public Compiler::CompilerBase, public boost::static_visitor<>
@@ -54,6 +58,8 @@ public:
 private:
     bool CompileTrackBlock(const std::string& trackBlockName);
     void CompileBlock(int trackNumber, IR::BlockReference blockRef);
+    void Finalize();
+
     void CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes);
     void EnsureTrackInitialized(int number);
 

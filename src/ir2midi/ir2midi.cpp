@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <exception>
 
 #include <boost/variant.hpp>
@@ -75,9 +76,25 @@ private:
 };
 
 
+void TrackCompilerContext::EnterBlock()
+{
+    m_BaseTimeForCurrentBlock = m_LastEventTime;
+}
+
 void TrackCompilerContext::PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev)
 {
+    m_LastEventTime = m_BaseTimeForCurrentBlock + relativeTime;
     m_Events.push_back(AbsoluteMIDIEvent{m_BaseTimeForCurrentBlock + relativeTime, ev});
+}
+
+void TrackCompilerContext::SortEvents()
+{
+    std::sort(m_Events.begin(), m_Events.end(), [] (auto&& lhs, auto&& rhs) { return lhs.AbsoluteTime < rhs.AbsoluteTime; });
+}
+
+const std::vector<AbsoluteMIDIEvent>& TrackCompilerContext::GetEvents() const
+{
+    return m_Events;
 }
 
 IR2MIDICompiler::IR2MIDICompiler(const IR::Module& ir) : m_IR(ir)
@@ -88,7 +105,15 @@ bool IR2MIDICompiler::Compile(const std::string& entryPoint)
 {
     try
     {
-        return CompileTrackBlock(entryPoint);
+        if (CompileTrackBlock(entryPoint))
+        {
+            Finalize();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     catch (const Exceptions::MessageException& e)
     {
@@ -192,6 +217,8 @@ bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
 
 void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
 {
+    GetTrackContext(trackNumber).EnterBlock();
+
     const auto& block = m_IR.Blocks.at(blockRef.ID);
     CheckForUnprocessedAttributes(block.Attributes);
 
@@ -200,6 +227,24 @@ void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
     for (auto&& i : block.Events)
     {
         boost::apply_visitor(*this, varTrackNumber, i);
+    }
+}
+
+void IR2MIDICompiler::Finalize()
+{
+    for (std::size_t i = 0; i < m_MIDI.Tracks.size(); i++)
+    {
+        GetTrackContext(i).SortEvents();
+
+        int prevTime = 0;
+
+        for (auto&& j : GetTrackContext(i).GetEvents())
+        {
+            m_MIDI.Tracks[i].Events.push_back(MIDI::MIDIEvent{j.AbsoluteTime - prevTime, j.Event});
+            prevTime = j.AbsoluteTime;
+        }
+
+        m_MIDI.Tracks[i].Events.push_back(MIDI::MIDIEvent{prevTime + 10, MIDI::MetaEvent{MIDI::MetaEventKind::EndOfTrack}});
     }
 }
 
