@@ -166,8 +166,7 @@ public:
 class MIDIEvent final
 {
 public:
-    int DeltaTime;
-    boost::variant<
+    using EventType = boost::variant<
         NoteOff,
         NoteOn,
         PolyphonicAftertouch,
@@ -177,7 +176,10 @@ public:
         PitchBend,
         SysExEvent,
         MetaEvent
-    > Event;
+    >;
+
+    int DeltaTime;
+    EventType Event;
 };
 
 } // namespace MIDI

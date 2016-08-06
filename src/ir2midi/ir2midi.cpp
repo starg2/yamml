@@ -1,6 +1,8 @@
 
 #include <exception>
 
+#include <boost/variant.hpp>
+
 #include <exceptions/messageexception.hpp>
 #include <ir2midi/ir2midi.hpp>
 #include <message/message.hpp>
@@ -12,6 +14,11 @@ namespace IR2MIDI
 {
 
 constexpr int TrackNumberSafeLimit = 256;
+
+void TrackCompilerContext::PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev)
+{
+    m_Events.push_back(AbsoluteMIDIEvent{m_BaseTimeForCurrentBlock + relativeTime, ev});
+}
 
 IR2MIDICompiler::IR2MIDICompiler(const IR::Module& ir) : m_IR(ir)
 {
@@ -63,6 +70,11 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
         CheckForUnprocessedAttributes(i.Attributes);
         EnsureTrackInitialized(i.Number);
 
+        for (auto&& j : i.Items)
+        {
+            CheckForUnprocessedAttributes(j.Attributes);
+            CompileBlock(i.Number, j.Block);
+        }
     }
 }
 
@@ -77,6 +89,16 @@ void IR2MIDICompiler::operator()(const AST::Command& ast)
             {ast.Name}
         }
     );
+}
+
+void IR2MIDICompiler::operator()(int trackNumber, const IR::Event& ev)
+{
+
+}
+
+void IR2MIDICompiler::operator()(int trackNumber, const IR::BlockReference& blockRef)
+{
+    CompileBlock(trackNumber, blockRef);
 }
 
 bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
@@ -105,6 +127,19 @@ bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
     }
 
     return true;
+}
+
+void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
+{
+    const auto& block = m_IR.Blocks.at(blockRef.ID);
+    CheckForUnprocessedAttributes(block.Attributes);
+
+    boost::variant<int> varTrackNumber = trackNumber;
+
+    for (auto&& i : block.Events)
+    {
+        boost::apply_visitor(*this, varTrackNumber, i);
+    }
 }
 
 void IR2MIDICompiler::CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes)
@@ -141,7 +176,18 @@ void IR2MIDICompiler::EnsureTrackInitialized(int number)
     if (static_cast<std::size_t>(number) >= m_MIDI.Tracks.size())
     {
         m_MIDI.Tracks.resize(number + 1);
+        m_Contexts.resize(number + 1);
     }
+}
+
+MIDI::MIDITrack& IR2MIDICompiler::GetTrack(int trackNumber)
+{
+    return m_MIDI.Tracks[static_cast<std::size_t>(trackNumber)];
+}
+
+TrackCompilerContext& IR2MIDICompiler::GetTrackContext(int trackNumber)
+{
+    return m_Contexts[static_cast<std::size_t>(trackNumber)];
 }
 
 } // namespace IR2MIDI
