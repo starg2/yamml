@@ -5,6 +5,7 @@
 
 #include <ir/note.hpp>
 #include <midi/event.hpp>
+#include <midi/note.hpp>
 
 namespace YAMML
 {
@@ -16,21 +17,55 @@ class Rest final
 {
 };
 
+class PolyphonicAftertouch final
+{
+public:
+    MIDI::NoteNumber Note;
+    int Pressure;
+};
+
+class ControlChange final
+{
+public:
+    MIDI::ControllerNumber Control;
+    int Value;
+};
+
+class ProgramChange final
+{
+public:
+    int Program;
+};
+
+class Aftertouch final
+{
+public:
+    int Pressure;
+};
+
+class PitchBend final
+{
+public:
+    int Value;
+};
+
 class Event final
 {
 public:
-    int Time;
-    boost::variant<
+    using EventType = boost::variant<
         Note,
         Rest,
-        MIDI::PolyphonicAftertouch,
-        MIDI::ControlChange,
-        MIDI::ProgramChange,
-        MIDI::Aftertouch,
-        MIDI::PitchBend,
+        PolyphonicAftertouch,
+        ControlChange,
+        ProgramChange,
+        Aftertouch,
+        PitchBend,
         MIDI::SysExEvent,
         MIDI::MetaEvent
-    > Value;
+    >;
+
+    int Time;
+    EventType Value;
 };
 
 } // namespace IR
