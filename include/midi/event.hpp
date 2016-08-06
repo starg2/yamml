@@ -19,25 +19,25 @@ namespace MIDI
 class NoteOff final
 {
 public:
-    int Channel = 0;
-    NoteNumber Note = {NoteName::C, 5};
-    int Velocity = 0;
+    int Channel;
+    NoteNumber Note;
+    int Velocity;
 };
 
 class NoteOn final
 {
 public:
-    int Channel = 0;
-    NoteNumber Note = {NoteName::C, 5};
-    int Velocity = 0;
+    int Channel;
+    NoteNumber Note;
+    int Velocity;
 };
 
 class PolyphonicAftertouch final
 {
 public:
-    int Channel = 0;
-    NoteNumber Note = {NoteName::C, 5};
-    int Pressure = 0;
+    int Channel;
+    NoteNumber Note;
+    int Pressure;
 };
 
 // http://nickfever.com/music/midi-cc-list
@@ -110,30 +110,30 @@ enum class ControllerNumber : std::uint8_t
 class ControlChange final
 {
 public:
-    int Channel = 0;
-    ControllerNumber Control = ControllerNumber::AllNotesOff;
-    int Value = 0;
+    int Channel;
+    ControllerNumber Control;
+    int Value;
 };
 
 class ProgramChange final
 {
 public:
-    int Channel = 0;
-    int Program = 0;
+    int Channel;
+    int Program;
 };
 
 class Aftertouch final
 {
 public:
-    int Channel = 0;
-    int Pressure = 0;
+    int Channel;
+    int Pressure;
 };
 
 class PitchBend final
 {
 public:
-    int Channel = 0;
-    int Value = 0;
+    int Channel;
+    int Value;
 };
 
 class SysExEvent final

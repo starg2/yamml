@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(Test1)
 
 	midi.Tracks.emplace_back();
 	midi.Tracks[0].Events.assign({
-		MIDI::MIDIEvent{200, MIDI::NoteOff{}},
+        MIDI::MIDIEvent{200, MIDI::NoteOff{0, {MIDI::NoteName::C, 5}, 0}},
 		MIDI::MIDIEvent{400, MIDI::MetaEvent{MIDI::MetaEventKind::EndOfTrack}}
 	});
 
