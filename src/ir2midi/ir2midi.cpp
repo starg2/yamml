@@ -15,6 +15,66 @@ namespace IR2MIDI
 
 constexpr int TrackNumberSafeLimit = 256;
 
+class EventConverter final : public boost::static_visitor<>
+{
+public:
+    EventConverter(TrackCompilerContext& context, int relativeTime, int channel)
+        : m_Context(context), m_RelativeTime{relativeTime}, m_Channel{channel}
+    {
+    }
+
+    void operator()(const IR::Note& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, MIDI::NoteOn{m_Channel, ev.Number, ev.OnVelocity});
+        m_Context.PushEvent(m_RelativeTime + ev.Duration, MIDI::NoteOff{m_Channel, ev.Number, ev.OffVelocity});
+    }
+
+    void operator()(const IR::Rest&)
+    {
+    }
+
+    void operator()(const IR::PolyphonicAftertouch& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, MIDI::PolyphonicAftertouch{m_Channel, ev.Note, ev.Pressure});
+    }
+
+    void operator()(const IR::ControlChange& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, MIDI::ControlChange{m_Channel, ev.Control, ev.Value});
+    }
+
+    void operator()(const IR::ProgramChange& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, MIDI::ProgramChange{m_Channel, ev.Program});
+    }
+
+    void operator()(const IR::Aftertouch& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, MIDI::Aftertouch{m_Channel, ev.Pressure});
+    }
+
+    void operator()(const IR::PitchBend& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, MIDI::PitchBend{m_Channel, ev.Value});
+    }
+
+    void operator()(const MIDI::SysExEvent& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, ev);
+    }
+
+    void operator()(const MIDI::MetaEvent& ev)
+    {
+        m_Context.PushEvent(m_RelativeTime, ev);
+    }
+
+private:
+    TrackCompilerContext& m_Context;
+    int m_RelativeTime;
+    int m_Channel;
+};
+
+
 void TrackCompilerContext::PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev)
 {
     m_Events.push_back(AbsoluteMIDIEvent{m_BaseTimeForCurrentBlock + relativeTime, ev});
@@ -93,7 +153,8 @@ void IR2MIDICompiler::operator()(const AST::Command& ast)
 
 void IR2MIDICompiler::operator()(int trackNumber, const IR::Event& ev)
 {
-
+    EventConverter ec(GetTrackContext(trackNumber), ev.Time, trackNumber);
+    ev.Value.apply_visitor(ec);
 }
 
 void IR2MIDICompiler::operator()(int trackNumber, const IR::BlockReference& blockRef)
