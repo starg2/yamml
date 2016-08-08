@@ -4,8 +4,6 @@ enable_testing()
 
 project(YAMML VERSION ${PROJECT_VERSION})
 
-set(CMAKE_CXX_STANDARD 14)
-
 set(PEGTLIncludeDir "../PEGTL" CACHE PATH "PEGTL include directory")
 set(YAMMLStaticLink FALSE CACHE BOOL "Link libraries statically")
 set(YAMMLStaticCRT FALSE CACHE BOOL "Use static link CRT")
@@ -27,6 +25,12 @@ add_definitions(
     -D_CRT_SECURE_NO_WARNINGS
 )
 
+if("${MSVC}")
+    add_compile_options(/EHsc /W4)
+else()
+    add_compile_options(-std=c++1z -Wall -Wextra)
+endif()
+
 if("${MSVC}" AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 19.00.23918))
     set(MSVC14_3_OR_GREATER 1)
     add_compile_options(/std:c++latest)
@@ -46,6 +50,7 @@ if(${YAMMLStaticCRT})
         CMAKE_C_FLAGS_DEBUG
         CMAKE_C_FLAGS_RELEASE
         )
+
     foreach(CompilerFlag ${CompilerFlags})
       string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
     endforeach()
