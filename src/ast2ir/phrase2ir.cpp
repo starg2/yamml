@@ -147,10 +147,17 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequence& ast)
 
     for (auto&& i : ast.Notes)
     {
+        int startTime = m_DeltaTime;
+        int endTime = startTime;
+
         for (auto&& j : i.Notes)
         {
             m_IR.Blocks[newIndex.ID].Events.emplace_back(j.apply_visitor(*this));
+            endTime = std::max(endTime, m_DeltaTime);
+            m_DeltaTime = startTime;
         }
+
+        m_DeltaTime = endTime;
     }
 
     return newIndex;
