@@ -220,6 +220,9 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatEachExpr
 
 IR::Block::EventType Phrase2IRCompiler::operator()(const AST::Rest& ast, int duration)
 {
+    static_cast<void>(ast);
+    static_cast<void>(duration);
+
     return IR::Event{m_DeltaTime, IR::Rest{}};
 }
 
