@@ -39,7 +39,7 @@ private:
 
         AppendUInt32BE(6);
 
-        AppendUInt16BE(midi.Header.GetFormat());
+        AppendUInt16BE(static_cast<std::uint16_t>(midi.Header.GetFormat()));
 
         if (midi.Tracks.size() > 0xFFFF)
         {
@@ -47,7 +47,7 @@ private:
         }
 
         AppendUInt16BE(static_cast<std::uint16_t>(midi.Tracks.size()));
-        AppendUInt16BE(midi.Header.GetUnitsPerBeat());
+        AppendUInt16BE(static_cast<std::uint16_t>(midi.Header.GetUnitsPerBeat()));
     }
 
     void AppendTrack(const MIDI::MIDITrack& track)
