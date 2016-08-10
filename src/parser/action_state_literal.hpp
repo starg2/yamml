@@ -11,7 +11,16 @@
 #pragma warning(disable: 4715)  // not all control paths return a value
 #endif
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
+#endif
+
 #include <pegtl/contrib/unescape.hh>
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 #ifdef _MSC_VER
 #pragma warning(pop)
