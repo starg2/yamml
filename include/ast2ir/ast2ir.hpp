@@ -16,6 +16,13 @@ namespace AST2IR
 class AST2IRCompiler final : public Compiler::CompilerBase
 {
 public:
+    AST2IRCompiler() = default;
+
+    template<typename T>
+    AST2IRCompiler(T func) : CompilerBase(func)
+    {
+    }
+
     bool Compile(const AST::Module& mod);
 
     boost::optional<IR::Module>& GetIR();

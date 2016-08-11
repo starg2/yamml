@@ -83,7 +83,7 @@ if("${CYGWIN}" OR "${MINGW}")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
 endif()
 
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
 
 include(cmake/common.cmake)
 

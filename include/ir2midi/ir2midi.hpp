@@ -42,7 +42,14 @@ private:
 class IR2MIDICompiler : public Compiler::CompilerBase, public boost::static_visitor<>
 {
 public:
-    explicit IR2MIDICompiler(const IR::Module& ir);
+    explicit IR2MIDICompiler(const IR::Module& ir) : m_IR(ir)
+    {
+    }
+
+    template<typename T>
+    IR2MIDICompiler(const IR::Module& ir, T func) : CompilerBase(func), m_IR(ir)
+    {
+    }
 
     bool Compile(const std::string& entryPoint);
 

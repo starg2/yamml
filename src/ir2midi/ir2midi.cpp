@@ -97,10 +97,6 @@ const std::vector<AbsoluteMIDIEvent>& TrackCompilerContext::GetEvents() const
     return m_Events;
 }
 
-IR2MIDICompiler::IR2MIDICompiler(const IR::Module& ir) : m_IR(ir)
-{
-}
-
 bool IR2MIDICompiler::Compile(const std::string& entryPoint)
 {
     try
