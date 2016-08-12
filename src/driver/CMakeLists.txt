@@ -1,6 +1,7 @@
 
 set(DriverHeaders
     driver.hpp
+    file.hpp
     format.hpp
     msgcallback.hpp
     stderrwriter.hpp
@@ -14,9 +15,9 @@ set(DriverSources
 
 if("${WIN32}")
     set(DriverHeaders ${DriverHeaders} cconv.hpp)
-    set(DriverSources ${DriverSources} cconv.cpp stderrwriter_win.cpp)
+    set(DriverSources ${DriverSources} cconv.cpp file_win.cpp stderrwriter_win.cpp)
 else()
-    set(DriverSources ${DriverSources} stderrwriter_cpp.cpp)
+    set(DriverSources ${DriverSources} file_cpp.cpp stderrwriter_cpp.cpp)
 endif()
 
 yamml_add_executable(yamml DriverSources DriverHeaders)
