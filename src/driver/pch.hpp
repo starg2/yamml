@@ -4,6 +4,7 @@
 #include <cctype>
 #include <cstdint>
 
+#include <algorithm>
 #include <functional>
 #include <iostream>
 #include <memory>
@@ -13,6 +14,7 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/program_options.hpp>
 
 #ifdef _WIN32
 #include <windows.h>
