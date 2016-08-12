@@ -1,6 +1,7 @@
 
 set(DriverHeaders
     driver.hpp
+    format.hpp
     msgcallback.hpp
     stderrwriter.hpp
 )
