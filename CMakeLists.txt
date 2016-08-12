@@ -72,6 +72,7 @@ if(${YAMMLStaticLink})
     set(Boost_USE_STATIC_LIBS ON)
 else()
     set(YAMMLLibLinkType "SHARED")
+    add_definitions(-DBOOST_ALL_DYN_LINK)
 endif()
 
 if("${CMAKE_BUILD_TYPE}" MATCHES "Rel")

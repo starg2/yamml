@@ -1,8 +1,4 @@
 
-if(NOT YAMMLStaticLink)
-    add_definitions(-DBOOST_TEST_DYN_LINK)
-endif()
-
 add_definitions(-DBOOST_TEST_MAIN)
 
 add_subdirectory(ast2ir)
