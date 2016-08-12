@@ -22,7 +22,7 @@ public:
     CompilerBase() = default;
 
     template<typename T>
-    CompilerBase(T func) : m_Callback(func)
+    explicit CompilerBase(T func) : m_Callback(func)
     {
     }
 

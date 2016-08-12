@@ -12,7 +12,7 @@ namespace Compiler
 class NestedCompilerBase : public CompilerBase
 {
 public:
-    NestedCompilerBase(CompilerBase& parentCompiler)
+    explicit NestedCompilerBase(CompilerBase& parentCompiler)
         : CompilerBase([this] (auto&& x) { m_ParentCompiler.AddMessage(x); return true; }), m_ParentCompiler(parentCompiler)
     {
     }
