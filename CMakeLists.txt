@@ -24,6 +24,7 @@ add_definitions(
     -DWIN32_LEAN_AND_MEAN
     -D_HAS_AUTO_PTR_ETC=1
     -D_CRT_SECURE_NO_WARNINGS
+    -D_SCL_SECURE_NO_WARNINGS
 )
 
 if("${MSVC}")
