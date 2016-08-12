@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 
     auto args = PO::split_winmain(YAMML::Driver::W2UTF8(::GetCommandLineW()));
     std::vector<char*> argPointers(args.size());
-    std::transform(args.begin(), args.end(), argPointers.begin(), [] (auto&& x) { return const_cast<char*>(x.data()); });
+    std::transform(args.begin(), args.end(), argPointers.begin(), [] (auto&& x) { return &x[0]; });
 
     PO::store(
         PO::command_line_parser(argPointers.size(), argPointers.data())
