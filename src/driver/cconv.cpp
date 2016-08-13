@@ -24,7 +24,7 @@ UTF82W::UTF82W(const std::string& str)
         0
     );
 
-    m_WString.assign(requiredSize + 1, L'\0');
+    m_WString.assign(requiredSize, L'\0');
 
     ::MultiByteToWideChar(
         CP_UTF8,
@@ -69,7 +69,7 @@ W2UTF8::W2UTF8(const std::wstring& wstr)
         nullptr
     );
 
-    m_String.assign(requiredSize + 1, '\0');
+    m_String.assign(requiredSize, '\0');
 
     ::WideCharToMultiByte(
         CP_UTF8,
