@@ -33,7 +33,7 @@ class NoteName : public pegtl::seq<NoteNameBase, pegtl::opt<NoteNameKey>>
 {
 };
 
-class NoteOctave : public SignedInteger
+class NoteOctave : public pegtl::seq<SignedInteger>
 {
 };
 
@@ -45,11 +45,11 @@ class SimpleChord : public pegtl::list_must<NoteNumber, pegtl::one<'&'>, Separat
 {
 };
 
-class SimpleDuration : public UnsignedInteger
+class SimpleDuration : public pegtl::seq<UnsignedInteger>
 {
 };
 
-class SimpleDurationModifier : public UnsignedInteger
+class SimpleDurationModifier : public pegtl::seq<UnsignedInteger>
 {
 };
 

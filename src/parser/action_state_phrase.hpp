@@ -481,6 +481,10 @@ public:
 class NoteNameState
 {
 public:
+    NoteNameState() : ASTNode{}
+    {
+    }
+
     template<typename TParentState, typename... TCommonStates>
     void success(TParentState& st, TCommonStates&...)
     {

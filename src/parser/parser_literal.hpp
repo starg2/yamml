@@ -22,7 +22,7 @@ class UnsignedIntegerBase
 {
 };
 
-class UnsignedInteger : public UnsignedIntegerBase
+class UnsignedInteger : public pegtl::seq<UnsignedIntegerBase>
 {
 };
 
