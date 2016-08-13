@@ -111,13 +111,6 @@ int main(int argc, char** argv)
 
         PO::notify(vm);
 
-        if (vm.count("help") || !vm.count("input"))
-        {
-            std::cout << "Usage: yamml [<options>...] <input_file> [<output_file>]\n\n";
-            std::cout << visibleOptions << std::endl;
-            return 0;
-        }
-
         if (vm.count("version"))
         {
 #if YAMML_VERSION_DATE + 0
@@ -127,6 +120,13 @@ int main(int argc, char** argv)
 #endif // YAMML_VERSION_DATE + 0
 
             std::cout << "Copyright (C) 2016 Starg." << std::endl;
+            return 0;
+        }
+
+        if (vm.count("help") || !vm.count("input"))
+        {
+            std::cout << "Usage: yamml [<options>...] <input_file> [<output_file>]\n\n";
+            std::cout << visibleOptions << std::endl;
             return 0;
         }
 
