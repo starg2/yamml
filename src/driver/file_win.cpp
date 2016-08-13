@@ -114,7 +114,7 @@ public:
         std::array<std::uint8_t, 4096> buffer;
         DWORD bytes = 0;
 
-        while ((!::ReadFile(m_hFile, buffer.data(), buffer.size(), &bytes, nullptr)) && (bytes > 0))
+        while (::ReadFile(m_hFile, buffer.data(), buffer.size(), &bytes, nullptr) && bytes > 0)
         {
             ret.insert(ret.end(), buffer.begin(), buffer.begin() + bytes);
         }
