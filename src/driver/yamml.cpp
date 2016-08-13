@@ -19,6 +19,20 @@
 #include "msgcallback.hpp"
 #include "stderrwriter.hpp"
 
+std::string CreateDefaultOutputName(const std::string& input)
+{
+    auto dotPos = input.rfind('.');
+
+    if (dotPos == input.npos)
+    {
+        return input + ".mid";
+    }
+    else
+    {
+        return input.substr(0, dotPos) + ".mid";
+    }
+}
+
 int main(int argc, char** argv)
 {
     static_cast<void>(argc);
@@ -114,6 +128,24 @@ int main(int argc, char** argv)
 
             std::cout << "Copyright (C) 2016 Starg." << std::endl;
             return 0;
+        }
+
+        auto pStdErrWriter = YAMML::Driver::CreateStdErrWriter();
+        auto inputName = vm["input"].as<std::string>();
+
+        auto output = YAMML::Driver::CompileYAMML(
+            inputName,
+            YAMML::Driver::ReadTextFile(inputName),
+            vm.count("entry") ? vm["entry"].as<std::string>() : "Main",
+            YAMML::Driver::MessagePrinter(pStdErrWriter.get())
+        );
+
+        if (output.is_initialized())
+        {
+            YAMML::Driver::WriteBinaryFile(
+                vm.count("out") ? vm["out"].as<std::string>() : CreateDefaultOutputName(inputName),
+                output.value()
+            );
         }
 
         std::cout.flush();
