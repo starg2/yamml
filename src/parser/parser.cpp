@@ -7,6 +7,17 @@
 #include <message/message.hpp>
 #include <parser/parser.hpp>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4702) // unreachable code
+#endif
+
+#include <pegtl.hh>
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 #include "control.hpp"
 #include "parser_module.hpp"
 
