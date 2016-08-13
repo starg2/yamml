@@ -44,73 +44,90 @@ int main(int argc, char** argv)
 
     PO::variables_map vm;
 
+    try
+    {
 #ifdef _WIN32
 
-    auto args = PO::split_winmain(YAMML::Driver::W2UTF8(::GetCommandLineW()));
-    std::vector<char*> argPointers(args.size());
-    std::transform(args.begin(), args.end(), argPointers.begin(), [] (auto&& x) { return &x[0]; });
+        auto args = PO::split_winmain(YAMML::Driver::W2UTF8(::GetCommandLineW()));
+        std::vector<char*> argPointers(args.size());
+        std::transform(args.begin(), args.end(), argPointers.begin(), [] (auto&& x) { return &x[0]; });
 
-    PO::store(
-        PO::command_line_parser(argPointers.size(), argPointers.data())
-        .options(allOptions)
-        .positional(positional)
-        .style(
-            PO::command_line_style::allow_long
-            | PO::command_line_style::allow_short
-            | PO::command_line_style::allow_dash_for_short
-            | PO::command_line_style::allow_slash_for_short
-            | PO::command_line_style::long_allow_adjacent
-            | PO::command_line_style::long_allow_next
-            | PO::command_line_style::short_allow_adjacent
-            | PO::command_line_style::short_allow_next
-            | PO::command_line_style::case_insensitive
-            | PO::command_line_style::allow_long_disguise
-        )
-        .run(),
-        vm
-    );
+        PO::store(
+            PO::command_line_parser(argPointers.size(), argPointers.data())
+            .options(allOptions)
+            .positional(positional)
+            .style(
+                PO::command_line_style::allow_long
+                | PO::command_line_style::allow_short
+                | PO::command_line_style::allow_dash_for_short
+                | PO::command_line_style::allow_slash_for_short
+                | PO::command_line_style::long_allow_adjacent
+                | PO::command_line_style::long_allow_next
+                | PO::command_line_style::short_allow_adjacent
+                | PO::command_line_style::short_allow_next
+                | PO::command_line_style::case_insensitive
+                | PO::command_line_style::allow_long_disguise
+            )
+            .run(),
+            vm
+        );
 
 #else // !_WIN32
 
-    PO::store(
-        PO::command_line_parser(argc, argv)
-        .options(allOptions)
-        .positional(positional)
-        .style(
-            PO::command_line_style::allow_long
-            | PO::command_line_style::allow_short
-            | PO::command_line_style::allow_dash_for_short
-            | PO::command_line_style::long_allow_adjacent
-            | PO::command_line_style::long_allow_next
-            | PO::command_line_style::short_allow_adjacent
-            | PO::command_line_style::short_allow_next
-            | PO::command_line_style::allow_long_disguise
-        )
-        .run(),
-        vm
-    );
+        PO::store(
+            PO::command_line_parser(argc, argv)
+            .options(allOptions)
+            .positional(positional)
+            .style(
+                PO::command_line_style::allow_long
+                | PO::command_line_style::allow_short
+                | PO::command_line_style::allow_dash_for_short
+                | PO::command_line_style::long_allow_adjacent
+                | PO::command_line_style::long_allow_next
+                | PO::command_line_style::short_allow_adjacent
+                | PO::command_line_style::short_allow_next
+                | PO::command_line_style::allow_long_disguise
+            )
+            .run(),
+            vm
+        );
 
 #endif // !_WIN32
 
-    PO::notify(vm);
+        PO::notify(vm);
 
-    if (vm.count("help"))
-    {
-        std::cout << "Usage: yamml [<options>...] <input_file> [<output_file>]\n\n";
-        std::cout << visibleOptions << std::endl;
-        return 0;
-    }
+        if (vm.count("help"))
+        {
+            std::cout << "Usage: yamml [<options>...] <input_file> [<output_file>]\n\n";
+            std::cout << visibleOptions << std::endl;
+            return 0;
+        }
 
-    if (vm.count("version"))
-    {
+        if (vm.count("version"))
+        {
 #if YAMML_VERSION_DATE + 0
-        std::cout << "YAMML v" << YAMML_VERSION_MAJOR << "." << YAMML_VERSION_MINOR << "." << YAMML_VERSION_DATE << "." << YAMML_VERSION_BUILD << std::endl;
+            std::cout << "YAMML v" << YAMML_VERSION_MAJOR << "." << YAMML_VERSION_MINOR << "." << YAMML_VERSION_DATE << "." << YAMML_VERSION_BUILD << std::endl;
 #else
-        std::cout << "YAMML dev" << std::endl;
+            std::cout << "YAMML dev" << std::endl;
 #endif // YAMML_VERSION_DATE + 0
 
-        std::cout << "Copyright (C) 2016 Starg." << std::endl;
-        return 0;
+            std::cout << "Copyright (C) 2016 Starg." << std::endl;
+            return 0;
+        }
+
+
+    }
+    catch (const PO::unknown_option& e)
+    {
+        std::cout << "Unknown option: " << e.get_option_name() << std::endl;
+    }
+    catch (const PO::error&)
+    {
+        std::cout << "Invalid command line" << std::endl;
+    }
+    catch (const std::exception&)
+    {
+        std::cout << "Unknown error" << std::endl;
     }
 
     return 0;
