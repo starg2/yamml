@@ -15,6 +15,7 @@
 #endif // _WIN32
 
 #include "driver.hpp"
+#include "file.hpp"
 #include "msgcallback.hpp"
 #include "stderrwriter.hpp"
 
@@ -96,7 +97,7 @@ int main(int argc, char** argv)
 
         PO::notify(vm);
 
-        if (vm.count("help"))
+        if (vm.count("help") || !vm.count("input"))
         {
             std::cout << "Usage: yamml [<options>...] <input_file> [<output_file>]\n\n";
             std::cout << visibleOptions << std::endl;
@@ -115,7 +116,15 @@ int main(int argc, char** argv)
             return 0;
         }
 
-
+        std::cout.flush();
+    }
+    catch (const YAMML::Driver::FileOpenException& e)
+    {
+        std::cout << "Unable to open file '" << e.FilePath << "'" << std::endl;
+    }
+    catch (const YAMML::Driver::IOException&)
+    {
+        std::cout << "Unable to read/write file" << std::endl;
     }
     catch (const PO::unknown_option& e)
     {

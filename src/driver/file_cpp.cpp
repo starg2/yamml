@@ -25,7 +25,7 @@ std::string ReadTextFile(const std::string& filePath)
 
     if (!ifs)
     {
-        throw IOException();
+        throw FileOpenException(filePath);
     }
 
     std::ostringstream oss;
@@ -45,7 +45,7 @@ void WriteBinaryFile(const std::string& filePath, const std::vector<std::uint8_t
 
     if (!ofs)
     {
-        throw IOException();
+        throw FileOpenException(filePath);
     }
 
     ofs.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());

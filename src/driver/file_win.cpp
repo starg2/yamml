@@ -95,7 +95,7 @@ public:
 
         if (!IsOpened())
         {
-            throw IOException();
+            throw FileOpenException(W2UTF8(filePath));
         }
     }
 
