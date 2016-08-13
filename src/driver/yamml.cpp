@@ -28,6 +28,7 @@ int main(int argc, char** argv)
     PO::options_description visibleOptions("Options");
     visibleOptions.add_options()
         ("help", "print this help message")
+        ("version", "print version info")
         ("entry", PO::value<std::string>(), "specify entry point")
         ("out", PO::value<std::string>(), "name output file");
 
@@ -100,7 +101,17 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    if (vm.count("version"))
+    {
+#if YAMML_VERSION_DATE + 0
+        std::cout << "YAMML v" << YAMML_VERSION_MAJOR << "." << YAMML_VERSION_MINOR << "." << YAMML_VERSION_DATE << "." << YAMML_VERSION_BUILD << std::endl;
+#else
+        std::cout << "YAMML dev" << std::endl;
+#endif // YAMML_VERSION_DATE + 0
 
+        std::cout << "Copyright (C) 2016 Starg." << std::endl;
+        return 0;
+    }
 
     return 0;
 }
