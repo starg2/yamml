@@ -73,7 +73,7 @@ private:
     MIDI::MIDITrack& GetTrack(int trackNumber);
     TrackCompilerContext& GetTrackContext(int trackNumber);
 
-    const IR::Module& m_IR;
+    IR::Module m_IR;
     MIDI::MIDIFile m_MIDI;
     std::vector<TrackCompilerContext> m_Contexts;
 };
