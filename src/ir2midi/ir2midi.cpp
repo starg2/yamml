@@ -89,7 +89,14 @@ void TrackCompilerContext::PushEvent(int relativeTime, const MIDI::MIDIEvent::Ev
 
 void TrackCompilerContext::SortEvents()
 {
-    std::sort(m_Events.begin(), m_Events.end(), [] (auto&& lhs, auto&& rhs) { return lhs.AbsoluteTime < rhs.AbsoluteTime; });
+    std::stable_sort(
+        m_Events.begin(),
+        m_Events.end(),
+        [] (auto&& lhs, auto&& rhs)
+        {
+            return lhs.AbsoluteTime < rhs.AbsoluteTime;
+        }
+    );
 }
 
 const std::vector<AbsoluteMIDIEvent>& TrackCompilerContext::GetEvents() const
