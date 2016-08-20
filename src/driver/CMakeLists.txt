@@ -21,5 +21,5 @@ else()
 endif()
 
 yamml_add_executable(yamml DriverSources DriverHeaders)
-target_link_libraries(yamml AST2IR IR2MIDI MIDIWriter Parser Boost::program_options)
+target_link_libraries(yamml AST2IR IR2MIDI IRProcessor MIDIWriter Parser Boost::program_options)
 

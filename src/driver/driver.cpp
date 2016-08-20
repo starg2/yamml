@@ -4,6 +4,7 @@
 
 #include <ast2ir/ast2ir.hpp>
 #include <ir2midi/ir2midi.hpp>
+#include <irprocessor/irprocessor.hpp>
 #include <midiwriter/midiwriter.hpp>
 #include <parser/parser.hpp>
 
@@ -36,7 +37,14 @@ boost::optional<std::vector<std::uint8_t>> CompileYAMML(
             return {};
         }
 
-        IR2MIDI::IR2MIDICompiler ir2midi(ast2ir.GetIR().value(), callback);
+        IRProcessor::IRCompiler irProc(ast2ir.GetIR().value(), callback);
+
+        if (!irProc.Compile())
+        {
+            return {};
+        }
+
+        IR2MIDI::IR2MIDICompiler ir2midi(irProc.GetIR(), callback);
 
         if (!ir2midi.Compile(entryPoint))
         {
