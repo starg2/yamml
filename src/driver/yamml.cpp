@@ -140,15 +140,18 @@ int main(int argc, char** argv)
             YAMML::Driver::MessagePrinter(pStdErrWriter.get())
         );
 
-        if (output.is_initialized())
+        if (!output.is_initialized())
         {
-            YAMML::Driver::WriteBinaryFile(
-                vm.count("out") ? vm["out"].as<std::string>() : CreateDefaultOutputName(inputName),
-                output.value()
-            );
+            return 1;
         }
 
+        YAMML::Driver::WriteBinaryFile(
+            vm.count("out") ? vm["out"].as<std::string>() : CreateDefaultOutputName(inputName),
+            output.value()
+        );
+
         std::cout.flush();
+        return 0;
     }
     catch (const YAMML::Driver::FileOpenException& e)
     {
@@ -171,5 +174,5 @@ int main(int argc, char** argv)
         std::cout << "Unknown error" << std::endl;
     }
 
-    return 0;
+    return 2;
 }
