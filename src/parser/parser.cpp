@@ -50,6 +50,8 @@ bool YAMMLParser::Parse()
     try
     {
         AST::Module ast;
+        ast.Name = GetSourceName();
+
         bool result = pegtl::parse<Grammar::Module, pegtl::nothing, Control>(m_Source, m_Name, ast, *this);
 
         if (result && !HasErrors())
@@ -69,7 +71,7 @@ bool YAMMLParser::Parse()
     }
 }
 
-const std::string & YAMMLParser::GetSourceName() const
+const std::string& YAMMLParser::GetSourceName() const
 {
     return m_Name;
 }
