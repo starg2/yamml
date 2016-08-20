@@ -21,16 +21,11 @@
 
 std::string CreateDefaultOutputName(const std::string& input)
 {
-    auto dotPos = input.rfind('.');
+    auto separatorPos = input.find_last_of("/\\");
+    auto fileName = (separatorPos == input.npos) ? input : input.substr(separatorPos + 1);
 
-    if (dotPos == input.npos)
-    {
-        return input + ".mid";
-    }
-    else
-    {
-        return input.substr(0, dotPos) + ".mid";
-    }
+    auto dotPos = fileName.rfind('.');
+    return (dotPos == fileName.npos ? fileName : fileName.substr(0, dotPos)) + ".mid";
 }
 
 int main(int argc, char** argv)
