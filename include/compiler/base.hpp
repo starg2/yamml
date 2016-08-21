@@ -32,13 +32,21 @@ public:
     CompilerBase(CompilerBase&&) = delete;
     CompilerBase& operator=(CompilerBase&&) = delete;
 
-    void AddMessage(Message::MessageItem msg)
+    void AddMessage(const Message::MessageItem& msg)
     {
         m_Messages.push_back(msg);
 
         if (m_Callback)
         {
             m_Callback(msg);
+        }
+    }
+
+    void AddMessages(const std::vector<Message::MessageItem>& messages)
+    {
+        for (auto&& i : messages)
+        {
+            AddMessage(i);
         }
     }
 
