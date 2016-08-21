@@ -98,14 +98,17 @@ class NoteSequenceInParentheses : public pegtl::if_must<pegtl::one<'('>, NoteSeq
 {
 };
 
+template<char TOperator>
+class PaddedOperator : public pegtl::pad<pegtl::one<TOperator>, Separator>
+{
+};
+
 template<char TOperator, typename... TChildren>
 class NoteRepeatExpressionBase
-    : public pegtl::seq<
+    : public pegtl::if_must<
         UnsignedInteger,
-        pegtl::if_must<
-            pegtl::pad<pegtl::one<TOperator>, Separator>,
-            pegtl::sor<NoteSequenceInParentheses, TChildren...>
-        >
+        PaddedOperator<TOperator>,
+        pegtl::sor<NoteSequenceInParentheses, TChildren...>
     >
 {
 };

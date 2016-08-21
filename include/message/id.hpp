@@ -66,6 +66,8 @@ enum class MessageID : int
     GrammarSpaceDelimitedChords,
     GrammarDurationOrDurationSet,
     GrammarSpaceDelimitedDurations,
+    GrammarPaddedOperatorRepeat,
+    GrammarPaddedOperatorRepeatEach,
     GrammarPhrase2,
     GrammarPhrase3,
     GrammarPhrase4,
