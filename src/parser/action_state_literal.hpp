@@ -43,7 +43,7 @@ public:
     template<typename TParentState, typename... TCommonStates>
     void success(TParentState& st, TCommonStates&...)
     {
-        st.ASTNode.Value = ASTNode;
+        st.OnParse(ASTNode);
     }
 
     AST::Literal ASTNode;

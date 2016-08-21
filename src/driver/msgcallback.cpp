@@ -34,7 +34,6 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::UnknownInPhrase2IR, ICEMessage + " (Phrase2IR: Phrase = '{0}', Message = '{1}')"},
         {Message::MessageID::UnknownInComposition2IR, ICEMessage + " (Composition2IR: Composition = '{0}', Message = '{1}')"},
         {Message::MessageID::UnknownInIR2MIDI, ICEMessage + " (IR2MIDI: Message = '{0}')"},
-        {Message::MessageID::UnprocessedCommand, ICEMessage + " (Unprocessed command: '{0}')"},
         {Message::MessageID::UnprocessedAttribute, ICEMessage + " (Unprocessed attribute: '{0}')"},
         {Message::MessageID::DuplicatedCompositionName, "composition named '{0}' is already defined"},
         {Message::MessageID::DuplicatedPhraseName, "phrase named '{0}' is already defined"},
@@ -91,7 +90,14 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::GrammarPhrase2, "parse error: GrammarPhrase2"},
         {Message::MessageID::GrammarPhrase3, "parse error: GrammarPhrase3"},
         {Message::MessageID::GrammarPhrase4, "parse error: GrammarPhrase4"},
-        {Message::MessageID::GrammarPhraseName, "parse error: GrammarPhraseName"}
+        {Message::MessageID::GrammarPhraseName, "parse error: GrammarPhraseName"},
+
+        // IR2MIDI
+        {Message::MessageID::InvalidCommandName, "invalid command '{0}'"},
+        {Message::MessageID::WrongNumberOfCommandArguments, "wrong number of arguments passed to command '{0}'; {2} expected, {1} found"},
+        {Message::MessageID::WrongTypeOfCommandArgument, "command argument {1} has a wrong type; expecting '{2}' here"},
+
+        {Message::MessageID::InvalidTempo, "invalid tempo value"}
     },
     m_pStdErrWriter{pStdErrWriter}
 {

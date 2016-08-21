@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include <midi/event.hpp>
@@ -30,6 +31,15 @@ private:
     std::vector<AbsoluteMIDIEvent> m_Events;
     int m_BaseTimeForCurrentBlock = 0;
     int m_LastEventTime = 0;
+};
+
+class IIR2MIDICompiler
+{
+public:
+    virtual ~IIR2MIDICompiler() = default;
+
+    virtual std::string GetSourceName() const = 0;
+    virtual TrackCompilerContext& GetTrackContext(int trackNumber) = 0;
 };
 
 } // namespace IR2MIDI

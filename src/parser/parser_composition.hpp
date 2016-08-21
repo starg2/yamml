@@ -17,7 +17,7 @@ namespace Parser
 namespace Grammar
 {
 
-class CommandArgument : public Value
+class CommandArgument : public pegtl::seq<Value>
 {
 };
 

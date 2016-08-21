@@ -57,6 +57,11 @@ public:
         st.ASTNode.Arguments.push_back(ASTNode);
     }
 
+    void OnParse(const AST::Literal& ast)
+    {
+        ASTNode.Value = ast;
+    }
+
     AST::AttributeArgument ASTNode;
 };
 

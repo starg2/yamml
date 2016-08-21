@@ -181,6 +181,11 @@ public:
         st.ASTNode.Arguments.push_back(ASTNode);
     }
 
+    void OnParse(const AST::Literal& ast)
+    {
+        ASTNode = ast;
+    }
+
     AST::Literal ASTNode;
 };
 

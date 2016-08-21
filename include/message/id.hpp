@@ -14,7 +14,6 @@ enum class MessageID : int
     UnknownInComposition2IR,
     UnknownInIR2MIDI,
     UnprocessedAttribute,
-    UnprocessedCommand,
     DuplicatedCompositionName,
     DuplicatedPhraseName,
     NoSuchPhraseName,
@@ -70,7 +69,14 @@ enum class MessageID : int
     GrammarPhrase2,
     GrammarPhrase3,
     GrammarPhrase4,
-    GrammarPhraseName
+    GrammarPhraseName,
+
+    // IR2MIDI
+    InvalidCommandName,
+    WrongNumberOfCommandArguments,
+    WrongTypeOfCommandArgument,
+
+    InvalidTempo
 };
 
 } // namespace Message

@@ -2,9 +2,11 @@
 set(IR2MIDIHeaders
     ../../include/ir2midi/context.hpp
     ../../include/ir2midi/ir2midi.hpp
+    command_tempo.hpp
 )
 
 set(IR2MIDISources
+    command_tempo.cpp
     context.cpp
     ir2midi.cpp
 )

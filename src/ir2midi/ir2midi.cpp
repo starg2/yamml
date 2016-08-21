@@ -7,6 +7,8 @@
 #include <ir2midi/ir2midi.hpp>
 #include <message/message.hpp>
 
+#include "command_tempo.hpp"
+
 namespace YAMML
 {
 
@@ -138,15 +140,22 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
 
 void IR2MIDICompiler::operator()(const AST::Command& ast)
 {
-    throw Exceptions::MessageException(
-        Message::MessageItem{
-            Message::MessageKind::FetalError,
-            Message::MessageID::UnprocessedCommand,
-            m_IR.Name,
-            ast.Location,
-            {ast.Name}
-        }
-    );
+    if (ast.Name == "tempo")
+    {
+        AddMessages(ProcessTempo(this, ast));
+    }
+    else
+    {
+        AddMessage(
+            Message::MessageItem{
+                Message::MessageKind::Error,
+                Message::MessageID::InvalidCommandName,
+                m_IR.Name,
+                ast.Location,
+                {ast.Name}
+            }
+        );
+    }
 }
 
 void IR2MIDICompiler::operator()(int trackNumber, const IR::Event& ev)
@@ -264,8 +273,14 @@ MIDI::MIDITrack& IR2MIDICompiler::GetTrack(int trackNumber)
     return m_MIDI.Tracks[static_cast<std::size_t>(trackNumber)];
 }
 
+std::string IR2MIDICompiler::GetSourceName() const
+{
+    return m_IR.Name;
+}
+
 TrackCompilerContext& IR2MIDICompiler::GetTrackContext(int trackNumber)
 {
+    EnsureTrackInitialized(trackNumber);
     return m_Contexts[static_cast<std::size_t>(trackNumber)];
 }
 
