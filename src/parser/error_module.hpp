@@ -13,7 +13,7 @@ namespace Parser
 {
 
 template<>
-const Message::MessageID ErrorControl<Grammar::PhrasesAndCompositions>::ID = Message::MessageID::Unknown;
+const Message::MessageID ErrorControl<Grammar::PhrasesAndCompositions>::ID = Message::MessageID::GrammarPhrasesAndCompositions;
 
 } // namespace Parser
 

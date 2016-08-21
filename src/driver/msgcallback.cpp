@@ -42,7 +42,55 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::NoSuchCompositionName, "cannot find a composition named '{0}'."},
         {Message::MessageID::TrackNumberIsOutOfSafeRange, "track number '{0}' is out of range. (must be 0 <= # < {1})"},
         {Message::MessageID::TrackNumberIsOutOfPreferredRange, "track number '{0}' is out of range. (must be 0 <= # < {1})"},
-        {Message::MessageID::TooLargeRepeatCount, "repeat count '{0}' is too large. (must be <= {1})"}
+        {Message::MessageID::TooLargeRepeatCount, "repeat count '{0}' is too large. (must be <= {1})"},
+
+        // error_attribute.hpp
+        {Message::MessageID::GrammarAttributeArgument, "parse error: GrammarAttributeArgument"},
+        {Message::MessageID::GrammarCommaSeparatedOptionalAttributeArguments, "parse error: GrammarCommaSeparatedOptionalAttributeArguments"},
+        {Message::MessageID::GrammarAttributeList, "parse error: GrammarAttributeList"},
+        {Message::MessageID::GrammarAttributeNameAndArguments, "parse error: GrammarAttributeNameAndArguments"},
+        {Message::MessageID::GrammarEndBracket, "parse error: GrammarEndBracket"},
+
+        // error_common.hpp
+        {Message::MessageID::GrammarBlockBegin, "parse error: GrammarBlockBegin"},
+        {Message::MessageID::GrammarBlockEnd, "parse error: GrammarBlockEnd"},
+        {Message::MessageID::GrammarEndParenthesis, "parse error: GrammarEndParenthesis"},
+
+        // error_composition.hpp
+        {Message::MessageID::GrammarCommandArgument, "parse error: GrammarCommandArgument"},
+        {Message::MessageID::GrammarCommandsAndTrackListBlocks, "parse error: GrammarCommandsAndTrackListBlocks"},
+        {Message::MessageID::GrammarOneOrMoreTrackBlocks, "parse error: GrammarOneOrMoreTrackBlocks"},
+        {Message::MessageID::GrammarSpaceSeparatedOptionalTrackItems, "parse error: GrammarSpaceSeparatedOptionalTrackItems"},
+
+        // error_literal.hpp
+        {Message::MessageID::GrammarSeparators, "parse error: GrammarSeparators"},
+        {Message::MessageID::GrammarSeparator, "parse error: GrammarSeparator"},
+        {Message::MessageID::GrammarEOF, "parse error: GrammarEOF"},
+        {Message::MessageID::GrammarUntilBlockCommentEnd, "parse error: GrammarUntilBlockCommentEnd"},
+        {Message::MessageID::GrammarIdentifier, "parse error: GrammarIdentifier"},
+        {Message::MessageID::GrammarEscape, "parse error: GrammarEscape"},
+        {Message::MessageID::GrammarAnyChar, "parse error: GrammarAnyChar"},
+        {Message::MessageID::GrammarNoDigit, "parse error: GrammarNoDigit"},
+        {Message::MessageID::GrammarXDigit, "parse error: GrammarXDigit"},
+        {Message::MessageID::GrammarUntilDoubleQuote, "parse error: GrammarUntilDoubleQuote"},
+        {Message::MessageID::GrammarUntilSingleQuote, "parse error: GrammarUntilSingleQuote"},
+
+        // error_module.hpp
+        {Message::MessageID::GrammarPhrasesAndCompositions, "parse error: GrammarPhrasesAndCompositions"},
+
+        // grammar_phrase.hpp
+        {Message::MessageID::GrammarNoteSequenceBlockWithoutAttributes, "parse error: GrammarNoteSequenceBlockWithoutAttributes"},
+        {Message::MessageID::GrammarSimpleDurationModifier, "parse error: GrammarSimpleDurationModifier"},
+        {Message::MessageID::GrammarNoteNumber, "parse error: GrammarNoteNumber"},
+        {Message::MessageID::GrammarNoteSequenceStatementsAndBlocks, "parse error: GrammarNoteSequenceStatementsAndBlocks"},
+        {Message::MessageID::GrammarNoteSequenceAndSeparators, "parse error: GrammarNoteSequenceAndSeparators"},
+        {Message::MessageID::GrammarSpaceDelimitedChords, "parse error: GrammarSpaceDelimitedChords"},
+        {Message::MessageID::GrammarDurationOrDurationSet, "parse error: GrammarDurationOrDurationSet"},
+        {Message::MessageID::GrammarSpaceDelimitedDurations, "parse error: GrammarSpaceDelimitedDurations"},
+        {Message::MessageID::GrammarPhrase2, "parse error: GrammarPhrase2"},
+        {Message::MessageID::GrammarPhrase3, "parse error: GrammarPhrase3"},
+        {Message::MessageID::GrammarPhrase4, "parse error: GrammarPhrase4"},
+        {Message::MessageID::GrammarPhraseName, "parse error: GrammarPhraseName"}
     },
     m_pStdErrWriter{pStdErrWriter}
 {

@@ -13,13 +13,13 @@ namespace Parser
 {
 
 template<>
-const Message::MessageID ErrorControl<Grammar::BlockBegin>::ID = Message::MessageID::Unknown;
+const Message::MessageID ErrorControl<Grammar::BlockBegin>::ID = Message::MessageID::GrammarBlockBegin;
 
 template<>
-const Message::MessageID ErrorControl<Grammar::BlockEnd>::ID = Message::MessageID::Unknown;
+const Message::MessageID ErrorControl<Grammar::BlockEnd>::ID = Message::MessageID::GrammarBlockEnd;
 
 template<>
-const Message::MessageID ErrorControl<pegtl::one<')'>>::ID = Message::MessageID::Unknown;
+const Message::MessageID ErrorControl<pegtl::one<')'>>::ID = Message::MessageID::GrammarEndParenthesis;
 
 } // namespace Parser
 
