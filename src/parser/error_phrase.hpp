@@ -37,10 +37,7 @@ template<>
 const Message::MessageID ErrorControl<Grammar::SpaceDelimitedDurations>::ID = Message::MessageID::GrammarSpaceDelimitedDurations;
 
 template<>
-const Message::MessageID ErrorControl<Grammar::PaddedOperator<'*'>>::ID = Message::MessageID::GrammarPaddedOperatorRepeat;
-
-template<>
-const Message::MessageID ErrorControl<Grammar::PaddedOperator<'%'>>::ID = Message::MessageID::GrammarPaddedOperatorRepeatEach;
+const Message::MessageID ErrorControl<Grammar::TrapMissingRepeatOperator>::ID = Message::MessageID::GrammarMissingRepeatOperator;
 
 template<>
 const Message::MessageID ErrorControl<
@@ -54,7 +51,7 @@ const Message::MessageID ErrorControl<
 
 template<>
 const Message::MessageID ErrorControl<
-    pegtl::sor<Grammar::NoteSequenceInParentheses, Grammar::NoteRepeatEachExpression, Grammar::NoteRepeatExpression, Grammar::NoteAndDuration>
+    pegtl::sor<Grammar::NoteSequenceInParentheses, Grammar::NoteRepeatEachExpression, Grammar::NoteRepeatExpression, Grammar::TrapMissingRepeatOperator, Grammar::NoteAndDuration>
 >::ID = Message::MessageID::GrammarPhrase4;
 
 template<>

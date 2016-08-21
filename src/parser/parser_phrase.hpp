@@ -98,6 +98,10 @@ class NoteSequenceInParentheses : public pegtl::if_must<pegtl::one<'('>, NoteSeq
 {
 };
 
+class TrapMissingRepeatOperator : public pegtl::seq<UnsignedInteger, pegtl::raise<TrapMissingRepeatOperator>>
+{
+};
+
 template<char TOperator>
 class PaddedOperator : public pegtl::pad<pegtl::one<TOperator>, Separator>
 {
@@ -105,10 +109,12 @@ class PaddedOperator : public pegtl::pad<pegtl::one<TOperator>, Separator>
 
 template<char TOperator, typename... TChildren>
 class NoteRepeatExpressionBase
-    : public pegtl::if_must<
+    : public pegtl::seq<
         UnsignedInteger,
-        PaddedOperator<TOperator>,
-        pegtl::sor<NoteSequenceInParentheses, TChildren...>
+        pegtl::if_must<
+            PaddedOperator<TOperator>,
+            pegtl::sor<NoteSequenceInParentheses, TChildren...>
+        >
     >
 {
 };
@@ -123,7 +129,7 @@ class NoteRepeatEachExpression : public NoteRepeatExpressionBase<'%', NoteRepeat
 
 class NoteAndExpression
     : public pegtl::list_must<
-        pegtl::sor<NoteSequenceInParentheses, NoteRepeatEachExpression, NoteRepeatExpression, NoteAndDuration>,
+        pegtl::sor<NoteSequenceInParentheses, NoteRepeatEachExpression, NoteRepeatExpression, TrapMissingRepeatOperator, NoteAndDuration>,
         pegtl::one<'&'>,
         Separator
     >
