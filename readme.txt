@@ -11,7 +11,7 @@ YAMML (Yet Another MML) コンパイラー
 外部ライブラリ
 --------------
 
-今のところ boost
+今のところ boost と [PEGTL](https://github.com/ColinH/PEGTL) v1.3.1
 
 
 ライセンス
