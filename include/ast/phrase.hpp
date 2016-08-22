@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -95,7 +96,7 @@ class NoteRepeatExpression final
 {
 public:
     std::size_t Count;
-    std::vector<boost::variant<NoteAndDuration, boost::recursive_wrapper<NoteSequence>>> Notes;
+    std::vector<boost::recursive_wrapper<NoteSequence>> Notes;
     SourceLocation Location;
 };
 
@@ -103,7 +104,7 @@ class NoteRepeatEachExpression final
 {
 public:
     std::size_t Count;
-    std::vector<boost::variant<NoteAndDuration, NoteRepeatExpression, boost::recursive_wrapper<NoteSequence>>> Notes;
+    std::vector<boost::recursive_wrapper<NoteSequence>> Notes;
     SourceLocation Location;
 };
 

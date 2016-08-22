@@ -147,19 +147,27 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteSequence& ast)
 
     for (auto&& i : ast.Notes)
     {
-        int startTime = m_DeltaTime;
-        int endTime = startTime;
-
-        for (auto&& j : i.Notes)
-        {
-            m_IR.Blocks[newIndex.ID].Events.emplace_back(j.apply_visitor(*this));
-            endTime = std::max(endTime, m_DeltaTime);
-            m_DeltaTime = startTime;
-        }
-
-        m_DeltaTime = endTime;
+        m_IR.Blocks[newIndex.ID].Events.emplace_back((*this)(i));
     }
 
+    return newIndex;
+}
+
+IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteAndExpression& ast)
+{
+    auto newIndex = AllocBlock();
+
+    int startTime = m_DeltaTime;
+    int endTime = startTime;
+
+    for (auto&& i : ast.Notes)
+    {
+        m_IR.Blocks[newIndex.ID].Events.emplace_back(i.apply_visitor(*this));
+        endTime = std::max(endTime, m_DeltaTime);
+        m_DeltaTime = startTime;
+    }
+
+    m_DeltaTime = endTime;
     return newIndex;
 }
 
@@ -186,7 +194,7 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatExpressi
         ast.Notes.begin(),
         ast.Notes.end(),
         childBlockEventArray.begin(),
-        [this] (auto&& x) { return x.apply_visitor(*this); }
+        [this] (auto&& x) { return (*this)(x.get()); }
     );
 
     for (std::size_t i = 0; i < ast.Count; i++)
@@ -207,11 +215,14 @@ IR::Block::EventType Phrase2IRCompiler::operator()(const AST::NoteRepeatEachExpr
 
     for (auto&& i : ast.Notes)
     {
-        auto childBlockItem = i.apply_visitor(*this);
-
-        for (std::size_t j = 0; j < ast.Count; j++)
+        for (auto&& j : i.get().Notes)
         {
-            m_IR.Blocks[newIndex.ID].Events.emplace_back(childBlockItem);
+            auto childBlockItem = (*this)(j);
+
+            for (std::size_t k = 0; k < ast.Count; k++)
+            {
+                m_IR.Blocks[newIndex.ID].Events.emplace_back(childBlockItem);
+            }
         }
     }
 

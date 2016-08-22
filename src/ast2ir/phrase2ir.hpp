@@ -32,6 +32,7 @@ public:
     IR::Block::EventType operator()(const AST::NoteSequenceBlock& ast);
 
     IR::Block::EventType operator()(const AST::NoteSequence& ast);
+    IR::Block::EventType operator()(const AST::NoteAndExpression& ast);
 
     IR::Block::EventType operator()(const AST::NoteAndDuration& ast);
     IR::Block::EventType operator()(const AST::NoteRepeatExpression& ast);

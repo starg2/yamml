@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <string>
 #include <type_traits>
+#include <utility>
 
 #include <pegtl.hh>
 
@@ -19,6 +20,20 @@ namespace YAMML
 
 namespace Parser
 {
+
+template<typename T>
+AST::NoteSequence MakeNoteSequence(T node)
+{
+    AST::NoteAndExpression nae;
+    nae.Location = node.Location;
+    nae.Notes.emplace_back(node);
+
+    AST::NoteSequence ns;
+    ns.Location = node.Location;
+    ns.Notes.push_back(std::move(nae));
+
+    return ns;
+}
 
 class PhraseState
 {
@@ -217,7 +232,7 @@ public:
     template<typename TParentState, typename... TCommonStates>
     void success(TParentState& st, TCommonStates&...)
     {
-        st.ASTNode.Notes.emplace_back(ASTNode);
+        st.ASTNode.Notes.emplace_back(MakeNoteSequence(ASTNode));
     }
 
     void OnParse(AST::NoteSequence node)
@@ -255,7 +270,7 @@ public:
     template<typename TParentState, typename... TCommonStates>
     void success(TParentState& st, TCommonStates&...)
     {
-        st.ASTNode.Notes.emplace_back(ASTNode);
+        st.ASTNode.Notes.emplace_back(MakeNoteSequence(ASTNode));
     }
 
     void OnParse(AST::SimpleDurationWithModifier node)

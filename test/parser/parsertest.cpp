@@ -62,27 +62,27 @@ composition Main
             BOOST_REQUIRE(noteSeqStatement.NoteSeq.is_initialized());
             auto noteSeq = *noteSeqStatement.NoteSeq;
 
-            BOOST_CHECK_EQUAL(noteSeq.Notes.size(), 1u);
+            BOOST_REQUIRE_EQUAL(noteSeq.Notes.size(), 1u);
 
             auto noteAndExpr = noteSeq.Notes.at(0);
-            BOOST_CHECK_EQUAL(noteAndExpr.Notes.size(), 3u);
+            BOOST_REQUIRE_EQUAL(noteAndExpr.Notes.size(), 3u);
 
             {
-                auto noteAndDuration = boost::get<AST::NoteAndDuration>(noteAndExpr.Notes.at(0));
+                auto noteAndDuration = boost::get<AST::NoteAndDuration>(boost::get<AST::NoteSequence>(noteAndExpr.Notes.at(0)).Notes.at(0).Notes.at(0));
                 BOOST_CHECK(!noteAndDuration.Duration.is_initialized());
                 BOOST_CHECK_EQUAL(boost::get<AST::NoteNumber>(noteAndDuration.Note).Name.Name, 'C');
                 BOOST_CHECK(!boost::get<AST::NoteNumber>(noteAndDuration.Note).Octave.is_initialized());
             }
 
             {
-                auto noteAndDuration = boost::get<AST::NoteAndDuration>(noteAndExpr.Notes.at(1));
+                auto noteAndDuration = boost::get<AST::NoteAndDuration>(boost::get<AST::NoteSequence>(noteAndExpr.Notes.at(1)).Notes.at(0).Notes.at(0));
                 BOOST_CHECK(!noteAndDuration.Duration.is_initialized());
                 BOOST_CHECK_EQUAL(boost::get<AST::NoteNumber>(noteAndDuration.Note).Name.Name, 'E');
                 BOOST_CHECK(!boost::get<AST::NoteNumber>(noteAndDuration.Note).Octave.is_initialized());
             }
 
             {
-                auto noteAndDuration = boost::get<AST::NoteAndDuration>(noteAndExpr.Notes.at(2));
+                auto noteAndDuration = boost::get<AST::NoteAndDuration>(boost::get<AST::NoteSequence>(noteAndExpr.Notes.at(2)).Notes.at(0).Notes.at(0));
                 BOOST_CHECK(!noteAndDuration.Duration.is_initialized());
                 BOOST_CHECK_EQUAL(boost::get<AST::NoteNumber>(noteAndDuration.Note).Name.Name, 'G');
                 BOOST_CHECK(!boost::get<AST::NoteNumber>(noteAndDuration.Note).Octave.is_initialized());
