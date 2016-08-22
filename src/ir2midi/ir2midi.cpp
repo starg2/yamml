@@ -80,15 +80,13 @@ bool IR2MIDICompiler::Compile(const std::string& entryPoint)
 {
     try
     {
-        if (CompileTrackBlock(entryPoint))
-        {
-            Finalize();
-            return true;
-        }
-        else
+        if (!CompileTrackBlock(entryPoint))
         {
             return false;
         }
+
+        Finalize();
+        return !HasErrors();
     }
     catch (const Exceptions::MessageException& e)
     {
