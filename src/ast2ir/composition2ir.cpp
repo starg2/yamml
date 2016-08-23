@@ -124,10 +124,7 @@ IR::TrackItem Composition2IRCompiler::Compile(const AST::TrackItem& ast)
         );
     }
 
-    return IR::TrackItem{
-        ast.Attributes,
-        IR::BlockReference{static_cast<std::size_t>(std::distance(m_IR.BlockNameMap.begin(), itName))}
-    };
+    return IR::TrackItem{ast.Attributes, itName->second};
 }
 
 } // namespace AST2IR
