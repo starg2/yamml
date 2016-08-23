@@ -24,9 +24,14 @@ void TrackCompilerContext::RestoreTime()
     m_LastEventTime = m_PrevLastEventTime;
 }
 
-void TrackCompilerContext::PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev)
+void TrackCompilerContext::UpdateTime(int relativeTime)
 {
     m_LastEventTime = m_BaseTimeForCurrentBlock + relativeTime;
+}
+
+void TrackCompilerContext::PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev)
+{
+    UpdateTime(relativeTime);
     m_Events.push_back(AbsoluteMIDIEvent{m_LastEventTime, ev});
 }
 

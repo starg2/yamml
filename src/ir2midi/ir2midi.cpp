@@ -31,8 +31,9 @@ public:
         m_Context.PushEvent(m_RelativeTime + ev.Duration, MIDI::NoteOff{m_Channel, ev.Number, ev.OffVelocity});
     }
 
-    void operator()(const IR::Rest&)
+    void operator()(const IR::Rest& ev)
     {
+        m_Context.UpdateTime(m_RelativeTime + ev.Duration);
     }
 
     void operator()(const IR::PolyphonicAftertouch& ev)

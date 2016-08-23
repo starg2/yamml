@@ -25,6 +25,7 @@ public:
     void EnterBlock();
     void SaveTime();
     void RestoreTime();
+    void UpdateTime(int relativeTime);
     void PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev);
     void SortEvents();
     const std::vector<AbsoluteMIDIEvent>& GetEvents() const;

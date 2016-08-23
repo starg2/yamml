@@ -220,9 +220,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteR
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::Rest& ast, int duration)
 {
     static_cast<void>(ast);
-    static_cast<void>(duration);
-
-    return {IR::Event{m_RelativeTime, IR::Rest{}}};
+    return {IR::Event{m_RelativeTime, IR::Rest{duration}}};
 }
 
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteNumber& ast, int duration)

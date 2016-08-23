@@ -15,6 +15,8 @@ namespace IR
 
 class Rest final
 {
+public:
+    int Duration;
 };
 
 class PolyphonicAftertouch final
