@@ -95,6 +95,8 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
 
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteSequenceStatement& ast)
 {
+    m_DefaultDuration = TickPerQuarter;
+
     if (ast.Attributes.empty())
     {
         return (*this)(*ast.NoteSeq);
@@ -166,6 +168,8 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteA
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteAndDuration& ast)
 {
     int duration = CalculateDuration(ast);
+    m_DefaultDuration = duration;
+
     boost::variant<int> varDuration = duration;
 
     auto newEvent = boost::apply_visitor(*this, ast.Note, varDuration);
@@ -258,7 +262,7 @@ int Phrase2IRCompiler::CalculateDuration(const AST::NoteAndDuration& ast)
     }
     else
     {
-        return TickPerQuarter;
+        return m_DefaultDuration;
     }
 }
 

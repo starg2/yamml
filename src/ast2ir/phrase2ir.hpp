@@ -52,6 +52,8 @@ private:
     IR::Module& m_IR;
     std::deque<std::vector<AST::Attribute>> m_AttributeStack;
     int m_RelativeTime = 0;
+
+    int m_DefaultDuration;
 };
 
 } // namespace AST2IR
