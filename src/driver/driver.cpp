@@ -1,12 +1,13 @@
 
 #include <exception>
-#include "driver.hpp"
 
 #include <ast2ir/ast2ir.hpp>
 #include <ir2midi/ir2midi.hpp>
 #include <irprocessor/irprocessor.hpp>
 #include <midiwriter/midiwriter.hpp>
 #include <parser/parser.hpp>
+
+#include "driver.hpp"
 
 namespace YAMML
 {
