@@ -33,7 +33,7 @@ bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlock
             m_IR.TrackBlocks[index.ID].Blocks.push_back(i.apply_visitor(*this));
         }
 
-        return true;
+        return !HasErrors();
     }
     catch (const Exceptions::MessageException& e)
     {
