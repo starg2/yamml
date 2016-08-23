@@ -21,6 +21,7 @@ enum class MessageID : int
     TrackNumberIsOutOfSafeRange,
     TrackNumberIsOutOfPreferredRange,
     TooLargeRepeatCount,
+    OctaveOutOfRange,
 
     // error_attribute.hpp
     GrammarAttributeArgument,

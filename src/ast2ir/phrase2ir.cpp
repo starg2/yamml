@@ -70,7 +70,7 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
         AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
 
         Compile(ast.Block, index);
-        return true;
+        return !HasErrors();
     }
     catch (const Exceptions::MessageException& e)
     {
@@ -96,6 +96,7 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteSequenceStatement& ast)
 {
     m_DefaultDuration = TickPerQuarter;
+    m_DefaultOctave = 5;
 
     if (ast.Attributes.empty())
     {
@@ -108,7 +109,6 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
         m_AttributeStack.push_back(ast.Attributes);
         AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
 
-        // with bounds checking
         m_IR.Blocks[newIndex.ID].Attributes = m_AttributeStack.back();
 
         if (ast.NoteSeq.is_initialized())
@@ -227,11 +227,33 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::Rest&
 
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteNumber& ast, int duration)
 {
+    if (ast.Octave.is_initialized())
+    {
+        auto octave = ast.Octave.value();
+
+        if (0 <= octave.Value && octave.Value <= 10)
+        {
+            m_DefaultOctave = octave.Value;
+        }
+        else
+        {
+            AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::OctaveOutOfRange,
+                    m_IR.Name,
+                    octave.Location,
+                    {std::to_string(octave.Value)}
+                }
+            );
+        }
+    }
+
     return {
         IR::Event{
             m_RelativeTime,
             IR::Note{
-                MIDI::NoteNumber(ast.Name.Name, ast.Name.Minor, ast.Octave.get_value_or(AST::NoteOctave{4, ast.Location}).Value),
+                MIDI::NoteNumber(ast.Name.Name, ast.Name.Minor, m_DefaultOctave),
                 100,
                 duration,
                 100

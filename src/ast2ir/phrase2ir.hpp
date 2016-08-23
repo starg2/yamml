@@ -54,6 +54,7 @@ private:
     int m_RelativeTime = 0;
 
     int m_DefaultDuration;
+    int m_DefaultOctave;
 };
 
 } // namespace AST2IR
