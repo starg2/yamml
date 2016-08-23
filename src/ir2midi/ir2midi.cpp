@@ -224,7 +224,7 @@ void IR2MIDICompiler::Finalize()
             prevTime = j.AbsoluteTime;
         }
 
-        m_MIDI.Tracks[i].Events.push_back(MIDI::MIDIEvent{prevTime + 10, MIDI::MetaEvent{MIDI::MetaEventKind::EndOfTrack}});
+        m_MIDI.Tracks[i].Events.push_back(MIDI::MIDIEvent{50, MIDI::MetaEvent{MIDI::MetaEventKind::EndOfTrack}});
     }
 }
 
