@@ -288,7 +288,7 @@ void Phrase2IRCompiler::Compile(const AST::NoteSequenceBlockWithoutAttributes& a
 
 void Phrase2IRCompiler::LimitRepeatCount(std::size_t count, const AST::SourceLocation& location)
 {
-    constexpr std::size_t MaxRepeatCount = 1024;
+    constexpr std::size_t MaxRepeatCount = 100;
 
     if (count > MaxRepeatCount)
     {
