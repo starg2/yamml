@@ -43,6 +43,8 @@ public:
     std::vector<IR::Block::EventType> operator()(const AST::SimpleChord& ast, int duration);
 
 private:
+    int CalculateDuration(const AST::NoteAndDuration& ast);
+
     IR::BlockReference AllocBlock();
     void Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index);
     void LimitRepeatCount(std::size_t count, const AST::SourceLocation& location);

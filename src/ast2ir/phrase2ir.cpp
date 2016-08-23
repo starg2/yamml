@@ -57,19 +57,6 @@ public:
     }
 };
 
-int CalculateDuration(const AST::NoteAndDuration& ast)
-{
-    if (ast.Duration.is_initialized())
-    {
-        DurationCalculator dc;
-        return ast.Duration->apply_visitor(dc);
-    }
-    else
-    {
-        return TickPerQuarter;
-    }
-}
-
 Phrase2IRCompiler::Phrase2IRCompiler(Compiler::CompilerBase& parentCompiler, IR::Module& ir)
     : NestedCompilerBase(parentCompiler), m_IR(ir)
 {
@@ -260,6 +247,19 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::Simpl
     }
 
     return ret;
+}
+
+int Phrase2IRCompiler::CalculateDuration(const AST::NoteAndDuration& ast)
+{
+    if (ast.Duration.is_initialized())
+    {
+        DurationCalculator dc;
+        return ast.Duration->apply_visitor(dc);
+    }
+    else
+    {
+        return TickPerQuarter;
+    }
 }
 
 IR::BlockReference Phrase2IRCompiler::AllocBlock()
