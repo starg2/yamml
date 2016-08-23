@@ -128,9 +128,17 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
         CheckForUnprocessedAttributes(i.Attributes);
         EnsureTrackInitialized(i.Number);
 
+        GetTrackContext(i.Number).SaveTime();
+    }
+
+    for (auto&& i : ir.Tracks)
+    {
+        GetTrackContext(i.Number).RestoreTime();
+
         for (auto&& j : i.Items)
         {
             CheckForUnprocessedAttributes(j.Attributes);
+            GetTrackContext(i.Number).EnterBlock();
             CompileBlock(i.Number, j.Block);
         }
     }
@@ -197,8 +205,6 @@ bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
 
 void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
 {
-    GetTrackContext(trackNumber).EnterBlock();
-
     const auto& block = m_IR.Blocks.at(blockRef.ID);
     CheckForUnprocessedAttributes(block.Attributes);
 

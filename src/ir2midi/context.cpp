@@ -14,10 +14,20 @@ void TrackCompilerContext::EnterBlock()
     m_BaseTimeForCurrentBlock = m_LastEventTime;
 }
 
+void TrackCompilerContext::SaveTime()
+{
+    m_PrevLastEventTime = m_LastEventTime;
+}
+
+void TrackCompilerContext::RestoreTime()
+{
+    m_LastEventTime = m_PrevLastEventTime;
+}
+
 void TrackCompilerContext::PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev)
 {
     m_LastEventTime = m_BaseTimeForCurrentBlock + relativeTime;
-    m_Events.push_back(AbsoluteMIDIEvent{m_BaseTimeForCurrentBlock + relativeTime, ev});
+    m_Events.push_back(AbsoluteMIDIEvent{m_LastEventTime, ev});
 }
 
 void TrackCompilerContext::SortEvents()
