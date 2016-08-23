@@ -268,6 +268,7 @@ void IR2MIDICompiler::EnsureTrackInitialized(int number)
 
 MIDI::MIDITrack& IR2MIDICompiler::GetTrack(int trackNumber)
 {
+    EnsureTrackInitialized(trackNumber);
     return m_MIDI.Tracks[static_cast<std::size_t>(trackNumber)];
 }
 
