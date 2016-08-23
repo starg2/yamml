@@ -29,36 +29,32 @@ namespace AST2IR
 
 constexpr int TickPerQuarter = 960;
 
-class DurationCalculator final : public boost::static_visitor<>
+class DurationCalculator final : public boost::static_visitor<int>
 {
 public:
-    void operator()(const AST::SimpleDurationWithModifier& ast)
+    int operator()(const AST::SimpleDurationWithModifier& ast)
     {
         if (ast.Modifier.is_initialized())
         {
-            m_Duration += TickPerQuarter * 4 / (ast.Base.Number / 2) / ast.Modifier.get().Number;
+            return TickPerQuarter * 4 / (ast.Base.Number / 2) / ast.Modifier.get().Number;
         }
         else
         {
-            m_Duration += TickPerQuarter * 4 / ast.Base.Number;
+            return TickPerQuarter * 4 / ast.Base.Number;
         }
     }
 
-    void operator()(const AST::DurationSet& ast)
+    int operator()(const AST::DurationSet& ast)
     {
+        int ret = 0;
+
         for (auto&& i : ast.Durations)
         {
-            (*this)(i);
+            ret += (*this)(i);
         }
-    }
 
-    int GetDuration() const
-    {
-        return m_Duration;
+        return ret;
     }
-
-private:
-    int m_Duration = 0;
 };
 
 int CalculateDuration(const AST::NoteAndDuration& ast)
@@ -66,8 +62,7 @@ int CalculateDuration(const AST::NoteAndDuration& ast)
     if (ast.Duration.is_initialized())
     {
         DurationCalculator dc;
-        ast.Duration->apply_visitor(dc);
-        return dc.GetDuration();
+        return ast.Duration->apply_visitor(dc);
     }
     else
     {
