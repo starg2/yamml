@@ -18,7 +18,7 @@ namespace Driver
 class WinConsoleStdErrWriter : public IStdErrWriter
 {
 public:
-    WinConsoleStdErrWriter(HANDLE hStdErr) : m_hStdErr{hStdErr}
+    explicit WinConsoleStdErrWriter(HANDLE hStdErr) : m_hStdErr{hStdErr}
     {
     }
 
@@ -37,7 +37,7 @@ private:
 class WinFileStdErrWriter : public IStdErrWriter
 {
 public:
-    WinFileStdErrWriter(HANDLE hStdErr) : m_hStdErr{hStdErr}
+    explicit WinFileStdErrWriter(HANDLE hStdErr) : m_hStdErr{hStdErr}
     {
     }
 
