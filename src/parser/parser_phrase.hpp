@@ -53,7 +53,20 @@ class SimpleDurationModifier : public pegtl::seq<UnsignedInteger>
 {
 };
 
-class SimpleDurationWithModifier : public pegtl::seq<SimpleDuration, pegtl::opt<pegtl::if_must<pegtl::one<'.'>, SimpleDurationModifier>>>
+class SimpleDurationModifierDots : public pegtl::plus<pegtl::one<'.'>>
+{
+};
+
+class SimpleDurationWithModifier
+    : public pegtl::seq<
+        SimpleDuration,
+        pegtl::opt<
+            pegtl::sor<
+                pegtl::seq<pegtl::one<'.'>, SimpleDurationModifier>,
+                SimpleDurationModifierDots
+            >
+        >
+    >
 {
 };
 

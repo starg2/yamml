@@ -280,6 +280,17 @@ class Control<Grammar::SimpleDurationWithModifier>
 };
 
 template<>
+class Control<Grammar::SimpleDurationModifierDots>
+    : public ChangeStateAndAction<
+        Grammar::SimpleDurationModifierDots,
+        SimpleDurationModifierDotsState,
+        SimpleDurationModifierDotsAction,
+        ErrorControl
+    >
+{
+};
+
+template<>
 class Control<Grammar::SimpleDurationModifier>
     : public ChangeStateAndAction<
         Grammar::SimpleDurationModifier,

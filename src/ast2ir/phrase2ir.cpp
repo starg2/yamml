@@ -1,5 +1,6 @@
 
 #include <cassert>
+#include <cmath>
 
 #include <algorithm>
 #include <deque>
@@ -36,7 +37,15 @@ public:
     {
         if (ast.Modifier.is_initialized())
         {
-            return TickPerQuarter * 4 / (ast.Base.Number / 2) / ast.Modifier.get().Number;
+            if (ast.Modifier.value().type() == typeid(AST::SimpleDurationModifierDots))
+            {
+                long pow2 = std::lround(std::pow(2, boost::get<AST::SimpleDurationModifierDots>(ast.Modifier.value()).Count));
+                return TickPerQuarter * 4 / (ast.Base.Number / 2) - TickPerQuarter * 4 / (ast.Base.Number * pow2);
+            }
+            else
+            {
+                return TickPerQuarter * 4 / (ast.Base.Number / 2) / boost::get<AST::SimpleDurationModifier>(ast.Modifier.value()).Number;
+            }
         }
         else
         {

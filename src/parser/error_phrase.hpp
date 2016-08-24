@@ -16,9 +16,6 @@ template<>
 const Message::MessageID ErrorControl<Grammar::NoteSequenceBlockWithoutAttributes>::ID = Message::MessageID::GrammarNoteSequenceBlockWithoutAttributes;
 
 template<>
-const Message::MessageID ErrorControl<Grammar::SimpleDurationModifier>::ID = Message::MessageID::GrammarSimpleDurationModifier;
-
-template<>
 const Message::MessageID ErrorControl<Grammar::NoteNumber>::ID = Message::MessageID::GrammarNoteNumber;
 
 template<>

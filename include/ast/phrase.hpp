@@ -67,11 +67,18 @@ public:
     SourceLocation Location;
 };
 
+class SimpleDurationModifierDots final
+{
+public:
+    unsigned long Count;
+    SourceLocation Location;
+};
+
 class SimpleDurationWithModifier final
 {
 public:
     SimpleDuration Base;
-    boost::optional<SimpleDurationModifier> Modifier;
+    boost::optional<boost::variant<SimpleDurationModifier, SimpleDurationModifierDots>> Modifier;
     SourceLocation Location;
 };
 

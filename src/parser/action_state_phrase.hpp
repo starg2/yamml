@@ -345,6 +345,35 @@ class SimpleDurationWithModifierAction<Grammar::SimpleDurationWithModifier> : pu
 {
 };
 
+class SimpleDurationModifierDotsState
+{
+public:
+    template<typename TParentState, typename... TCommonStates>
+    void success(TParentState& st, TCommonStates&...)
+    {
+        st.ASTNode.Modifier = ASTNode;
+    }
+
+    AST::SimpleDurationModifierDots ASTNode;
+};
+
+template<typename TRule>
+class SimpleDurationModifierDotsAction : public pegtl::nothing<TRule>
+{
+};
+
+template<>
+class SimpleDurationModifierDotsAction<Grammar::SimpleDurationModifierDots>
+{
+public:
+    template<typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationModifierDotsState& st, TCommonStates&... commonStates)
+    {
+        AssignLocationAction::apply(in, st, commonStates...);
+        st.ASTNode.Count = static_cast<unsigned long>(in.size());
+    }
+};
+
 class SimpleDurationModifierState
 {
 public:
