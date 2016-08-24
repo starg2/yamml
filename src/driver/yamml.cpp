@@ -164,9 +164,9 @@ int main(int argc, char** argv)
     {
         std::cout << "Invalid command line" << std::endl;
     }
-    catch (const std::exception&)
+    catch (const std::exception& e)
     {
-        std::cout << "Unknown error" << std::endl;
+        std::cout << "Unknown error: '" << e.what() << "'" << std::endl;
     }
 
     return 2;
