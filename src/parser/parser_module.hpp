@@ -20,7 +20,7 @@ class PhrasesAndCompositions : public pegtl::star<pegtl::pad<pegtl::sor<Composit
 {
 };
 
-class Module : public pegtl::must<PhrasesAndCompositions, Separators, pegtl::eof>
+class Module : public pegtl::must<PhrasesAndCompositions, pegtl::eof>
 {
 };
 

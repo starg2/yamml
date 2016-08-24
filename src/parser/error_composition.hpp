@@ -24,6 +24,9 @@ const Message::MessageID ErrorControl<Grammar::OneOrMoreTrackBlocks>::ID = Messa
 template<>
 const Message::MessageID ErrorControl<Grammar::SpaceSeparatedOptionalTrackItems>::ID = Message::MessageID::GrammarSpaceSeparatedOptionalTrackItems;
 
+template<>
+const Message::MessageID ErrorControl<Grammar::CompositionName>::ID = Message::MessageID::GrammarCompositionName;
+
 } // namespace Parser
 
 } // namespace YAMML

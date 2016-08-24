@@ -40,17 +40,18 @@ enum class MessageID : int
     GrammarCommandsAndTrackListBlocks,
     GrammarOneOrMoreTrackBlocks,
     GrammarSpaceSeparatedOptionalTrackItems,
+    GrammarCompositionName,
 
     // error_literal.hpp
     GrammarSeparators,
     GrammarSeparator,
     GrammarEOF,
     GrammarUntilBlockCommentEnd,
-    GrammarIdentifier,
     GrammarEscape,
-    GrammarAnyChar,
     GrammarNoDigit,
-    GrammarXDigit,
+    GrammarXDigit2,
+    GrammarXDigit4,
+    GrammarXDigit8,
     GrammarUntilDoubleQuote,
     GrammarUntilSingleQuote,
 

@@ -67,13 +67,17 @@ class CommandsAndTrackListBlocks : public pegtl::star<pegtl::sor<pegtl::pad<Comm
 {
 };
 
+class CompositionName : public pegtl::pad<Identifier, Separator>
+{
+};
+
 class Composition
     : public pegtl::seq<
         AttributeOptionalSequence,
         pegtl::if_must<
             pegtl_string_t("composition"),
             Separator,
-            Identifier,
+            CompositionName,
             BlockBegin,
             CommandsAndTrackListBlocks,
             BlockEnd

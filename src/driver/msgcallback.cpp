@@ -47,39 +47,40 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         // error_attribute.hpp
         {Message::MessageID::GrammarAttributeArgument, "parse error: GrammarAttributeArgument"},
         {Message::MessageID::GrammarCommaSeparatedOptionalAttributeArguments, "parse error: GrammarCommaSeparatedOptionalAttributeArguments"},
-        {Message::MessageID::GrammarAttributeList, "parse error: GrammarAttributeList"},
-        {Message::MessageID::GrammarAttributeNameAndArguments, "parse error: GrammarAttributeNameAndArguments"},
-        {Message::MessageID::GrammarEndBracket, "parse error: GrammarEndBracket"},
+        {Message::MessageID::GrammarAttributeList, "expecting identifier after '['"},
+        {Message::MessageID::GrammarAttributeNameAndArguments, "expecting identifier here (consider removing trailing ',')"},
+        {Message::MessageID::GrammarEndBracket, "unexpected token found. Did you forget ']'?"},
 
         // error_common.hpp
-        {Message::MessageID::GrammarBlockBegin, "parse error: GrammarBlockBegin"},
-        {Message::MessageID::GrammarBlockEnd, "parse error: GrammarBlockEnd"},
-        {Message::MessageID::GrammarEndParenthesis, "parse error: GrammarEndParenthesis"},
+        {Message::MessageID::GrammarBlockBegin, "unexpected token found. expecting '{'"},
+        {Message::MessageID::GrammarBlockEnd, "unexpected token"},
+        {Message::MessageID::GrammarEndParenthesis, "missing ')'"},
 
         // error_composition.hpp
         {Message::MessageID::GrammarCommandArgument, "parse error: GrammarCommandArgument"},
         {Message::MessageID::GrammarCommandsAndTrackListBlocks, "parse error: GrammarCommandsAndTrackListBlocks"},
-        {Message::MessageID::GrammarOneOrMoreTrackBlocks, "parse error: GrammarOneOrMoreTrackBlocks"},
+        {Message::MessageID::GrammarOneOrMoreTrackBlocks, "unexpected token found. expecting track blocks"},
         {Message::MessageID::GrammarSpaceSeparatedOptionalTrackItems, "parse error: GrammarSpaceSeparatedOptionalTrackItems"},
+        {Message::MessageID::GrammarCompositionName, "expecting valid name for composition"},
 
         // error_literal.hpp
         {Message::MessageID::GrammarSeparators, "parse error: GrammarSeparators"},
         {Message::MessageID::GrammarSeparator, "parse error: GrammarSeparator"},
-        {Message::MessageID::GrammarEOF, "parse error: GrammarEOF"},
-        {Message::MessageID::GrammarUntilBlockCommentEnd, "parse error: GrammarUntilBlockCommentEnd"},
-        {Message::MessageID::GrammarIdentifier, "parse error: GrammarIdentifier"},
-        {Message::MessageID::GrammarEscape, "parse error: GrammarEscape"},
-        {Message::MessageID::GrammarAnyChar, "parse error: GrammarAnyChar"},
-        {Message::MessageID::GrammarNoDigit, "parse error: GrammarNoDigit"},
-        {Message::MessageID::GrammarXDigit, "parse error: GrammarXDigit"},
-        {Message::MessageID::GrammarUntilDoubleQuote, "parse error: GrammarUntilDoubleQuote"},
-        {Message::MessageID::GrammarUntilSingleQuote, "parse error: GrammarUntilSingleQuote"},
+        {Message::MessageID::GrammarEOF, "expecting 'phrase' or 'composition'"},
+        {Message::MessageID::GrammarUntilBlockCommentEnd, "unterminated block comment (missing '*/')"},
+        {Message::MessageID::GrammarEscape, "invalid escape sequence"},
+        {Message::MessageID::GrammarNoDigit, "numeric constant may not be prefixed with '0'"},
+        {Message::MessageID::GrammarXDigit2, "expecting 2 xdigits after '\\x'"},
+        {Message::MessageID::GrammarXDigit4, "expecting 4 xdigits after '\\u'"},
+        {Message::MessageID::GrammarXDigit8, "expecting 8 xdigits after '\\U'"},
+        {Message::MessageID::GrammarUntilDoubleQuote, "unterminated string literal (missing double quote)"},
+        {Message::MessageID::GrammarUntilSingleQuote, "unterminated string literal (missing single quote)"},
 
         // error_module.hpp
         {Message::MessageID::GrammarPhrasesAndCompositions, "parse error: GrammarPhrasesAndCompositions"},
 
         // grammar_phrase.hpp
-        {Message::MessageID::GrammarNoteSequenceBlockWithoutAttributes, "parse error: GrammarNoteSequenceBlockWithoutAttributes"},
+        {Message::MessageID::GrammarNoteSequenceBlockWithoutAttributes, "expecting '{' here"},
         {Message::MessageID::GrammarSimpleDurationModifier, "parse error: GrammarSimpleDurationModifier"},
         {Message::MessageID::GrammarNoteNumber, "parse error: GrammarNoteNumber"},
         {Message::MessageID::GrammarNoteSequenceStatementsAndBlocks, "parse error: GrammarNoteSequenceStatementsAndBlocks"},
@@ -87,18 +88,18 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::GrammarSpaceDelimitedChords, "parse error: GrammarSpaceDelimitedChords"},
         {Message::MessageID::GrammarDurationOrDurationSet, "parse error: GrammarDurationOrDurationSet"},
         {Message::MessageID::GrammarSpaceDelimitedDurations, "parse error: GrammarSpaceDelimitedDurations"},
-        {Message::MessageID::GrammarMissingRepeatOperator, "expecting '*' or '%' after a numeric constant"},
+        {Message::MessageID::GrammarMissingRepeatOperator, "expecting '*' or '%' after numeric constant"},
         {Message::MessageID::GrammarPhrase2, "parse error: GrammarPhrase2"},
         {Message::MessageID::GrammarPhrase3, "parse error: GrammarPhrase3"},
         {Message::MessageID::GrammarPhrase4, "parse error: GrammarPhrase4"},
-        {Message::MessageID::GrammarPhraseName, "parse error: GrammarPhraseName"},
+        {Message::MessageID::GrammarPhraseName, "expecting valid name for phrase"},
 
         // IR2MIDI
         {Message::MessageID::InvalidCommandName, "invalid command '{0}'"},
         {Message::MessageID::WrongNumberOfCommandArguments, "wrong number of arguments passed to command '{0}'; {2} expected, {1} found"},
         {Message::MessageID::WrongTypeOfCommandArgument, "command argument {1} has a wrong type; expecting '{2}' here"},
 
-        {Message::MessageID::InvalidTempo, "invalid tempo value"}
+        {Message::MessageID::InvalidTempo, "invalid tempo value '{0}'"}
     },
     m_pStdErrWriter{pStdErrWriter}
 {

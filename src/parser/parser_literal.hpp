@@ -102,15 +102,15 @@ class Identifier : public pegtl::seq<IdentifierCharFirst, pegtl::star<Identifier
 };
 
 // https://github.com/ColinH/PEGTL/blob/master/examples/unescape.cc
-class EscapeX2 : public pegtl::seq<pegtl::one<'x'>, pegtl::rep<2, pegtl::must<pegtl::xdigit>>>
+class EscapeX2 : public pegtl::if_must<pegtl::one<'x'>, pegtl::rep<2, pegtl::xdigit>>
 {
 };
 
-class EscapeU4 : public pegtl::seq<pegtl::one<'u'>, pegtl::rep<4, pegtl::must<pegtl::xdigit>>>
+class EscapeU4 : public pegtl::if_must<pegtl::one<'u'>, pegtl::rep<4, pegtl::xdigit>>
 {
 };
 
-class EscapeU8 : public pegtl::seq<pegtl::one<'U'>, pegtl::rep<8, pegtl::must<pegtl::xdigit>>>
+class EscapeU8 : public pegtl::if_must<pegtl::one<'U'>, pegtl::rep<8, pegtl::xdigit>>
 {
 };
 
@@ -126,7 +126,7 @@ class AnyChar : public pegtl::utf8::range<0x20, 0x10FFFF>
 {
 };
 
-class CharcterOrEscapeSequence : public pegtl::if_must_else<pegtl::one<'\\'>, Escape, AnyChar>
+class CharcterOrEscapeSequence : public pegtl::if_then_else<pegtl::one<'\\'>, pegtl::must<Escape>, AnyChar>
 {
 };
 
