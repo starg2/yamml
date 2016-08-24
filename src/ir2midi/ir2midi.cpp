@@ -1,5 +1,7 @@
 
+#include <algorithm>
 #include <exception>
+#include <vector>
 
 #include <boost/variant.hpp>
 
@@ -124,17 +126,19 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
 {
     CheckForUnprocessedAttributes(ir.Attributes);
 
+    int lastTime = 0;
+
     for (auto&& i : ir.Tracks)
     {
         CheckForUnprocessedAttributes(i.Attributes);
         EnsureTrackInitialized(i.Number);
 
-        GetTrackContext(i.Number).SaveTime();
+        lastTime = std::max(GetTrackContext(i.Number).GetLastTime(), lastTime);
     }
 
     for (auto&& i : ir.Tracks)
     {
-        GetTrackContext(i.Number).RestoreTime();
+        GetTrackContext(i.Number).SetTime(lastTime);
 
         for (auto&& j : i.Items)
         {

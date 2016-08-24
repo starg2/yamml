@@ -23,8 +23,8 @@ class TrackCompilerContext final
 {
 public:
     void EnterBlock();
-    void SaveTime();
-    void RestoreTime();
+    int GetLastTime();
+    void SetTime(int t);
     void UpdateTime(int relativeTime);
     void PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev);
     void SortEvents();
@@ -34,7 +34,6 @@ private:
     std::vector<AbsoluteMIDIEvent> m_Events;
     int m_BaseTimeForCurrentBlock = 0;
     int m_LastEventTime = 0;
-    int m_PrevLastEventTime = 0;
 };
 
 class IIR2MIDICompiler
