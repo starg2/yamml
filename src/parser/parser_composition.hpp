@@ -63,7 +63,7 @@ class TrackListBlock
 {
 };
 
-class CommandsAndTrackListBlocks : public pegtl::star<pegtl::sor<pegtl::pad<Command, Separator>, TrackListBlock>>
+class CommandsAndTrackListBlocks : public pegtl::star<pegtl::sor<TrackListBlock, pegtl::pad<Command, Separator>>>
 {
 };
 
