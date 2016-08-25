@@ -26,7 +26,7 @@ public:
         typename TParentState,
         typename... TCommonStates
     >
-    static bool match(TInput& in, TParentState&& parentState, TCommonStates&... commonStates)
+    static bool match(TInput& in, TParentState& parentState, TCommonStates&... commonStates)
     {
         pegtl::internal::state_disable_helper<TApplyMode, TState> childState;
 
