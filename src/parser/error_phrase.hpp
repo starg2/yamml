@@ -52,6 +52,9 @@ const Message::MessageID ErrorControl<
 >::ID = Message::MessageID::GrammarPhrase4;
 
 template<>
+const Message::MessageID ErrorControl<pegtl::one<';'>>::ID = Message::MessageID::GrammarSemicolon;
+
+template<>
 const Message::MessageID ErrorControl<Grammar::PhraseName>::ID = Message::MessageID::GrammarPhraseName;
 
 } // namespace Parser

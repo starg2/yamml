@@ -92,6 +92,7 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::GrammarPhrase2, "parse error: GrammarPhrase2"},
         {Message::MessageID::GrammarPhrase3, "parse error: GrammarPhrase3"},
         {Message::MessageID::GrammarPhrase4, "parse error: GrammarPhrase4"},
+        {Message::MessageID::GrammarSemicolon, "unexpected token '{0}'"},
         {Message::MessageID::GrammarPhraseName, "expecting valid name for phrase"},
 
         // IR2MIDI

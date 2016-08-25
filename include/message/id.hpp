@@ -71,6 +71,7 @@ enum class MessageID : int
     GrammarPhrase2,
     GrammarPhrase3,
     GrammarPhrase4,
+    GrammarSemicolon,
     GrammarPhraseName,
 
     // IR2MIDI

@@ -149,17 +149,25 @@ class NoteAndExpression
 {
 };
 
-class NoteSequence : public pegtl::star<pegtl::pad<NoteAndExpression, Separator>>
+class NoteSequence : public pegtl::plus<pegtl::pad<NoteAndExpression, Separator>>
 {
 };
 
-class NoteSequenceStatement : public pegtl::seq<AttributeOptionalSequence, pegtl::pad_opt<NoteSequence, Separator>, pegtl::one<';'>>
+class NoteSequenceStatement
+    : public pegtl::seq<
+    AttributeOptionalSequence,
+    pegtl::if_then_else<
+        NoteSequence,
+        pegtl::must<pegtl::one<';'>>,
+        pegtl::one<';'>
+    >
+>
 {
 };
 
 class NoteSequenceBlock;
 
-class NoteSequenceStatementsAndBlocks : public pegtl::star<pegtl::sor<NoteSequenceStatement, NoteSequenceBlock>>
+class NoteSequenceStatementsAndBlocks : public pegtl::star<pegtl::sor<NoteSequenceBlock, NoteSequenceStatement>>
 {
 };
 
