@@ -1,9 +1,15 @@
 
+#include <memory>
+#include <string>
+#include <typeinfo>
+
 #include <boost/variant.hpp>
 
-#include "command_tempo.hpp"
-
+#include <ir2midi/command.hpp>
+#include <message/id.hpp>
 #include <midi/event.hpp>
+
+#include "command_tempo.hpp"
 
 namespace YAMML
 {
@@ -11,72 +17,78 @@ namespace YAMML
 namespace IR2MIDI
 {
 
-std::vector<Message::MessageItem> ProcessTempo(IIR2MIDICompiler* pCompiler, const AST::Command& ast)
+class TempoCommandProcessor final : public ICommandProcessor
 {
-    std::vector<Message::MessageItem> messages;
-
-    if (ast.Arguments.size() != 1)
+public:
+    explicit TempoCommandProcessor(IIR2MIDICompiler* pCompiler) : m_pCompiler(pCompiler)
     {
-        messages.push_back(
-            Message::MessageItem{
-                Message::MessageKind::Error,
+    }
+
+    virtual ~TempoCommandProcessor() = default;
+
+    virtual IIR2MIDICompiler* GetCompiler() override
+    {
+        return m_pCompiler;
+    }
+
+    virtual void Process(const AST::Command& ast) override
+    {
+        ValidateArguments(ast);
+
+        unsigned int usecPerQuater = 60 * 1'000'000 / boost::get<long>(ast.Arguments[0].Value);
+
+        GetCompiler()->GetTrackContext(0).PushEvent(
+            0,
+            MIDI::MetaEvent{
+                MIDI::MetaEventKind::SetTempo,
+                {
+                    static_cast<std::uint8_t>((usecPerQuater & 0xFF0000) >> 16),
+                    static_cast<std::uint8_t>((usecPerQuater & 0xFF00) >> 8),
+                    static_cast<std::uint8_t>(usecPerQuater & 0xFF)
+                }
+            }
+        );
+    }
+
+    void ValidateArguments(const AST::Command& ast)
+    {
+        if (ast.Arguments.size() != 1)
+        {
+            ThrowMessage(
                 Message::MessageID::WrongNumberOfCommandArguments,
-                pCompiler->GetSourceName(),
                 ast.Location,
                 {"tempo", std::to_string(ast.Arguments.size()), "1"}
-            }
-        );
+            );
+        }
 
-        return messages;
-    }
-
-    if (ast.Arguments[0].Value.type() != typeid(long))
-    {
-        messages.push_back(
-            Message::MessageItem{
-                Message::MessageKind::Error,
+        if (ast.Arguments[0].Value.type() != typeid(long))
+        {
+            ThrowMessage(
                 Message::MessageID::WrongTypeOfCommandArgument,
-                pCompiler->GetSourceName(),
                 ast.Location,
                 {"tempo", "1", "int"}
-            }
-        );
+            );
+        }
 
-        return messages;
-    }
+        auto tempo = boost::get<long>(ast.Arguments[0].Value);
 
-    auto tempo = boost::get<long>(ast.Arguments[0].Value);
-
-    if (tempo <= 0)
-    {
-        messages.push_back(
-            Message::MessageItem{
-                Message::MessageKind::Error,
+        if (tempo <= 0)
+        {
+            ThrowMessage(
                 Message::MessageID::InvalidTempo,
-                pCompiler->GetSourceName(),
                 ast.Location,
                 {std::to_string(tempo)}
-            }
-        );
-
-        return messages;
+            );
+        }
     }
 
-    unsigned int usecPerQuater = 60 * 1'000'000 / tempo;
+private:
+    IIR2MIDICompiler* m_pCompiler;
+};
 
-    pCompiler->GetTrackContext(0).PushEvent(
-        0,
-        MIDI::MetaEvent{
-            MIDI::MetaEventKind::SetTempo,
-            {
-                static_cast<std::uint8_t>((usecPerQuater & 0xFF0000) >> 16),
-                static_cast<std::uint8_t>((usecPerQuater & 0xFF00) >> 8),
-                static_cast<std::uint8_t>(usecPerQuater & 0xFF)
-            }
-        }
-    );
-
-    return messages;
+std::unique_ptr<ICommandProcessor> CreateTempoCommandProcessor(IIR2MIDICompiler* pCompiler)
+{
+    return std::make_unique<TempoCommandProcessor>(pCompiler);
 }
 
 } // namespace IR2MIDI

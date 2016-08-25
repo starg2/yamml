@@ -78,7 +78,8 @@ enum class MessageID : int
     WrongNumberOfCommandArguments,
     WrongTypeOfCommandArgument,
 
-    InvalidTempo
+    InvalidTempo,
+    InvalidProgram
 };
 
 } // namespace Message

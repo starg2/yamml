@@ -5,6 +5,7 @@
 
 #include <exceptions/messageexception.hpp>
 #include <message/message.hpp>
+#include <midi/limits.hpp>
 
 #include "composition2ir.hpp"
 #include "containerutil.hpp"
@@ -14,8 +15,6 @@ namespace YAMML
 
 namespace AST2IR
 {
-
-constexpr int TrackNumberLimit = 16;
 
 Composition2IRCompiler::Composition2IRCompiler(Compiler::CompilerBase& parentCompiler, IR::Module& ir)
     : NestedCompilerBase(parentCompiler), m_IR(ir)
@@ -78,7 +77,7 @@ IR::TrackBlock::BlockType Composition2IRCompiler::operator()(const AST::TrackLis
 
 IR::Track Composition2IRCompiler::Compile(const AST::TrackBlock& ast)
 {
-    if (!(0 <= ast.TrackNumber && ast.TrackNumber < TrackNumberLimit))
+    if (!(0 <= ast.TrackNumber && ast.TrackNumber < MIDI::TrackNumberLimit))
     {
         throw Exceptions::MessageException(
             Message::MessageItem{
@@ -86,7 +85,7 @@ IR::Track Composition2IRCompiler::Compile(const AST::TrackBlock& ast)
                 Message::MessageID::TrackNumberIsOutOfPreferredRange,
                 m_IR.Name,
                 ast.Location,
-                {std::to_string(ast.TrackNumber), std::to_string(TrackNumberLimit)}
+                {std::to_string(ast.TrackNumber), std::to_string(MIDI::TrackNumberLimit)}
             }
         );
     }

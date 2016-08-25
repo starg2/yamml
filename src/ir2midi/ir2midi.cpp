@@ -8,7 +8,9 @@
 #include <exceptions/messageexception.hpp>
 #include <ir2midi/ir2midi.hpp>
 #include <message/message.hpp>
+#include <midi/limits.hpp>
 
+#include "command_program.hpp"
 #include "command_tempo.hpp"
 
 namespace YAMML
@@ -16,8 +18,6 @@ namespace YAMML
 
 namespace IR2MIDI
 {
-
-constexpr int TrackNumberSafeLimit = 256;
 
 class EventConverter final : public boost::static_visitor<>
 {
@@ -151,11 +151,9 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
 
 void IR2MIDICompiler::operator()(const AST::Command& ast)
 {
-    if (ast.Name == "tempo")
-    {
-        AddMessages(ProcessTempo(this, ast));
-    }
-    else
+    auto itProc = m_CommandProcessors.find(ast.Name);
+
+    if (itProc == m_CommandProcessors.end())
     {
         AddMessage(
             Message::MessageItem{
@@ -166,6 +164,17 @@ void IR2MIDICompiler::operator()(const AST::Command& ast)
                 {ast.Name}
             }
         );
+    }
+    else
+    {
+        try
+        {
+            itProc->second->Process(ast);
+        }
+        catch (const Exceptions::MessageException& e)
+        {
+            AddMessage(e.Item);
+        }
     }
 }
 
@@ -178,6 +187,12 @@ void IR2MIDICompiler::operator()(int trackNumber, const IR::Event& ev)
 void IR2MIDICompiler::operator()(int trackNumber, const IR::BlockReference& blockRef)
 {
     CompileBlock(trackNumber, blockRef);
+}
+
+void IR2MIDICompiler::InitializeCommandProcessors()
+{
+    m_CommandProcessors["program"] = CreateProgramCommandProcessor(this);
+    m_CommandProcessors["tempo"] = CreateTempoCommandProcessor(this);
 }
 
 bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
@@ -257,7 +272,7 @@ void IR2MIDICompiler::CheckForUnprocessedAttributes(const std::vector<AST::Attri
 
 void IR2MIDICompiler::EnsureTrackInitialized(int number)
 {
-    if (!(0 <= number && number < TrackNumberSafeLimit))
+    if (!(0 <= number && number < MIDI::TrackNumberSafeLimit))
     {
         throw Exceptions::MessageException(
             Message::MessageItem{
@@ -265,7 +280,7 @@ void IR2MIDICompiler::EnsureTrackInitialized(int number)
                 Message::MessageID::TrackNumberIsOutOfSafeRange,
                 m_IR.Name,
                 {0, 0},
-                {std::to_string(number), std::to_string(TrackNumberSafeLimit)}
+                {std::to_string(number), std::to_string(MIDI::TrackNumberSafeLimit)}
             }
         );
     }

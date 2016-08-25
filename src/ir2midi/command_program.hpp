@@ -12,7 +12,7 @@ namespace YAMML
 namespace IR2MIDI
 {
 
-std::unique_ptr<ICommandProcessor> CreateTempoCommandProcessor(IIR2MIDICompiler* pCompiler);
+std::unique_ptr<ICommandProcessor> CreateProgramCommandProcessor(IIR2MIDICompiler* pCompiler);
 
 } // namespace IR2MIDI
 

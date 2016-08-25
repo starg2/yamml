@@ -6,6 +6,7 @@
 #include <deque>
 #include <exception>
 #include <string>
+#include <typeinfo>
 #include <vector>
 
 #include <boost/optional.hpp>
@@ -18,6 +19,7 @@
 #include <message/message.hpp>
 #include <ir/block.hpp>
 #include <ir/module.hpp>
+#include <midi/limits.hpp>
 
 #include "containerutil.hpp"
 #include "phrase2ir.hpp"
@@ -27,8 +29,6 @@ namespace YAMML
 
 namespace AST2IR
 {
-
-constexpr int TickPerQuarter = 960;
 
 class DurationCalculator final : public boost::static_visitor<int>
 {
@@ -40,16 +40,16 @@ public:
             if (ast.Modifier.value().type() == typeid(AST::SimpleDurationModifierDots))
             {
                 long pow2 = std::lround(std::pow(2, boost::get<AST::SimpleDurationModifierDots>(ast.Modifier.value()).Count));
-                return TickPerQuarter * 4 / (ast.Base.Number / 2) - TickPerQuarter * 4 / (ast.Base.Number * pow2);
+                return MIDI::TickPerQuarter * 4 / (ast.Base.Number / 2) - MIDI::TickPerQuarter * 4 / (ast.Base.Number * pow2);
             }
             else
             {
-                return TickPerQuarter * 4 / (ast.Base.Number / 2) / boost::get<AST::SimpleDurationModifier>(ast.Modifier.value()).Number;
+                return MIDI::TickPerQuarter * 4 / (ast.Base.Number / 2) / boost::get<AST::SimpleDurationModifier>(ast.Modifier.value()).Number;
             }
         }
         else
         {
-            return TickPerQuarter * 4 / ast.Base.Number;
+            return MIDI::TickPerQuarter * 4 / ast.Base.Number;
         }
     }
 
@@ -104,7 +104,7 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
 
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteSequenceStatement& ast)
 {
-    m_DefaultDuration = TickPerQuarter;
+    m_DefaultDuration = MIDI::TickPerQuarter;
     m_DefaultOctave = 5;
 
     if (ast.Attributes.empty())

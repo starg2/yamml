@@ -10,6 +10,7 @@
 #include <functional>
 #include <iterator>
 #include <string>
+#include <typeinfo>
 #include <utility>
 #include <vector>
 

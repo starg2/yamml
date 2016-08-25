@@ -1,7 +1,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <boost/variant.hpp>
@@ -9,6 +11,7 @@
 #include <ast/composition.hpp>
 #include <compiler/base.hpp>
 #include <ir/module.hpp>
+#include <ir2midi/command.hpp>
 #include <ir2midi/context.hpp>
 #include <midi/file.hpp>
 
@@ -23,12 +26,17 @@ class IR2MIDICompiler : public Compiler::CompilerBase, public IIR2MIDICompiler, 
 public:
     explicit IR2MIDICompiler(const IR::Module& ir) : m_IR(ir)
     {
+        InitializeCommandProcessors();
     }
 
     template<typename T>
     IR2MIDICompiler(const IR::Module& ir, T func) : CompilerBase(func), m_IR(ir)
     {
+        InitializeCommandProcessors();
     }
+
+    IR2MIDICompiler(const IR2MIDICompiler&) = delete;
+    IR2MIDICompiler& operator=(const IR2MIDICompiler&) = delete;
 
     virtual ~IR2MIDICompiler() = default;
 
@@ -47,6 +55,7 @@ public:
     virtual TrackCompilerContext& GetTrackContext(int trackNumber) override;
 
 private:
+    void InitializeCommandProcessors();
     bool CompileTrackBlock(const std::string& trackBlockName);
     void CompileBlock(int trackNumber, IR::BlockReference blockRef);
     void Finalize();
@@ -59,6 +68,7 @@ private:
     IR::Module m_IR;
     MIDI::MIDIFile m_MIDI;
     std::vector<TrackCompilerContext> m_Contexts;
+    std::unordered_map<std::string, std::unique_ptr<ICommandProcessor>> m_CommandProcessors;
 };
 
 } // namespace IR2MIDI
