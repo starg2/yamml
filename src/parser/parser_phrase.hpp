@@ -192,8 +192,8 @@ class Phrase
     : public pegtl::seq<
         AttributeOptionalSequence,
         pegtl::if_must<
-            pegtl_string_t("phrase"),
-            Separator,
+            pegtl::seq<pegtl_string_t("phrase"), pegtl::sor<Separator, pegtl::eof>>,
+            Separators,
             PhraseName,
             NoteSequenceBlockWithoutAttributes
         >

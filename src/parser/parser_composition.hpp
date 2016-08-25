@@ -75,8 +75,8 @@ class Composition
     : public pegtl::seq<
         AttributeOptionalSequence,
         pegtl::if_must<
-            pegtl_string_t("composition"),
-            Separator,
+            pegtl::seq<pegtl_string_t("composition"), pegtl::sor<Separator, pegtl::eof>>,
+            Separators,
             CompositionName,
             BlockBegin,
             CommandsAndTrackListBlocks,
