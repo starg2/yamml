@@ -21,7 +21,7 @@ namespace YAMML
 namespace IR2MIDI
 {
 
-class IR2MIDICompiler : public Compiler::CompilerBase, public IIR2MIDICompiler, public boost::static_visitor<>
+class IR2MIDICompiler final : public Compiler::CompilerBase, public IIR2MIDICompiler, public boost::static_visitor<>
 {
 public:
     explicit IR2MIDICompiler(const IR::Module& ir) : m_IR(ir)
@@ -63,12 +63,15 @@ private:
     void CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes);
     void EnsureTrackInitialized(int number);
 
+    int GetLastEventTime() const;
+    void UpdateLastEventTime();
     MIDI::MIDITrack& GetTrack(int trackNumber);
 
     IR::Module m_IR;
     MIDI::MIDIFile m_MIDI;
     std::vector<TrackCompilerContext> m_Contexts;
     std::unordered_map<std::string, std::unique_ptr<ICommandProcessor>> m_CommandProcessors;
+    int m_LastEventTime = 0;
 };
 
 } // namespace IR2MIDI

@@ -22,9 +22,16 @@ public:
 class TrackCompilerContext final
 {
 public:
+    TrackCompilerContext() = default;
+
+    explicit TrackCompilerContext(int lastEventTime)
+    {
+        SetLastEventTime(lastEventTime);
+    }
+
     void EnterBlock();
-    int GetLastTime();
-    void SetTime(int t);
+    int GetLastEventTime();
+    void SetLastEventTime(int t);
     void UpdateTime(int relativeTime);
     void PushEvent(int relativeTime, const MIDI::MIDIEvent::EventType& ev);
     void SortEvents();

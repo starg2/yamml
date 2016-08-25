@@ -14,12 +14,12 @@ void TrackCompilerContext::EnterBlock()
     m_BaseTimeForCurrentBlock = m_LastEventTime;
 }
 
-int TrackCompilerContext::GetLastTime()
+int TrackCompilerContext::GetLastEventTime()
 {
     return m_LastEventTime;
 }
 
-void TrackCompilerContext::SetTime(int t)
+void TrackCompilerContext::SetLastEventTime(int t)
 {
     m_LastEventTime = t;
     m_BaseTimeForCurrentBlock = t;

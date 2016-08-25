@@ -127,19 +127,15 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
 {
     CheckForUnprocessedAttributes(ir.Attributes);
 
-    int lastTime = 0;
-
     for (auto&& i : ir.Tracks)
     {
         CheckForUnprocessedAttributes(i.Attributes);
         EnsureTrackInitialized(i.Number);
-
-        lastTime = std::max(GetTrackContext(i.Number).GetLastTime(), lastTime);
     }
 
     for (auto&& i : ir.Tracks)
     {
-        GetTrackContext(i.Number).SetTime(lastTime);
+        GetTrackContext(i.Number).SetLastEventTime(GetLastEventTime());
 
         for (auto&& j : i.Items)
         {
@@ -148,6 +144,8 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
             CompileBlock(i.Number, j.Block);
         }
     }
+
+    UpdateLastEventTime();
 }
 
 void IR2MIDICompiler::operator()(const AST::Command& ast)
@@ -171,6 +169,7 @@ void IR2MIDICompiler::operator()(const AST::Command& ast)
         try
         {
             itProc->second->Process(ast);
+            UpdateLastEventTime();
         }
         catch (const Exceptions::MessageException& e)
         {
@@ -290,7 +289,25 @@ void IR2MIDICompiler::EnsureTrackInitialized(int number)
     if (static_cast<std::size_t>(number) >= m_MIDI.Tracks.size())
     {
         m_MIDI.Tracks.resize(number + 1);
-        m_Contexts.resize(number + 1);
+        m_Contexts.resize(number + 1, TrackCompilerContext(GetLastEventTime()));
+    }
+}
+
+int IR2MIDICompiler::GetLastEventTime() const
+{
+    return m_LastEventTime;
+}
+
+void IR2MIDICompiler::UpdateLastEventTime()
+{
+    for (auto&& i : m_Contexts)
+    {
+        m_LastEventTime = std::max(i.GetLastEventTime(), m_LastEventTime);
+    }
+
+    for (auto&& i : m_Contexts)
+    {
+        i.SetLastEventTime(m_LastEventTime);
     }
 }
 
