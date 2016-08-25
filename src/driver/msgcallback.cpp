@@ -49,17 +49,17 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::GrammarCommaSeparatedOptionalAttributeArguments, "parse error: GrammarCommaSeparatedOptionalAttributeArguments"},
         {Message::MessageID::GrammarAttributeList, "expecting identifier after '['"},
         {Message::MessageID::GrammarAttributeNameAndArguments, "expecting identifier here (consider removing trailing ',')"},
-        {Message::MessageID::GrammarEndBracket, "unexpected token found. Did you forget ']'?"},
+        {Message::MessageID::GrammarEndBracket, "unexpected token '{0}'. Did you forget ']'?"},
 
         // error_common.hpp
-        {Message::MessageID::GrammarBlockBegin, "unexpected token found. expecting '{'"},
-        {Message::MessageID::GrammarBlockEnd, "unexpected token"},
+        {Message::MessageID::GrammarBlockBegin, "unexpected token '{0}'. expecting '{'"},
+        {Message::MessageID::GrammarBlockEnd, "unexpected token '{0}'"},
         {Message::MessageID::GrammarEndParenthesis, "missing ')'"},
 
         // error_composition.hpp
         {Message::MessageID::GrammarCommandArgument, "parse error: GrammarCommandArgument"},
         {Message::MessageID::GrammarCommandsAndTrackListBlocks, "parse error: GrammarCommandsAndTrackListBlocks"},
-        {Message::MessageID::GrammarOneOrMoreTrackBlocks, "unexpected token found. expecting track blocks"},
+        {Message::MessageID::GrammarOneOrMoreTrackBlocks, "unexpected token '{0}'. expecting track blocks"},
         {Message::MessageID::GrammarSpaceSeparatedOptionalTrackItems, "parse error: GrammarSpaceSeparatedOptionalTrackItems"},
         {Message::MessageID::GrammarCompositionName, "expecting valid name for composition"},
 

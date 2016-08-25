@@ -66,7 +66,7 @@ bool YAMMLParser::Parse()
     }
     catch (const Exceptions::ParseException& e)
     {
-        AddMessage({Message::MessageKind::Error, e.ID, e.Source, {e.Line, e.Column}});
+        AddMessage(Message::MessageItem{Message::MessageKind::Error, e.ID, e.Source, {e.Line, e.Column}, {e.NextToken}});
         return false;
     }
 }
