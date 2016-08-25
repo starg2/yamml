@@ -12,6 +12,7 @@
 
 #include "command_program.hpp"
 #include "command_tempo.hpp"
+#include "command_volume.hpp"
 
 namespace YAMML
 {
@@ -193,6 +194,7 @@ void IR2MIDICompiler::InitializeCommandProcessors()
 {
     m_CommandProcessors["program"] = CreateProgramCommandProcessor(this);
     m_CommandProcessors["tempo"] = CreateTempoCommandProcessor(this);
+    m_CommandProcessors["volume"] = CreateVolumeCommandProcessor(this);
 }
 
 bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)

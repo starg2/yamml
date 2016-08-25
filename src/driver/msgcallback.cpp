@@ -99,8 +99,9 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::WrongNumberOfCommandArguments, "wrong number of arguments passed to command '{0}'; {2} expected, {1} found"},
         {Message::MessageID::WrongTypeOfCommandArgument, "command argument {1} has a wrong type; expecting '{2}' here"},
 
+        {Message::MessageID::InvalidProgram, "invalid program name"},
         {Message::MessageID::InvalidTempo, "invalid tempo value '{0}'"},
-        {Message::MessageID::InvalidProgram, "invalid program name"}
+        {Message::MessageID::InvalidVolume, "invalid volume value '{0}'"}
     },
     m_pStdErrWriter{pStdErrWriter}
 {
