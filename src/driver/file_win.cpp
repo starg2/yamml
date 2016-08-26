@@ -114,7 +114,7 @@ public:
         std::array<std::uint8_t, 4096> buffer;
         DWORD bytes = 0;
 
-        while (::ReadFile(m_hFile, buffer.data(), buffer.size(), &bytes, nullptr) && bytes > 0)
+        while (::ReadFile(m_hFile, buffer.data(), static_cast<DWORD>(buffer.size()), &bytes, nullptr) && bytes > 0)
         {
             ret.insert(ret.end(), buffer.begin(), buffer.begin() + bytes);
         }
@@ -130,7 +130,7 @@ public:
             throw std::logic_error("File is not opened yet.");
         }
 
-        if (!::WriteFile(m_hFile, c.data(), c.size(), nullptr, nullptr))
+        if (!::WriteFile(m_hFile, c.data(), static_cast<DWORD>(c.size()), nullptr, nullptr))
         {
             throw IOException();
         }

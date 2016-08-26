@@ -241,7 +241,7 @@ void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
 
 void IR2MIDICompiler::Finalize()
 {
-    for (std::size_t i = 0; i < m_MIDI.Tracks.size(); i++)
+    for (int i = 0; i < static_cast<int>(m_MIDI.Tracks.size()); i++)
     {
         GetTrackContext(i).SortEvents();
 

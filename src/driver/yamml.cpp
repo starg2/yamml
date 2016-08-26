@@ -63,7 +63,7 @@ int main(int argc, char** argv)
         std::transform(args.begin(), args.end(), argPointers.begin(), [] (auto&& x) { return &x[0]; });
 
         PO::store(
-            PO::command_line_parser(argPointers.size(), argPointers.data())
+            PO::command_line_parser(static_cast<int>(argPointers.size()), argPointers.data())
             .options(allOptions)
             .positional(positional)
             .style(

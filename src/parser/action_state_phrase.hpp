@@ -568,8 +568,8 @@ public:
     {
         st.ASTNode.Minor = 0;
 
-        st.ASTNode.Minor += std::count(in.begin(), in.end(), 's');
-        st.ASTNode.Minor -= std::count(in.begin(), in.end(), 'f');
+        st.ASTNode.Minor += static_cast<int>(std::count(in.begin(), in.end(), 's'));
+        st.ASTNode.Minor -= static_cast<int>(std::count(in.begin(), in.end(), 'f'));
     }
 };
 

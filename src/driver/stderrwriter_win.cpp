@@ -27,7 +27,7 @@ public:
     virtual void Write(const std::string& str) override
     {
         UTF82W wstr(str);
-        ::WriteConsoleW(m_hStdErr, wstr.GetCString(), wstr.GetString().length(), nullptr, nullptr);
+        ::WriteConsoleW(m_hStdErr, wstr.GetCString(), static_cast<DWORD>(wstr.GetString().length()), nullptr, nullptr);
     }
 
 private:
@@ -45,7 +45,7 @@ public:
 
     virtual void Write(const std::string& str) override
     {
-        ::WriteFile(m_hStdErr, str.data(), str.size(), nullptr, nullptr);
+        ::WriteFile(m_hStdErr, str.data(), static_cast<DWORD>(str.size()), nullptr, nullptr);
     }
 
 private:
