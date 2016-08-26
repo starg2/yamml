@@ -53,7 +53,7 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
 
         // error_common.hpp
         {Message::MessageID::GrammarBlockBegin, "unexpected token '{0}'. expecting '{'"},
-        {Message::MessageID::GrammarBlockEnd, "unexpected token '{0}', did you forget ';' or '}'?"},
+        {Message::MessageID::GrammarBlockEnd, "unexpected token '{0}'"},
         {Message::MessageID::GrammarEndParenthesis, "unexpected token '{0}', did you forget ')'?"},
         {Message::MessageID::GrammarSemicolon, "unexpected token '{0}', did you forget ';'?"},
 

@@ -156,9 +156,8 @@ class NoteSequence : public pegtl::plus<pegtl::pad<NoteAndExpression, Separator>
 class NoteSequenceStatement
     : public pegtl::seq<
     AttributeOptionalSequence,
-    pegtl::if_then_else<
+    pegtl::if_must<
         NoteSequence,
-        pegtl::must<pegtl::one<';'>>,
         pegtl::one<';'>
     >
 >
