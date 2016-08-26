@@ -6,7 +6,7 @@
 #include <pegtl.hh>
 #include <pegtl/internal/demangle.hh>
 
-#include <exceptions/parseexception.hpp>
+#include <message/message.hpp>
 
 #include "parser_literal.hpp"
 
@@ -40,7 +40,7 @@ public:
 };
 
 template<typename TInput>
-void ThrowParseException(const std::string& ruleName, const TInput& in, Message::MessageID id)
+auto CreateParseErrorMessage(Message::MessageKind kind, Message::MessageID id, const TInput& in)
 {
     std::string tokenForErrorMsg;
 
@@ -51,14 +51,13 @@ void ThrowParseException(const std::string& ruleName, const TInput& in, Message:
         tokenForErrorMsg
     );
 
-    throw Exceptions::ParseException(
-        ruleName,
+    return Message::MessageItem{
+        kind,
+        id,
         in.source(),
-        in.line(),
-        in.column(),
-        matched ? tokenForErrorMsg : "<EOF>",
-        id
-    );
+        {in.line(), in.column()},
+        {matched ? tokenForErrorMsg : "<EOF>"}
+    };
 }
 
 template<typename TRule>
@@ -67,10 +66,11 @@ class ErrorControl : public pegtl::normal<TRule>
 public:
     static const Message::MessageID ID;
 
-    template<typename TInput, typename... TStates>
-    static void raise(const TInput& in, TStates&&...)
+    template<typename TInput, typename TCurrentState, typename TCompiler, typename... TOtherStates>
+    static void raise(const TInput& in, TCurrentState&, TCompiler& compiler, TOtherStates&&...)
     {
-        ThrowParseException(pegtl::internal::demangle<TRule>(), in, ID);
+        compiler.AddMessage(CreateParseErrorMessage(Message::MessageKind::Error, ID, in));
+        ErrorControl::normal::raise(in);
     }
 };
 

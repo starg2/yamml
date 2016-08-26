@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <utility>
 
-#include <exceptions/parseexception.hpp>
 #include <message/kind.hpp>
 #include <message/message.hpp>
 #include <parser/parser.hpp>
@@ -64,9 +63,8 @@ bool YAMMLParser::Parse()
             return false;
         }
     }
-    catch (const Exceptions::ParseException& e)
+    catch (const pegtl::parse_error&)
     {
-        AddMessage(Message::MessageItem{Message::MessageKind::Error, e.ID, e.Source, {e.Line, e.Column}, {e.NextToken}});
         return false;
     }
 }
