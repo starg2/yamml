@@ -46,24 +46,17 @@ YAMMLParser::YAMMLParser(std::string name, std::string source, std::function<Cal
 
 bool YAMMLParser::Parse()
 {
-    try
+    AST::Module ast;
+    ast.Name = GetSourceName();
+
+    bool result = pegtl::parse<pegtl::try_catch<Grammar::Module>, pegtl::nothing, Control>(m_Source, m_Name, ast, *this);
+
+    if (result && !HasErrors())
     {
-        AST::Module ast;
-        ast.Name = GetSourceName();
-
-        bool result = pegtl::parse<Grammar::Module, pegtl::nothing, Control>(m_Source, m_Name, ast, *this);
-
-        if (result && !HasErrors())
-        {
-            m_AST = std::move(ast);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        m_AST = std::move(ast);
+        return true;
     }
-    catch (const pegtl::parse_error&)
+    else
     {
         return false;
     }
