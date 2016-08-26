@@ -18,11 +18,17 @@ public:
     {
     }
 
+    IRCompiler(const IRCompiler&) = delete;
+    IRCompiler& operator=(const IRCompiler&) = delete;
+
     bool Compile();
 
+    std::string GetSourceName() const;
     const IR::Module& GetIR() const;
 
 private:
+    void CompileTrackBlock(std::size_t index);
+
     IR::Module m_IR;
 };
 

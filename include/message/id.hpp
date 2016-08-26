@@ -12,6 +12,7 @@ enum class MessageID : int
     Unknown,
     UnknownInPhrase2IR,
     UnknownInComposition2IR,
+    UnknownInIRProcessor,
     UnknownInIR2MIDI,
     UnprocessedAttribute,
     DuplicatedCompositionName,
@@ -73,6 +74,9 @@ enum class MessageID : int
     GrammarPhrase3,
     GrammarPhrase4,
     GrammarPhraseName,
+
+    // IRProcessor
+    InvalidAttributeName,
 
     // IR2MIDI
     InvalidCommandName,

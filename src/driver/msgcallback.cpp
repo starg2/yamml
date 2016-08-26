@@ -33,6 +33,7 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::Unknown, ICEMessage},
         {Message::MessageID::UnknownInPhrase2IR, ICEMessage + " (Phrase2IR: Phrase = '{0}', Message = '{1}')"},
         {Message::MessageID::UnknownInComposition2IR, ICEMessage + " (Composition2IR: Composition = '{0}', Message = '{1}')"},
+        {Message::MessageID::UnknownInIRProcessor, ICEMessage + " (IRProcessor: Message = '{0}')"},
         {Message::MessageID::UnknownInIR2MIDI, ICEMessage + " (IR2MIDI: Message = '{0}')"},
         {Message::MessageID::UnprocessedAttribute, ICEMessage + " (Unprocessed attribute: '{0}')"},
         {Message::MessageID::DuplicatedCompositionName, "composition named '{0}' is already defined"},
@@ -94,6 +95,9 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::GrammarPhrase3, "unexpected token '{0}', expecting notes"},
         {Message::MessageID::GrammarPhrase4, "unexpected token '{0}', expecting notes"},
         {Message::MessageID::GrammarPhraseName, "expecting valid name for phrase"},
+
+        // IRProcessor
+        {Message::MessageID::InvalidAttributeName, "invalid attribute '{0}'"},
 
         // IR2MIDI
         {Message::MessageID::InvalidCommandName, "invalid command '{0}'"},
