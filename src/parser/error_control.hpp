@@ -16,7 +16,7 @@ namespace YAMML
 namespace Parser
 {
 
-class TokenForErrorMessage : public pegtl::sor<Grammar::Identifier, Grammar::SignedInteger, pegtl::utf8::any>
+class TokenForErrorMessage : public pegtl::sor<Grammar::Identifier, Grammar::UnsignedInteger, pegtl::utf8::any>
 {
 };
 
