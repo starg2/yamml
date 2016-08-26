@@ -34,6 +34,7 @@ enum class MessageID : int
     GrammarBlockBegin,
     GrammarBlockEnd,
     GrammarEndParenthesis,
+    GrammarSemicolon,
 
     // error_composition.hpp
     GrammarCommandArgument,
@@ -71,7 +72,6 @@ enum class MessageID : int
     GrammarPhrase2,
     GrammarPhrase3,
     GrammarPhrase4,
-    GrammarSemicolon,
     GrammarPhraseName,
 
     // IR2MIDI

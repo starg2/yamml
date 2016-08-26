@@ -21,6 +21,9 @@ const Message::MessageID ErrorControl<Grammar::BlockEnd>::ID = Message::MessageI
 template<>
 const Message::MessageID ErrorControl<pegtl::one<')'>>::ID = Message::MessageID::GrammarEndParenthesis;
 
+template<>
+const Message::MessageID ErrorControl<pegtl::one<';'>>::ID = Message::MessageID::GrammarSemicolon;
+
 } // namespace Parser
 
 } // namespace YAMML

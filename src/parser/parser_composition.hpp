@@ -21,11 +21,20 @@ class CommandArgument : public pegtl::seq<Value>
 {
 };
 
-class Command : public pegtl::seq<Identifier, pegtl::pad_opt<pegtl::list_must<CommandArgument, pegtl::one<','>, Separator>, Separator>, pegtl::one<';'>>
+class Command
+    : public pegtl::seq<
+        Identifier,
+        pegtl::pad_opt<pegtl::list_must<CommandArgument, pegtl::one<','>, Separator>, Separator>,
+        pegtl::must<pegtl::one<';'>>
+    >
 {
 };
 
-class TrackItem : public pegtl::seq<AttributeOptionalSequence, pegtl::pad_opt<Identifier, Separator>, pegtl::one<';'>>
+class TrackItem
+    : public pegtl::seq<
+        AttributeOptionalSequence,
+        pegtl::if_must<pegtl::pad<Identifier, Separator>, pegtl::one<';'>>
+    >
 {
 };
 

@@ -45,7 +45,7 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::OctaveOutOfRange, "octave value '{0}' is out of range (must be between 0 and 10)"},
 
         // error_attribute.hpp
-        {Message::MessageID::GrammarAttributeArgument, "parse error: GrammarAttributeArgument"},
+        {Message::MessageID::GrammarAttributeArgument, "expecting numeric constant, string literal or identifier after ','"},
         {Message::MessageID::GrammarCommaSeparatedOptionalAttributeArguments, "parse error: GrammarCommaSeparatedOptionalAttributeArguments"},
         {Message::MessageID::GrammarAttributeList, "expecting identifier after '['"},
         {Message::MessageID::GrammarAttributeNameAndArguments, "expecting identifier here (consider removing trailing ',')"},
@@ -53,11 +53,12 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
 
         // error_common.hpp
         {Message::MessageID::GrammarBlockBegin, "unexpected token '{0}'. expecting '{'"},
-        {Message::MessageID::GrammarBlockEnd, "unexpected token '{0}'"},
-        {Message::MessageID::GrammarEndParenthesis, "missing ')'"},
+        {Message::MessageID::GrammarBlockEnd, "unexpected token '{0}', did you forget ';' or '}'?"},
+        {Message::MessageID::GrammarEndParenthesis, "unexpected token '{0}', did you forget ')'?"},
+        {Message::MessageID::GrammarSemicolon, "unexpected token '{0}', did you forget ';'?"},
 
         // error_composition.hpp
-        {Message::MessageID::GrammarCommandArgument, "parse error: GrammarCommandArgument"},
+        {Message::MessageID::GrammarCommandArgument, "expecting numeric constant, string literal or identifier after ','"},
         {Message::MessageID::GrammarCommandsAndTrackListBlocks, "parse error: GrammarCommandsAndTrackListBlocks"},
         {Message::MessageID::GrammarOneOrMoreTrackBlocks, "unexpected token '{0}'. expecting track blocks"},
         {Message::MessageID::GrammarSpaceSeparatedOptionalTrackItems, "parse error: GrammarSpaceSeparatedOptionalTrackItems"},
@@ -84,15 +85,14 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::GrammarSimpleDurationModifier, "parse error: GrammarSimpleDurationModifier"},
         {Message::MessageID::GrammarNoteNumber, "parse error: GrammarNoteNumber"},
         {Message::MessageID::GrammarNoteSequenceStatementsAndBlocks, "parse error: GrammarNoteSequenceStatementsAndBlocks"},
-        {Message::MessageID::GrammarNoteSequenceAndSeparators, "parse error: GrammarNoteSequenceAndSeparators"},
+        {Message::MessageID::GrammarNoteSequenceAndSeparators, "unexpected token '{0}', expecting notes"},
         {Message::MessageID::GrammarSpaceDelimitedChords, "parse error: GrammarSpaceDelimitedChords"},
         {Message::MessageID::GrammarDurationOrDurationSet, "expecting duration specifier after '/'"},
         {Message::MessageID::GrammarSpaceDelimitedDurations, "expecting duration specifiers, not '{0}'"},
         {Message::MessageID::GrammarMissingRepeatOperator, "expecting '*' or '%' after numeric constant"},
-        {Message::MessageID::GrammarPhrase2, "parse error: GrammarPhrase2"},
-        {Message::MessageID::GrammarPhrase3, "parse error: GrammarPhrase3"},
-        {Message::MessageID::GrammarPhrase4, "parse error: GrammarPhrase4"},
-        {Message::MessageID::GrammarSemicolon, "unexpected token '{0}'"},
+        {Message::MessageID::GrammarPhrase2, "unexpected token '{0}', expecting notes"},
+        {Message::MessageID::GrammarPhrase3, "unexpected token '{0}', expecting notes"},
+        {Message::MessageID::GrammarPhrase4, "unexpected token '{0}', expecting notes"},
         {Message::MessageID::GrammarPhraseName, "expecting valid name for phrase"},
 
         // IR2MIDI
