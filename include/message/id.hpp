@@ -79,6 +79,7 @@ enum class MessageID : int
     WrongNumberOfCommandArguments,
     WrongTypeOfCommandArgument,
 
+    InvalidPanpot,
     InvalidProgram,
     InvalidTempo,
     InvalidVolume
