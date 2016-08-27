@@ -82,21 +82,33 @@ class DurationOrDurationSet : public pegtl::sor<DurationSet, SimpleDurationWithM
 {
 };
 
+class SlashAndDuration : public pegtl::if_must<pegtl::pad<pegtl::one<'/'>, Separator>, DurationOrDurationSet>
+{
+};
+
 class SpaceDelimitedChords : public pegtl::pad<SimpleChord, Separator>
 {
 };
 
+class SpaceDelimitedChordsInParenthesis : public pegtl::if_must<pegtl::one<'('>, SpaceDelimitedChords, pegtl::one<')'>>
+{
+};
+
+class NoteAccents : public pegtl::plus<pegtl::one<'!', '^', '~'>>
+{
+};
+
 class NoteAndDuration
-    : public pegtl::seq<
-        pegtl::sor<
-            pegtl::if_must<pegtl::one<'('>, SpaceDelimitedChords, pegtl::one<')'>>,
-            Rest,
-            NoteNumber
-        >,
-        pegtl::pad_opt<
-            pegtl::if_must<pegtl::pad<pegtl::one<'/'>, Separator>, DurationOrDurationSet>,
-            Separator
-        >
+    : public pegtl::sor<
+        pegtl::seq<
+			pegtl::sor<SpaceDelimitedChordsInParenthesis, NoteNumber>,
+			pegtl::pad_opt<SlashAndDuration, Separator>,
+			pegtl::pad_opt<NoteAccents, Separator>
+		>,
+        pegtl::seq<
+			Rest,
+			pegtl::pad_opt<SlashAndDuration, Separator>
+		>
     >
 {
 };

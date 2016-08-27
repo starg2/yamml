@@ -20,6 +20,12 @@ namespace YAMML
 namespace AST2IR
 {
 
+struct DurationAndVelocity
+{
+	int Duration;
+	int Velocity;
+};
+
 class Phrase2IRCompiler final : public Compiler::NestedCompilerBase, public boost::static_visitor<std::vector<IR::Block::EventType>>
 {
 public:
@@ -38,12 +44,14 @@ public:
     std::vector<IR::Block::EventType> operator()(const AST::NoteRepeatExpression& ast);
     std::vector<IR::Block::EventType> operator()(const AST::NoteRepeatEachExpression& ast);
 
-    std::vector<IR::Block::EventType> operator()(const AST::Rest& ast, int duration);
-    std::vector<IR::Block::EventType> operator()(const AST::NoteNumber& ast, int duration);
-    std::vector<IR::Block::EventType> operator()(const AST::SimpleChord& ast, int duration);
+    std::vector<IR::Block::EventType> operator()(const AST::Rest& ast, const DurationAndVelocity& dv);
+    std::vector<IR::Block::EventType> operator()(const AST::NoteNumber& ast, const DurationAndVelocity& dv);
+    std::vector<IR::Block::EventType> operator()(const AST::SimpleChord& ast, const DurationAndVelocity& dv);
 
 private:
     int CalculateDuration(const AST::NoteAndDuration& ast);
+	int GetNetDuration(int duration, const boost::optional<AST::NoteAccents>& accents);
+	int GetVelocity(const boost::optional<AST::NoteAccents>& accents);
 
     IR::BlockReference AllocBlock();
     void Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index);

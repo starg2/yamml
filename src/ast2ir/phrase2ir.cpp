@@ -179,9 +179,12 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteA
     int duration = CalculateDuration(ast);
     m_DefaultDuration = duration;
 
-    boost::variant<int> varDuration = duration;
+	boost::variant<DurationAndVelocity> varDV = DurationAndVelocity{
+		GetNetDuration(duration, ast.Accents),
+		GetVelocity(ast.Accents)
+	};
 
-    auto newEvent = boost::apply_visitor(*this, ast.Note, varDuration);
+    auto newEvent = boost::apply_visitor(*this, ast.Note, varDV);
 
     m_RelativeTime += duration;
     return newEvent;
@@ -226,13 +229,13 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteR
     return ret;
 }
 
-std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::Rest& ast, int duration)
+std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::Rest& ast, const DurationAndVelocity& dv)
 {
     static_cast<void>(ast);
-    return {IR::Event{m_RelativeTime, IR::Rest{duration}}};
+    return {IR::Event{m_RelativeTime, IR::Rest{dv.Duration}}};
 }
 
-std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteNumber& ast, int duration)
+std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteNumber& ast, const DurationAndVelocity& dv)
 {
     if (ast.Octave.is_initialized())
     {
@@ -261,21 +264,21 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteN
             m_RelativeTime,
             IR::Note{
                 MIDI::NoteNumber(ast.Name.Name, ast.Name.Minor, m_DefaultOctave),
-                100,
-                duration,
+                dv.Velocity,
+                dv.Duration,
                 100
             }
         }
     };
 }
 
-std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::SimpleChord& ast, int duration)
+std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::SimpleChord& ast, const DurationAndVelocity& dv)
 {
     std::vector<IR::Block::EventType> ret;
 
     for (auto&& i : ast.Notes)
     {
-        auto events = (*this)(i, duration);
+        auto events = (*this)(i, dv);
         ret.insert(ret.end(), events.begin(), events.end());
     }
 
@@ -293,6 +296,35 @@ int Phrase2IRCompiler::CalculateDuration(const AST::NoteAndDuration& ast)
     {
         return m_DefaultDuration;
     }
+}
+
+int Phrase2IRCompiler::GetNetDuration(int duration, const boost::optional<AST::NoteAccents>& accents)
+{
+	if (accents.is_initialized())
+	{
+		int st = accents->Staccato - accents->Tenuto;
+
+		switch (st)
+		{
+		case -1:
+			return duration * 95 / 100;
+		case 0:
+			return duration * 9 / 10;
+		case 1:
+			return duration * 3 / 4;
+		default:
+			return (st < 0) ? duration : static_cast<int>(std::lround(duration * std::pow(2, -st + 1)));
+		}
+	}
+	else
+	{
+		return duration * 9 / 10;
+	}
+}
+
+int Phrase2IRCompiler::GetVelocity(const boost::optional<AST::NoteAccents>& accents)
+{
+	return std::min(accents.is_initialized() ? 72 + accents->Accents * 12 : 72, 127);
 }
 
 IR::BlockReference Phrase2IRCompiler::AllocBlock()

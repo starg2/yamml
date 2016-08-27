@@ -296,6 +296,38 @@ class NoteAndDurationAction<Grammar::NoteAndDuration> : public AssignLocationAct
 {
 };
 
+class NoteAccentsState
+{
+public:
+	template<typename TParentState, typename... TCommonStates>
+	void success(TParentState& st, TCommonStates&...)
+	{
+		st.ASTNode.Accents = ASTNode;
+	}
+
+	AST::NoteAccents ASTNode;
+};
+
+template<typename TRule>
+class NoteAccentsAction : public pegtl::nothing<TRule>
+{
+};
+
+template<>
+class NoteAccentsAction<Grammar::NoteAccents>
+{
+public:
+	template<typename... TCommonStates>
+	static void apply(const pegtl::input& in, NoteAccentsState& st, TCommonStates&...)
+	{
+		AssignLocationAction::apply(in, st);
+
+		st.ASTNode.Accents = static_cast<int>(std::count(in.begin(), in.end(), '!'));
+		st.ASTNode.Staccato = static_cast<int>(std::count(in.begin(), in.end(), '^'));
+		st.ASTNode.Tenuto = static_cast<int>(std::count(in.begin(), in.end(), '~'));
+	}
+};
+
 class DurationSetState
 {
 public:
