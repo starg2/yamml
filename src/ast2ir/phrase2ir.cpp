@@ -344,6 +344,8 @@ void Phrase2IRCompiler::Compile(const AST::NoteSequenceBlockWithoutAttributes& a
         auto events = i.apply_visitor(*this);
         m_IR.Blocks[index.ID].Events.insert(m_IR.Blocks[index.ID].Events.end(), events.begin(), events.end());
     }
+
+	m_IR.Blocks[index.ID].Events.emplace_back(IR::Event{m_RelativeTime, IR::Rest{0}});
 }
 
 void Phrase2IRCompiler::LimitRepeatCount(std::size_t count, const AST::SourceLocation& location)
