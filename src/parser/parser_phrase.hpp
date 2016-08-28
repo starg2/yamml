@@ -101,14 +101,14 @@ class NoteAccents : public pegtl::plus<pegtl::one<'!', '^', '~'>>
 class NoteAndDuration
     : public pegtl::sor<
         pegtl::seq<
-			pegtl::sor<SpaceDelimitedChordsInParenthesis, NoteNumber>,
-			pegtl::pad_opt<SlashAndDuration, Separator>,
-			pegtl::pad_opt<NoteAccents, Separator>
-		>,
+            pegtl::sor<SpaceDelimitedChordsInParenthesis, NoteNumber>,
+            pegtl::pad_opt<SlashAndDuration, Separator>,
+            pegtl::pad_opt<NoteAccents, Separator>
+        >,
         pegtl::seq<
-			Rest,
-			pegtl::pad_opt<SlashAndDuration, Separator>
-		>
+            Rest,
+            pegtl::pad_opt<SlashAndDuration, Separator>
+        >
     >
 {
 };

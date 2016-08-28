@@ -90,7 +90,7 @@ public:
 
     std::vector<std::uint8_t> operator()(const MIDI::MetaEvent& ev) const
     {
-		std::vector<std::uint8_t> ret{0xFF, ToUInt8(static_cast<std::uint8_t>(ev.Kind), 127)};
+        std::vector<std::uint8_t> ret{0xFF, ToUInt8(static_cast<std::uint8_t>(ev.Kind), 127)};
 
         auto length = ToVariableLengthValue(static_cast<std::uint32_t>(ev.Value.size()));
         std::copy(length.begin(), length.end(), std::back_inserter(ret));
@@ -104,7 +104,7 @@ private:
     template<typename... TArgs>
     static std::vector<std::uint8_t> PackBytes(int flag, int channel, TArgs&&... args)
     {
-		return {static_cast<std::uint8_t>(ToUInt8(flag, 0xFF) | ToUInt8(channel, 15)), ToUInt8(static_cast<int>(args), 0x7F)...};
+        return {static_cast<std::uint8_t>(ToUInt8(flag, 0xFF) | ToUInt8(channel, 15)), ToUInt8(static_cast<int>(args), 0x7F)...};
     }
 
     template<typename T>

@@ -179,10 +179,10 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteA
     int duration = CalculateDuration(ast);
     m_DefaultDuration = duration;
 
-	boost::variant<DurationAndVelocity> varDV = DurationAndVelocity{
-		GetNetDuration(duration, ast.Accents),
-		GetVelocity(ast.Accents)
-	};
+    boost::variant<DurationAndVelocity> varDV = DurationAndVelocity{
+        GetNetDuration(duration, ast.Accents),
+        GetVelocity(ast.Accents)
+    };
 
     auto newEvent = boost::apply_visitor(*this, ast.Note, varDV);
 
@@ -300,31 +300,31 @@ int Phrase2IRCompiler::CalculateDuration(const AST::NoteAndDuration& ast)
 
 int Phrase2IRCompiler::GetNetDuration(int duration, const boost::optional<AST::NoteAccents>& accents)
 {
-	if (accents.is_initialized())
-	{
-		int st = accents->Staccato - accents->Tenuto;
+    if (accents.is_initialized())
+    {
+        int st = accents->Staccato - accents->Tenuto;
 
-		switch (st)
-		{
-		case -1:
-			return duration * 95 / 100;
-		case 0:
-			return duration * 9 / 10;
-		case 1:
-			return duration * 3 / 4;
-		default:
-			return (st < 0) ? duration : static_cast<int>(std::lround(duration * std::pow(2, -st + 1)));
-		}
-	}
-	else
-	{
-		return duration * 9 / 10;
-	}
+        switch (st)
+        {
+        case -1:
+            return duration * 95 / 100;
+        case 0:
+            return duration * 9 / 10;
+        case 1:
+            return duration * 3 / 4;
+        default:
+            return (st < 0) ? duration : static_cast<int>(std::lround(duration * std::pow(2, -st + 1)));
+        }
+    }
+    else
+    {
+        return duration * 9 / 10;
+    }
 }
 
 int Phrase2IRCompiler::GetVelocity(const boost::optional<AST::NoteAccents>& accents)
 {
-	return std::min(accents.is_initialized() ? 72 + accents->Accents * 12 : 72, 127);
+    return std::min(accents.is_initialized() ? 72 + accents->Accents * 12 : 72, 127);
 }
 
 IR::BlockReference Phrase2IRCompiler::AllocBlock()
@@ -345,7 +345,7 @@ void Phrase2IRCompiler::Compile(const AST::NoteSequenceBlockWithoutAttributes& a
         m_IR.Blocks[index.ID].Events.insert(m_IR.Blocks[index.ID].Events.end(), events.begin(), events.end());
     }
 
-	m_IR.Blocks[index.ID].Events.emplace_back(IR::Event{m_RelativeTime, IR::Rest{0}});
+    m_IR.Blocks[index.ID].Events.emplace_back(IR::Event{m_RelativeTime, IR::Rest{0}});
 }
 
 void Phrase2IRCompiler::LimitRepeatCount(std::size_t count, const AST::SourceLocation& location)

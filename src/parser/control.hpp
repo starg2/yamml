@@ -259,12 +259,12 @@ class Control<Grammar::NoteAndDuration>
 
 template<>
 class Control<Grammar::NoteAccents>
-	: public ChangeStateAndAction<
-		Grammar::NoteAccents,
-		NoteAccentsState,
-		NoteAccentsAction,
-		ErrorControl
-	>
+    : public ChangeStateAndAction<
+        Grammar::NoteAccents,
+        NoteAccentsState,
+        NoteAccentsAction,
+        ErrorControl
+    >
 {
 };
 

@@ -92,10 +92,10 @@ public:
 class NoteAccents final
 {
 public:
-	int Accents;
-	int Staccato;
-	int Tenuto;
-	SourceLocation Location;
+    int Accents;
+    int Staccato;
+    int Tenuto;
+    SourceLocation Location;
 };
 
 class NoteAndDuration final
@@ -103,7 +103,7 @@ class NoteAndDuration final
 public:
     boost::variant<Rest, NoteNumber, SimpleChord> Note;
     boost::optional<boost::variant<SimpleDurationWithModifier, DurationSet>> Duration;
-	boost::optional<NoteAccents> Accents;
+    boost::optional<NoteAccents> Accents;
     SourceLocation Location;
 };
 

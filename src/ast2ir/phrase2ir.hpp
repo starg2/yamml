@@ -22,8 +22,8 @@ namespace AST2IR
 
 struct DurationAndVelocity
 {
-	int Duration;
-	int Velocity;
+    int Duration;
+    int Velocity;
 };
 
 class Phrase2IRCompiler final : public Compiler::NestedCompilerBase, public boost::static_visitor<std::vector<IR::Block::EventType>>
@@ -50,8 +50,8 @@ public:
 
 private:
     int CalculateDuration(const AST::NoteAndDuration& ast);
-	int GetNetDuration(int duration, const boost::optional<AST::NoteAccents>& accents);
-	int GetVelocity(const boost::optional<AST::NoteAccents>& accents);
+    int GetNetDuration(int duration, const boost::optional<AST::NoteAccents>& accents);
+    int GetVelocity(const boost::optional<AST::NoteAccents>& accents);
 
     IR::BlockReference AllocBlock();
     void Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index);
