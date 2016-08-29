@@ -114,7 +114,7 @@ int main(int argc, char** argv)
             std::cout << "YAMML dev" << std::endl;
 #endif // YAMML_VERSION_DATE + 0
 
-            std::cout << "Copyright (C) 2016 Starg." << std::endl;
+            std::cout << "Copyright (C) 2016 Starg. Distributed under the MIT License." << std::endl;
             return 0;
         }
 
