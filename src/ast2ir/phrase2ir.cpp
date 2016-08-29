@@ -324,7 +324,14 @@ int Phrase2IRCompiler::GetNetDuration(int duration, const boost::optional<AST::N
 
 int Phrase2IRCompiler::GetVelocity(const boost::optional<AST::NoteAccents>& accents)
 {
-    return std::min(accents.is_initialized() ? 72 + accents->Accents * 12 : 72, 127);
+    if (accents.is_initialized())
+    {
+        return std::min(static_cast<int>(std::lround(std::pow(1.2, accents.value().Accents) * 72)), 127);
+    }
+    else
+    {
+        return 72;
+    }
 }
 
 IR::BlockReference Phrase2IRCompiler::AllocBlock()

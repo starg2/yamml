@@ -305,7 +305,7 @@ public:
         st.ASTNode.Accents = ASTNode;
     }
 
-    AST::NoteAccents ASTNode;
+    AST::NoteAccents ASTNode = {};
 };
 
 template<typename TRule>
