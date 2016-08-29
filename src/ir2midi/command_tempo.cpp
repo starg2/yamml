@@ -31,6 +31,11 @@ public:
         return m_pCompiler;
     }
 
+    virtual std::string GetCommandName() const override
+    {
+        return "tempo";
+    }
+
     virtual void Process(const AST::Command& ast) override
     {
         ValidateArguments(ast);
@@ -52,23 +57,8 @@ public:
 
     void ValidateArguments(const AST::Command& ast)
     {
-        if (ast.Arguments.size() != 1)
-        {
-            ThrowMessage(
-                Message::MessageID::WrongNumberOfCommandArguments,
-                ast.Location,
-                {"tempo", std::to_string(ast.Arguments.size()), "1"}
-            );
-        }
-
-        if (ast.Arguments[0].Value.type() != typeid(long))
-        {
-            ThrowMessage(
-                Message::MessageID::WrongTypeOfCommandArgument,
-                ast.Location,
-                {"tempo", "1", "int"}
-            );
-        }
+        ValidateArgCount(ast, 1);
+        ValidateArgType(ast, 0, typeid(long));
 
         auto tempo = boost::get<long>(ast.Arguments[0].Value);
 

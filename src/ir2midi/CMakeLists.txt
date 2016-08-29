@@ -11,6 +11,7 @@ set(IR2MIDIHeaders
 )
 
 set(IR2MIDISources
+    command.cpp
     command_insert.cpp
     command_panpot.cpp
     command_program.cpp

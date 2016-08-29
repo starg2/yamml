@@ -31,6 +31,11 @@ public:
         return m_pCompiler;
     }
 
+    virtual std::string GetCommandName() const override
+    {
+        return "insert";
+    }
+
     virtual void Process(const AST::Command& ast) override
     {
         ValidateArguments(ast);
@@ -39,23 +44,8 @@ public:
 
     void ValidateArguments(const AST::Command& ast)
     {
-        if (ast.Arguments.size() != 1)
-        {
-            ThrowMessage(
-                Message::MessageID::WrongNumberOfCommandArguments,
-                ast.Location,
-                {"insert", std::to_string(ast.Arguments.size()), "1"}
-            );
-        }
-
-        if (ast.Arguments[0].Value.type() != typeid(std::string))
-        {
-            ThrowMessage(
-                Message::MessageID::WrongTypeOfCommandArgument,
-                ast.Location,
-                {"insert", "1", "string"}
-            );
-        }
+        ValidateArgCount(ast, 1);
+        ValidateArgType(ast, 0, typeid(std::string));
 
         auto name = boost::get<std::string>(ast.Arguments[0].Value);
 

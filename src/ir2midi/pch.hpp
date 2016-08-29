@@ -7,6 +7,7 @@
 #include <string>
 #include <typeinfo>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include <boost/optional.hpp>

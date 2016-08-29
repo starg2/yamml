@@ -32,6 +32,11 @@ public:
         return m_pCompiler;
     }
 
+    virtual std::string GetCommandName() const override
+    {
+        return "panpot";
+    }
+
     virtual void Process(const AST::Command& ast) override
     {
         ValidateArguments(ast);
@@ -47,54 +52,14 @@ public:
 
     void ValidateArguments(const AST::Command& ast)
     {
-        if (ast.Arguments.size() != 2)
-        {
-            ThrowMessage(
-                Message::MessageID::WrongNumberOfCommandArguments,
-                ast.Location,
-                {"panpot", std::to_string(ast.Arguments.size()), "2"}
-            );
-        }
-
-        ValidateSingleArgument(ast, 0);
-        ValidateSingleArgument(ast, 1);
-
-        auto channel = boost::get<long>(ast.Arguments[0].Value);
-
-        if (!(0 <= channel && channel < MIDI::TrackNumberLimit))
-        {
-            ThrowMessage(
-                Message::MessageID::TrackNumberIsOutOfPreferredRange,
-                ast.Location,
-                {std::to_string(channel), std::to_string(MIDI::TrackNumberLimit)}
-            );
-        }
-
-        auto panpot = boost::get<long>(ast.Arguments[1].Value);
-
-        if (!(0 <= panpot && panpot < 128))
-        {
-            ThrowMessage(
-                Message::MessageID::InvalidPanpot,
-                ast.Location,
-                {std::to_string(panpot)}
-            );
-        }
+        ValidateArgCount(ast, 2);
+        ValidateArgType(ast, 0, typeid(long));
+        ValidateArgType(ast, 1, typeid(long));
+        ValidateArgChannel(ast, 0);
+        ValidateArgMIDIValue(ast, 1, Message::MessageID::InvalidPanpot);
     }
 
 private:
-    void ValidateSingleArgument(const AST::Command& ast, std::size_t index)
-    {
-        if (ast.Arguments[index].Value.type() != typeid(long))
-        {
-            ThrowMessage(
-                Message::MessageID::WrongTypeOfCommandArgument,
-                ast.Location,
-                {"panpot", std::to_string(index + 1), "int"}
-            );
-        }
-    }
-
     IIR2MIDICompiler* m_pCompiler;
 };
 

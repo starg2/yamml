@@ -33,6 +33,11 @@ public:
         return m_pCompiler;
     }
 
+    virtual std::string GetCommandName() const override
+    {
+        return "program";
+    }
+
     virtual void Process(const AST::Command& ast) override
     {
         ValidateArguments(ast);
@@ -55,43 +60,19 @@ public:
 
     void ValidateArguments(const AST::Command& ast)
     {
-        if (ast.Arguments.size() != 2)
-        {
-            ThrowMessage(
-                Message::MessageID::WrongNumberOfCommandArguments,
-                ast.Location,
-                {"program", std::to_string(ast.Arguments.size()), "2"}
-            );
-        }
-
-        if (ast.Arguments[0].Value.type() != typeid(long))
-        {
-            ThrowMessage(
-                Message::MessageID::WrongTypeOfCommandArgument,
-                ast.Location,
-                {"program", "1", "int"}
-            );
-        }
+        ValidateArgCount(ast, 2);
+        ValidateArgType(ast, 0, typeid(long));
 
         if ((ast.Arguments[1].Value.type() != typeid(long)) && (ast.Arguments[1].Value.type() != typeid(std::string)))
         {
             ThrowMessage(
                 Message::MessageID::WrongTypeOfCommandArgument,
                 ast.Location,
-                {"program", "2", "int/string"}
+                {GetCommandName(), "2", "int/string"}
             );
         }
 
-        auto channel = boost::get<long>(ast.Arguments[0].Value);
-
-        if (!(0 <= channel && channel < MIDI::TrackNumberLimit))
-        {
-            ThrowMessage(
-                Message::MessageID::TrackNumberIsOutOfPreferredRange,
-                ast.Location,
-                {std::to_string(channel), std::to_string(MIDI::TrackNumberLimit)}
-            );
-        }
+        ValidateArgChannel(ast, 0);
     }
 
     int operator()(const long& n)

@@ -32,6 +32,11 @@ public:
         return m_pCompiler;
     }
 
+    virtual std::string GetCommandName() const override
+    {
+        return "volume";
+    }
+
     virtual void Process(const AST::Command& ast) override
     {
         ValidateArguments(ast);
@@ -47,54 +52,11 @@ public:
 
     void ValidateArguments(const AST::Command& ast)
     {
-        if (ast.Arguments.size() != 2)
-        {
-            ThrowMessage(
-                Message::MessageID::WrongNumberOfCommandArguments,
-                ast.Location,
-                {"volume", std::to_string(ast.Arguments.size()), "2"}
-            );
-        }
-
-        if (ast.Arguments[0].Value.type() != typeid(long))
-        {
-            ThrowMessage(
-                Message::MessageID::WrongTypeOfCommandArgument,
-                ast.Location,
-                {"volume", "1", "int"}
-            );
-        }
-
-        if (ast.Arguments[1].Value.type() != typeid(long))
-        {
-            ThrowMessage(
-                Message::MessageID::WrongTypeOfCommandArgument,
-                ast.Location,
-                {"volume", "2", "int"}
-            );
-        }
-
-        auto channel = boost::get<long>(ast.Arguments[0].Value);
-
-        if (!(0 <= channel && channel < MIDI::TrackNumberLimit))
-        {
-            ThrowMessage(
-                Message::MessageID::TrackNumberIsOutOfPreferredRange,
-                ast.Location,
-                {std::to_string(channel), std::to_string(MIDI::TrackNumberLimit)}
-            );
-        }
-
-        auto volume = boost::get<long>(ast.Arguments[1].Value);
-
-        if (!(0 <= volume && volume < 128))
-        {
-            ThrowMessage(
-                Message::MessageID::InvalidVolume,
-                ast.Location,
-                {std::to_string(channel)}
-            );
-        }
+        ValidateArgCount(ast, 2);
+        ValidateArgType(ast, 0, typeid(long));
+        ValidateArgType(ast, 1, typeid(long));
+        ValidateArgChannel(ast, 0);
+        ValidateArgMIDIValue(ast, 1, Message::MessageID::InvalidVolume);
     }
 
 private:

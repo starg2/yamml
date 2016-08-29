@@ -1,6 +1,7 @@
 
 #include <algorithm>
 #include <exception>
+#include <utility>
 #include <vector>
 
 #include <boost/variant.hpp>
@@ -191,13 +192,19 @@ void IR2MIDICompiler::operator()(int trackNumber, const IR::BlockReference& bloc
     CompileBlock(trackNumber, blockRef);
 }
 
+void IR2MIDICompiler::AddCommandProcessor(std::unique_ptr<ICommandProcessor> pProcessor)
+{
+    auto name = pProcessor->GetCommandName();
+    m_CommandProcessors[name] = std::move(pProcessor);
+}
+
 void IR2MIDICompiler::InitializeCommandProcessors()
 {
-    m_CommandProcessors["insert"] = CreateInsertCommandProcessor(this);
-    m_CommandProcessors["panpot"] = CreatePanpotCommandProcessor(this);
-    m_CommandProcessors["program"] = CreateProgramCommandProcessor(this);
-    m_CommandProcessors["tempo"] = CreateTempoCommandProcessor(this);
-    m_CommandProcessors["volume"] = CreateVolumeCommandProcessor(this);
+    AddCommandProcessor(CreateInsertCommandProcessor(this));
+    AddCommandProcessor(CreatePanpotCommandProcessor(this));
+    AddCommandProcessor(CreateProgramCommandProcessor(this));
+    AddCommandProcessor(CreateTempoCommandProcessor(this));
+    AddCommandProcessor(CreateVolumeCommandProcessor(this));
 }
 
 bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)

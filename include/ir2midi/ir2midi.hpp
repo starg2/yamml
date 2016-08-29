@@ -56,6 +56,7 @@ public:
     virtual bool HasTrackBlock(const std::string& trackBlockName) const override;
 
 private:
+    void AddCommandProcessor(std::unique_ptr<ICommandProcessor> pProcessor);
     void InitializeCommandProcessors();
     virtual bool CompileTrackBlock(const std::string& trackBlockName) override;
     void CompileBlock(int trackNumber, IR::BlockReference blockRef);
