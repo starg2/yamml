@@ -50,6 +50,8 @@ public:
 
     virtual std::string GetSourceName() const = 0;
     virtual TrackCompilerContext& GetTrackContext(int trackNumber) = 0;
+    virtual bool CompileTrackBlock(const std::string& trackBlockName) = 0;
+    virtual bool HasTrackBlock(const std::string& trackBlockName) const = 0;
 };
 
 } // namespace IR2MIDI

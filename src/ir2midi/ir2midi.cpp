@@ -10,6 +10,7 @@
 #include <message/message.hpp>
 #include <midi/limits.hpp>
 
+#include "command_insert.hpp"
 #include "command_panpot.hpp"
 #include "command_program.hpp"
 #include "command_tempo.hpp"
@@ -192,6 +193,7 @@ void IR2MIDICompiler::operator()(int trackNumber, const IR::BlockReference& bloc
 
 void IR2MIDICompiler::InitializeCommandProcessors()
 {
+    m_CommandProcessors["insert"] = CreateInsertCommandProcessor(this);
     m_CommandProcessors["panpot"] = CreatePanpotCommandProcessor(this);
     m_CommandProcessors["program"] = CreateProgramCommandProcessor(this);
     m_CommandProcessors["tempo"] = CreateTempoCommandProcessor(this);
@@ -328,6 +330,11 @@ TrackCompilerContext& IR2MIDICompiler::GetTrackContext(int trackNumber)
 {
     EnsureTrackInitialized(trackNumber);
     return m_Contexts[static_cast<std::size_t>(trackNumber)];
+}
+
+bool IR2MIDICompiler::HasTrackBlock(const std::string & trackBlockName) const
+{
+    return m_IR.TrackBlockNameMap.find(trackBlockName) != m_IR.TrackBlockNameMap.end();
 }
 
 } // namespace IR2MIDI

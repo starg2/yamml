@@ -3,6 +3,7 @@ set(IR2MIDIHeaders
     ../../include/ir2midi/command.hpp
     ../../include/ir2midi/context.hpp
     ../../include/ir2midi/ir2midi.hpp
+    command_insert.hpp
     command_panpot.hpp
     command_program.hpp
     command_tempo.hpp
@@ -10,6 +11,7 @@ set(IR2MIDIHeaders
 )
 
 set(IR2MIDISources
+    command_insert.cpp
     command_panpot.cpp
     command_program.cpp
     command_tempo.cpp

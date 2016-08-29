@@ -53,10 +53,11 @@ public:
 
     virtual std::string GetSourceName() const override;
     virtual TrackCompilerContext& GetTrackContext(int trackNumber) override;
+    virtual bool HasTrackBlock(const std::string& trackBlockName) const override;
 
 private:
     void InitializeCommandProcessors();
-    bool CompileTrackBlock(const std::string& trackBlockName);
+    virtual bool CompileTrackBlock(const std::string& trackBlockName) override;
     void CompileBlock(int trackNumber, IR::BlockReference blockRef);
     void Finalize();
 
