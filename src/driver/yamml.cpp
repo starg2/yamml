@@ -1,4 +1,11 @@
 
+#if defined(_MSC_VER) && defined(_WIN32) && defined(_DEBUG)
+
+#include <crtdbg.h>
+
+#endif // _WIN32
+
+
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -32,6 +39,12 @@ int main(int argc, char** argv)
 {
     static_cast<void>(argc);
     static_cast<void>(argv);
+
+#if defined(_MSC_VER) && defined(_WIN32) && defined(_DEBUG)
+
+    ::_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+#endif // _WIN32
 
     namespace PO = boost::program_options;
 
