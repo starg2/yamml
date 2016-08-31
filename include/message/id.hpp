@@ -15,6 +15,7 @@ enum class MessageID : int
     UnknownInIRProcessor,
     UnknownInIR2MIDI,
     UnprocessedAttribute,
+    DuplicatedName,
     DuplicatedCompositionName,
     DuplicatedPhraseName,
     NoSuchPhraseName,

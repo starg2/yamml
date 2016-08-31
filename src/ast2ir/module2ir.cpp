@@ -67,6 +67,23 @@ boost::optional<IR::Module> Module2IRCompiler::Compile(const AST::Module& ast)
             return {};
         }
 
+        auto itPhraseName = ir.BlockNameMap.find(i.Name);
+
+        if (itPhraseName != ir.BlockNameMap.end())
+        {
+            AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::DuplicatedName,
+                    ir.Name,
+                    i.Location,
+                    {i.Name}
+                }
+            );
+
+            return {};
+        }
+
         auto newIndex = IR::TrackBlockReference{ir.TrackBlocks.size()};
         ir.TrackBlockNameMap[i.Name] = newIndex;
         ir.TrackBlocks.emplace_back();

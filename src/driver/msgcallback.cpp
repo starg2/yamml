@@ -36,6 +36,7 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::UnknownInIRProcessor, ICEMessage + " (IRProcessor: Message = '{0}')"},
         {Message::MessageID::UnknownInIR2MIDI, ICEMessage + " (IR2MIDI: Message = '{0}')"},
         {Message::MessageID::UnprocessedAttribute, ICEMessage + " (Unprocessed attribute: '{0}')"},
+        {Message::MessageID::DuplicatedName, "composition or phrase named '{0}' is already defined"},
         {Message::MessageID::DuplicatedCompositionName, "composition named '{0}' is already defined"},
         {Message::MessageID::DuplicatedPhraseName, "phrase named '{0}' is already defined"},
         {Message::MessageID::NoSuchPhraseName, "cannot find a phrase named '{0}'"},
