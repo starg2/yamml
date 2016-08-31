@@ -128,14 +128,14 @@ public:
 class NoteAndExpression final
 {
 public:
-    std::vector<boost::variant<NoteAndDuration, NoteRepeatEachExpression, NoteRepeatExpression, boost::recursive_wrapper<NoteSequence>>> Notes;
+    std::vector<boost::recursive_wrapper<NoteSequence>> Notes;
     SourceLocation Location;
 };
 
 class NoteSequence final
 {
 public:
-    std::vector<NoteAndExpression> Notes;
+    std::vector<boost::variant<NoteAndDuration, NoteAndExpression, NoteRepeatEachExpression, NoteRepeatExpression>> Notes;
     SourceLocation Location;
 };
 

@@ -147,7 +147,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
 
     for (auto&& i : ast.Notes)
     {
-        auto events = (*this)(i);
+        auto events = i.apply_visitor(*this);
         ret.insert(ret.end(), events.begin(), events.end());
     }
 
@@ -163,7 +163,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteA
 
     for (auto&& i : ast.Notes)
     {
-        auto events = i.apply_visitor(*this);
+        auto events = (*this)(i.get());
         ret.insert(ret.end(), events.begin(), events.end());
 
         endTime = std::max(endTime, m_RelativeTime);
@@ -220,7 +220,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteR
         {
             for (std::size_t k = 0; k < ast.Count; k++)
             {
-                auto events = (*this)(j);
+                auto events = j.apply_visitor(*this);
                 ret.insert(ret.end(), events.begin(), events.end());
             }
         }

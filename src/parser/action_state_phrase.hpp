@@ -24,13 +24,9 @@ namespace Parser
 template<typename T>
 AST::NoteSequence MakeNoteSequence(T node)
 {
-    AST::NoteAndExpression nae;
-    nae.Location = node.Location;
-    nae.Notes.emplace_back(node);
-
     AST::NoteSequence ns;
     ns.Location = node.Location;
-    ns.Notes.push_back(std::move(nae));
+    ns.Notes.emplace_back(std::move(node));
 
     return ns;
 }
@@ -194,7 +190,7 @@ public:
     template<typename TParentState, typename... TCommonStates>
     void success(TParentState& st, TCommonStates&...)
     {
-        st.ASTNode.Notes.emplace_back(ASTNode);
+        st.ASTNode.Notes.emplace_back(MakeNoteSequence(ASTNode));
     }
 
     void OnParse(AST::NoteSequence node)
