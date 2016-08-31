@@ -113,7 +113,7 @@ class NoteRepeatExpression final
 {
 public:
     std::size_t Count;
-    std::vector<boost::recursive_wrapper<NoteSequence>> Notes;
+    std::vector<NoteSequence> Notes;
     SourceLocation Location;
 };
 
@@ -121,14 +121,14 @@ class NoteRepeatEachExpression final
 {
 public:
     std::size_t Count;
-    std::vector<boost::recursive_wrapper<NoteSequence>> Notes;
+    std::vector<NoteSequence> Notes;
     SourceLocation Location;
 };
 
 class NoteAndExpression final
 {
 public:
-    std::vector<boost::recursive_wrapper<NoteSequence>> Notes;
+    std::vector<NoteSequence> Notes;
     SourceLocation Location;
 };
 
