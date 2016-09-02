@@ -109,7 +109,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
 
     if (ast.Attributes.empty())
     {
-        return (*this)(*ast.NoteSeq);
+        return (*this)(ast.NoteSeq.value());
     }
     else
     {
@@ -122,7 +122,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
 
         if (ast.NoteSeq.is_initialized())
         {
-            auto events = (*this)(*ast.NoteSeq);
+            auto events = (*this)(ast.NoteSeq.value());
             m_IR.Blocks[newIndex.ID].Events.insert(m_IR.Blocks[newIndex.ID].Events.end(), events.begin(), events.end());
         }
 
