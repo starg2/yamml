@@ -65,7 +65,7 @@ private:
     void CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes);
     void EnsureTrackInitialized(int number);
 
-    int GetLastEventTime() const;
+    int GetLastGlobalEventTime() const;
     void UpdateLastEventTime();
     MIDI::MIDITrack& GetTrack(int trackNumber);
 

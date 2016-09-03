@@ -136,17 +136,22 @@ void IR2MIDICompiler::operator()(const IR::TrackList& ir)
         EnsureTrackInitialized(i.Number);
     }
 
+    int globalLastTimeNext = GetLastGlobalEventTime();
+
     for (auto&& i : ir.Tracks)
     {
-        GetTrackContext(i.Number).SetLastEventTime(GetLastEventTime());
+        GetTrackContext(i.Number).SetLastEventTime(GetLastGlobalEventTime());
 
         for (auto&& j : i.Items)
         {
             CheckForUnprocessedAttributes(j.Attributes);
             CompileBlock(i.Number, j.Block);
         }
+
+        globalLastTimeNext = std::max(globalLastTimeNext, GetTrackContext(i.Number).GetLastEventTime());
     }
 
+    m_LastEventTime = globalLastTimeNext;
     UpdateLastEventTime();
 }
 
@@ -300,11 +305,11 @@ void IR2MIDICompiler::EnsureTrackInitialized(int number)
     if (static_cast<std::size_t>(number) >= m_MIDI.Tracks.size())
     {
         m_MIDI.Tracks.resize(number + 1);
-        m_Contexts.resize(number + 1, TrackCompilerContext(GetLastEventTime()));
+        m_Contexts.resize(number + 1, TrackCompilerContext(GetLastGlobalEventTime()));
     }
 }
 
-int IR2MIDICompiler::GetLastEventTime() const
+int IR2MIDICompiler::GetLastGlobalEventTime() const
 {
     return m_LastEventTime;
 }
