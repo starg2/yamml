@@ -113,6 +113,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
     }
     else
     {
+        ResetTime();
         auto newIndex = AllocBlock();
 
         m_AttributeStack.push_back(ast.Attributes);
@@ -132,6 +133,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
 
 std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteSequenceBlock& ast)
 {
+    ResetTime();
     auto newIndex = AllocBlock();
 
     m_AttributeStack.push_back(ast.Attributes);
@@ -332,6 +334,11 @@ int Phrase2IRCompiler::GetVelocity(const boost::optional<AST::NoteAccents>& acce
     {
         return 72;
     }
+}
+
+void Phrase2IRCompiler::ResetTime()
+{
+    m_RelativeTime = 0;
 }
 
 IR::BlockReference Phrase2IRCompiler::AllocBlock()

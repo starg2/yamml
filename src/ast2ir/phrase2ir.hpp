@@ -52,6 +52,7 @@ private:
     int CalculateDuration(const AST::NoteAndDuration& ast);
     int GetNetDuration(int duration, const boost::optional<AST::NoteAccents>& accents);
     int GetVelocity(const boost::optional<AST::NoteAccents>& accents);
+    void ResetTime();
 
     IR::BlockReference AllocBlock();
     void Compile(const AST::NoteSequenceBlockWithoutAttributes& ast, IR::BlockReference index);
