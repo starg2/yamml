@@ -122,15 +122,16 @@ public:
         return ret;
     }
 
-    template<typename T>
-    void Write(const T& c)
+    void Write(const std::vector<std::uint8_t>& c)
     {
         if (!IsOpened())
         {
             throw std::logic_error("File is not opened yet.");
         }
 
-        if (!::WriteFile(m_hFile, c.data(), static_cast<DWORD>(c.size()), nullptr, nullptr))
+        DWORD bytesWritten;
+
+        if (!::WriteFile(m_hFile, c.data(), static_cast<DWORD>(c.size()), &bytesWritten, nullptr) || c.size() != bytesWritten)
         {
             throw IOException();
         }
