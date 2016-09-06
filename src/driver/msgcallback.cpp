@@ -44,6 +44,7 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::TrackNumberIsOutOfSafeRange, "track number '{0}' is out of range (must be 0 <= # < {1})"},
         {Message::MessageID::TrackNumberIsOutOfPreferredRange, "track number '{0}' is out of range (must be 0 <= # < {1})"},
         {Message::MessageID::TooLargeRepeatCount, "repeat count '{0}' is too large (must be <= {1})"},
+        {Message::MessageID::IntegerOutOfRange, "integer literal '{0}' is out of range"},
         {Message::MessageID::OctaveOutOfRange, "octave value '{0}' is out of range (must be between 0 and 10)"},
 
         // error_attribute.hpp

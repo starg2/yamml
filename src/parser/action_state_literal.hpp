@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -27,6 +28,7 @@
 #endif
 
 #include <ast/literal.hpp>
+#include <message/message.hpp>
 
 #include "action.hpp"
 #include "parser_literal.hpp"
@@ -63,10 +65,25 @@ template<>
 class ValueAction<Grammar::SignedInteger>
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TState, typename TCompiler, typename... TCommonStates>
+    static void apply(const pegtl::input& in, TState& st, TCompiler& compiler, TCommonStates&...)
     {
-        st.ASTNode.Value = std::stol(in.string());
+        try
+        {
+            st.ASTNode.Value = std::stol(in.string());
+        }
+        catch (const std::out_of_range&)
+        {
+            compiler.AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::IntegerOutOfRange,
+                    compiler.GetSourceName(),
+                    {in.line(), in.column()},
+                    {in.string()}
+                }
+            );
+        }
     }
 };
 

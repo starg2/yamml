@@ -2,6 +2,7 @@
 #pragma once
 
 #include <algorithm>
+#include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -10,6 +11,7 @@
 
 #include <ast/module.hpp>
 #include <ast/phrase.hpp>
+#include <message/message.hpp>
 #include <parser/parser.hpp>
 
 #include "action.hpp"
@@ -215,10 +217,25 @@ template<>
 class NoteRepeatEachExpressionAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteRepeatEachExpressionState& st, TCommonStates&...)
+    template<typename TCompiler, typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteRepeatEachExpressionState& st, TCompiler& compiler, TCommonStates&...)
     {
-        st.ASTNode.Count = std::stoul(in.string());
+        try
+        {
+            st.ASTNode.Count = std::stoul(in.string());
+        }
+        catch (const std::out_of_range&)
+        {
+            compiler.AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::IntegerOutOfRange,
+                    compiler.GetSourceName(),
+                    {in.line(), in.column()},
+                    {in.string()}
+                }
+            );
+        }
     }
 };
 
@@ -253,10 +270,25 @@ template<>
 class NoteRepeatExpressionAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteRepeatExpressionState& st, TCommonStates&...)
+    template<typename TCompiler, typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteRepeatExpressionState& st, TCompiler& compiler, TCommonStates&...)
     {
-        st.ASTNode.Count = std::stoul(in.string());
+        try
+        {
+            st.ASTNode.Count = std::stoul(in.string());
+        }
+        catch (const std::out_of_range&)
+        {
+            compiler.AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::IntegerOutOfRange,
+                    compiler.GetSourceName(),
+                    {in.line(), in.column()},
+                    {in.string()}
+                }
+            );
+        }
     }
 };
 
@@ -428,10 +460,25 @@ template<>
 class SimpleDurationModifierAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, SimpleDurationModifierState& st, TCommonStates&...)
+    template<typename TCompiler, typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationModifierState& st, TCompiler& compiler, TCommonStates&...)
     {
-        st.ASTNode.Number = std::stoul(in.string());
+        try
+        {
+            st.ASTNode.Number = std::stoul(in.string());
+        }
+        catch (const std::out_of_range&)
+        {
+            compiler.AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::IntegerOutOfRange,
+                    compiler.GetSourceName(),
+                    {in.line(), in.column()},
+                    {in.string()}
+                }
+            );
+        }
     }
 };
 
@@ -461,10 +508,25 @@ template<>
 class SimpleDurationAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, SimpleDurationState& st, TCommonStates&...)
+    template<typename TCompiler, typename... TCommonStates>
+    static void apply(const pegtl::input& in, SimpleDurationState& st, TCompiler& compiler, TCommonStates&...)
     {
-        st.ASTNode.Number = std::stoul(in.string());
+        try
+        {
+            st.ASTNode.Number = std::stoul(in.string());
+        }
+        catch (const std::out_of_range&)
+        {
+            compiler.AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::IntegerOutOfRange,
+                    compiler.GetSourceName(),
+                    {in.line(), in.column()},
+                    {in.string()}
+                }
+            );
+        }
     }
 };
 
@@ -543,10 +605,25 @@ template<>
 class NoteOctaveAction<Grammar::SignedInteger>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteOctaveState& st, TCommonStates&...)
+    template<typename TCompiler, typename... TCommonStates>
+    static void apply(const pegtl::input& in, NoteOctaveState& st, TCompiler& compiler, TCommonStates&...)
     {
-        st.ASTNode.Value = std::stoi(in.string());
+        try
+        {
+            st.ASTNode.Value = std::stoi(in.string());
+        }
+        catch (const std::out_of_range&)
+        {
+            compiler.AddMessage(
+                Message::MessageItem{
+                    Message::MessageKind::Error,
+                    Message::MessageID::IntegerOutOfRange,
+                    compiler.GetSourceName(),
+                    {in.line(), in.column()},
+                    {in.string()}
+                }
+            );
+        }
     }
 };
 

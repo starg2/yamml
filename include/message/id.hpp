@@ -23,6 +23,7 @@ enum class MessageID : int
     TrackNumberIsOutOfSafeRange,
     TrackNumberIsOutOfPreferredRange,
     TooLargeRepeatCount,
+    IntegerOutOfRange,
     OctaveOutOfRange,
 
     // error_attribute.hpp
