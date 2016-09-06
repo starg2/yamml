@@ -14,6 +14,7 @@
 
 #include <ast/attribute.hpp>
 #include <ast/phrase.hpp>
+#include <common/containerutil.hpp>
 #include <compiler/nested.hpp>
 #include <exceptions/messageexception.hpp>
 #include <message/message.hpp>
@@ -21,7 +22,6 @@
 #include <ir/module.hpp>
 #include <midi/limits.hpp>
 
-#include "containerutil.hpp"
 #include "phrase2ir.hpp"
 
 namespace YAMML
@@ -76,7 +76,7 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
     try
     {
         m_AttributeStack.push_back(ast.Attributes);
-        AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
+        Common::AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
 
         Compile(ast.Block, index);
         return !HasErrors();
@@ -117,7 +117,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
         auto newIndex = AllocBlock();
 
         m_AttributeStack.push_back(ast.Attributes);
-        AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
+        Common::AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
 
         m_IR.Blocks[newIndex.ID].Attributes = m_AttributeStack.back();
 
@@ -138,7 +138,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
     auto newIndex = AllocBlock();
 
     m_AttributeStack.push_back(ast.Attributes);
-    AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
+    Common::AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
 
     Compile(ast.Block, newIndex);
     ResetTime();

@@ -8,7 +8,6 @@
 #include <midi/limits.hpp>
 
 #include "composition2ir.hpp"
-#include "containerutil.hpp"
 
 namespace YAMML
 {

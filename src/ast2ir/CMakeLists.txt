@@ -1,6 +1,7 @@
 
 set(AST2IRHeaders
     ../../include/ast2ir/ast2ir.hpp
+    ../../include/common/containerutil.hpp
     ../../include/compiler/base.hpp
     ../../include/compiler/nested.hpp
     ../../include/ir/block.hpp
@@ -9,7 +10,6 @@ set(AST2IRHeaders
     ../../include/ir/note.hpp
     ../../include/ir/track.hpp
     composition2ir.hpp
-    containerutil.hpp
     module2ir.hpp
     phrase2ir.hpp
 )

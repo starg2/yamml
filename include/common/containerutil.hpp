@@ -1,12 +1,10 @@
 
 #pragma once
 
-#include <vector>
-
 namespace YAMML
 {
 
-namespace AST2IR
+namespace Common
 {
 
 template<typename T>
@@ -31,6 +29,6 @@ private:
     T& m_Container;
 };
 
-} // namespace AST2IR
+} // namespace Common
 
 } // namespace YAMML
