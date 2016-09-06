@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include <ast/sourcelocation.hpp>
 #include <midi/event.hpp>
 
 namespace YAMML
@@ -50,7 +51,7 @@ public:
 
     virtual std::string GetSourceName() const = 0;
     virtual TrackCompilerContext& GetTrackContext(int trackNumber) = 0;
-    virtual bool CompileTrackBlock(const std::string& trackBlockName) = 0;
+    virtual void CompileTrackBlock(const std::string& trackBlockName, const AST::SourceLocation& location) = 0;
     virtual bool HasTrackBlock(const std::string& trackBlockName) const = 0;
 };
 

@@ -82,6 +82,9 @@ enum class MessageID : int
 
     // IR2MIDI
     InvalidCommandName,
+    TrackBlockCompilationRecursion,
+    TrackBlockCompilationBackTrace,
+    TrackBlockCompilationBackTraceEntryPoint,
     WrongNumberOfCommandArguments,
     WrongTypeOfCommandArgument,
 

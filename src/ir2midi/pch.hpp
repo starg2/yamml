@@ -2,6 +2,7 @@
 #pragma once
 
 #include <algorithm>
+#include <deque>
 #include <exception>
 #include <memory>
 #include <string>

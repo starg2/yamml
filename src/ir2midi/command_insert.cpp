@@ -39,24 +39,13 @@ public:
     virtual void Process(const AST::Command& ast) override
     {
         ValidateArguments(ast);
-        GetCompiler()->CompileTrackBlock(boost::get<std::string>(ast.Arguments[0].Value));
+        GetCompiler()->CompileTrackBlock(boost::get<std::string>(ast.Arguments[0].Value), ast.Location);
     }
 
     void ValidateArguments(const AST::Command& ast)
     {
         ValidateArgCount(ast, 1);
         ValidateArgType(ast, 0, typeid(std::string));
-
-        auto name = boost::get<std::string>(ast.Arguments[0].Value);
-
-        if (!GetCompiler()->HasTrackBlock(name))
-        {
-            ThrowMessage(
-                Message::MessageID::NoSuchCompositionName,
-                ast.Location,
-                {name}
-            );
-        }
     }
 
 private:

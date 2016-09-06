@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <deque>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -9,6 +10,7 @@
 #include <boost/variant.hpp>
 
 #include <ast/composition.hpp>
+#include <ast/sourcelocation.hpp>
 #include <compiler/base.hpp>
 #include <ir/module.hpp>
 #include <ir2midi/command.hpp>
@@ -20,6 +22,13 @@ namespace YAMML
 
 namespace IR2MIDI
 {
+
+class NameAndLocation
+{
+public:
+    std::string Name;
+    AST::SourceLocation Location;
+};
 
 class IR2MIDICompiler final : public Compiler::CompilerBase, public IIR2MIDICompiler, public boost::static_visitor<>
 {
@@ -53,15 +62,16 @@ public:
 
     virtual std::string GetSourceName() const override;
     virtual TrackCompilerContext& GetTrackContext(int trackNumber) override;
+    virtual void CompileTrackBlock(const std::string& trackBlockName, const AST::SourceLocation& location) override;
     virtual bool HasTrackBlock(const std::string& trackBlockName) const override;
 
 private:
     void AddCommandProcessor(std::unique_ptr<ICommandProcessor> pProcessor);
     void InitializeCommandProcessors();
-    virtual bool CompileTrackBlock(const std::string& trackBlockName) override;
     void CompileBlock(int trackNumber, IR::BlockReference blockRef);
     void Finalize();
 
+    void CheckForRecursion(const std::string& trackBlockName, const AST::SourceLocation& location);
     void CheckForUnprocessedAttributes(const std::vector<AST::Attribute>& attributes);
     void EnsureTrackInitialized(int number);
 
@@ -73,6 +83,7 @@ private:
     MIDI::MIDIFile m_MIDI;
     std::vector<TrackCompilerContext> m_Contexts;
     std::unordered_map<std::string, std::unique_ptr<ICommandProcessor>> m_CommandProcessors;
+    std::deque<NameAndLocation> m_TrackBlockCompilationStack;
     int m_LastEventTime = 0;
 };
 

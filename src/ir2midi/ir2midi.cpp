@@ -6,6 +6,8 @@
 
 #include <boost/variant.hpp>
 
+#include <ast/sourcelocation.hpp>
+#include <common/containerutil.hpp>
 #include <exceptions/messageexception.hpp>
 #include <ir2midi/ir2midi.hpp>
 #include <message/message.hpp>
@@ -87,11 +89,7 @@ bool IR2MIDICompiler::Compile(const std::string& entryPoint)
 {
     try
     {
-        if (!CompileTrackBlock(entryPoint))
-        {
-            return false;
-        }
-
+        CompileTrackBlock(entryPoint, {});
         Finalize();
         return !HasErrors();
     }
@@ -211,7 +209,7 @@ void IR2MIDICompiler::InitializeCommandProcessors()
     AddCommandProcessor(CreateVolumeCommandProcessor(this));
 }
 
-bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
+void IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName, const AST::SourceLocation& location)
 {
     auto itTrack = m_IR.TrackBlockNameMap.find(trackBlockName);
 
@@ -222,11 +220,16 @@ bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
                 Message::MessageKind::Error,
                 Message::MessageID::NoSuchCompositionName,
                 m_IR.Name,
-                {0, 0},
+                location,
                 {trackBlockName}
             }
         );
     }
+
+    CheckForRecursion(trackBlockName, location);
+
+    m_TrackBlockCompilationStack.push_back(NameAndLocation{trackBlockName, location});
+    Common::AutoPop<decltype(m_TrackBlockCompilationStack)> autoPop(m_TrackBlockCompilationStack);
 
     // with bounds checking
     CheckForUnprocessedAttributes(m_IR.TrackBlocks.at(itTrack->second.ID).Attributes);
@@ -235,8 +238,6 @@ bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
     {
         i.apply_visitor(*this);
     }
-
-    return true;
 }
 
 void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
@@ -270,6 +271,61 @@ void IR2MIDICompiler::Finalize()
         }
 
         m_MIDI.Tracks[i].Events.push_back(MIDI::MIDIEvent{50, MIDI::MetaEvent{MIDI::MetaEventKind::EndOfTrack}});
+    }
+}
+
+void IR2MIDICompiler::CheckForRecursion(const std::string& trackBlockName, const AST::SourceLocation& location)
+{
+    auto it = std::find_if(
+        m_TrackBlockCompilationStack.begin(),
+        m_TrackBlockCompilationStack.end(),
+        [&trackBlockName] (auto&& x)
+        {
+            return x.Name == trackBlockName;
+        }
+    );
+
+    if (it != m_TrackBlockCompilationStack.end())
+    {
+        AddMessage(
+            Message::MessageItem{
+                Message::MessageKind::Error,
+                Message::MessageID::TrackBlockCompilationRecursion,
+                GetSourceName(),
+                location,
+                {trackBlockName}
+            }
+        );
+
+        if (m_TrackBlockCompilationStack.size() > 1)
+        {
+            std::for_each(
+                m_TrackBlockCompilationStack.rbegin(),
+                m_TrackBlockCompilationStack.rend() - 1,
+                [this] (auto&& x)
+                {
+                    this->AddMessage(
+                        Message::MessageItem{
+                            Message::MessageKind::Note,
+                            Message::MessageID::TrackBlockCompilationBackTrace,
+                            this->GetSourceName(),
+                            x.Location,
+                            {x.Name}
+                        }
+                    );
+                }
+            );
+        }
+
+        throw Exceptions::MessageException(
+            Message::MessageItem{
+                Message::MessageKind::Note,
+                Message::MessageID::TrackBlockCompilationBackTraceEntryPoint,
+                GetSourceName(),
+                {},
+                {m_TrackBlockCompilationStack.at(0).Name}
+            }
+        );
     }
 }
 

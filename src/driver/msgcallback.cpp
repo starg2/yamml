@@ -103,6 +103,9 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
 
         // IR2MIDI
         {Message::MessageID::InvalidCommandName, "invalid command '{0}'"},
+        {Message::MessageID::TrackBlockCompilationRecursion, "composition '{0}': circular dependency detected"},
+        {Message::MessageID::TrackBlockCompilationBackTrace, "composition '{0}' was inserted from here"},
+        {Message::MessageID::TrackBlockCompilationBackTraceEntryPoint, "compilation started from composition '{0}'"},
         {Message::MessageID::WrongNumberOfCommandArguments, "wrong number of arguments passed to command '{0}'; {2} expected, {1} found"},
         {Message::MessageID::WrongTypeOfCommandArgument, "command argument {1} has a wrong type; expecting '{2}' here"},
 
