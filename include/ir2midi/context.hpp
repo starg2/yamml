@@ -29,7 +29,7 @@ public:
         SetLastEventTime(lastEventTime);
     }
 
-    void EnterBlock();
+    void ResetTime();
     int GetLastEventTime();
     void SetLastEventTime(int t);
     void UpdateTime(int relativeTime);

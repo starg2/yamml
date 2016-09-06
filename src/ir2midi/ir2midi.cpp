@@ -241,7 +241,7 @@ bool IR2MIDICompiler::CompileTrackBlock(const std::string& trackBlockName)
 
 void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
 {
-    GetTrackContext(trackNumber).EnterBlock();
+    GetTrackContext(trackNumber).ResetTime();
     const auto& block = m_IR.Blocks.at(blockRef.ID);
     CheckForUnprocessedAttributes(block.Attributes);
 
@@ -251,6 +251,8 @@ void IR2MIDICompiler::CompileBlock(int trackNumber, IR::BlockReference blockRef)
     {
         boost::apply_visitor(*this, varTrackNumber, i);
     }
+
+    GetTrackContext(trackNumber).ResetTime();
 }
 
 void IR2MIDICompiler::Finalize()

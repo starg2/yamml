@@ -127,6 +127,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
             m_IR.Blocks[newIndex.ID].Events.insert(m_IR.Blocks[newIndex.ID].Events.end(), events.begin(), events.end());
         }
 
+        ResetTime();
         return {newIndex};
     }
 }
@@ -140,6 +141,7 @@ std::vector<IR::Block::EventType> Phrase2IRCompiler::operator()(const AST::NoteS
     AutoPop<decltype(m_AttributeStack)> autoPop(m_AttributeStack);
 
     Compile(ast.Block, newIndex);
+    ResetTime();
     return {newIndex};
 }
 

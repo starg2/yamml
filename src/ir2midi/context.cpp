@@ -9,7 +9,7 @@ namespace YAMML
 namespace IR2MIDI
 {
 
-void TrackCompilerContext::EnterBlock()
+void TrackCompilerContext::ResetTime()
 {
     m_BaseTimeForCurrentBlock = m_LastEventTime;
 }
