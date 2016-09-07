@@ -26,6 +26,12 @@
 #include "msgcallback.hpp"
 #include "stderrwriter.hpp"
 
+namespace YAMML
+{
+
+namespace Driver
+{
+
 std::string CreateDefaultOutputName(const std::string& input)
 {
     auto separatorPos = input.find_last_of("/\\");
@@ -34,6 +40,10 @@ std::string CreateDefaultOutputName(const std::string& input)
     auto dotPos = fileName.rfind('.');
     return (dotPos == fileName.npos ? fileName : fileName.substr(0, dotPos)) + ".mid";
 }
+
+} // namespace Driver
+
+} // namespace YAMML
 
 int main(int argc, char** argv)
 {
@@ -154,7 +164,7 @@ int main(int argc, char** argv)
         }
 
         YAMML::Driver::WriteBinaryFile(
-            vm.count("out") ? vm["out"].as<std::string>() : CreateDefaultOutputName(inputName),
+            vm.count("out") ? vm["out"].as<std::string>() : YAMML::Driver::CreateDefaultOutputName(inputName),
             output.value()
         );
 
