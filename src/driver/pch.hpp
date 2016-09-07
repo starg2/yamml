@@ -1,6 +1,12 @@
 
 #pragma once
 
+#if defined(_MSC_VER) && defined(_WIN32) && defined(_DEBUG)
+
+#include <crtdbg.h>
+
+#endif // _WIN32
+
 #include <cctype>
 #include <cstdint>
 
