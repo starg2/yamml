@@ -140,9 +140,16 @@ public:
 private:
     static std::wstring FixPath(const std::wstring& oldFilePath)
     {
-        if (oldFilePath.length() >= MAX_PATH && oldFilePath.substr(0, 4) != UNCPrefix)
+        if (oldFilePath.length() >= MAX_PATH && oldFilePath.substr(0, 4) != LR"(\\?\)")
         {
-            return UNCPrefix + oldFilePath;
+            if (oldFilePath.substr(0, 2) == LR"(\\)") // UNC
+            {
+                return LR"(\\?\UNC)" + oldFilePath.substr(1);
+            }
+            else
+            {
+                return LR"(\\?\)" + oldFilePath;
+            }
         }
         else
         {
@@ -150,7 +157,6 @@ private:
         }
     }
 
-    static constexpr const wchar_t* UNCPrefix = LR"(\\?\)";
     HANDLE m_hFile;
 };
 
