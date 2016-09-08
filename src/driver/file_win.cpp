@@ -171,7 +171,7 @@ std::string ReadTextFile(const std::string& filePath)
     }
     else if (buffer.size() >= 2 && buffer[0] == 0xFF && buffer[1] == 0xFE)  // UTF-16LE
     {
-        std::wstring wstr(buffer.size() / 2, L'\0');
+        std::wstring wstr((buffer.size() - 1) / 2, L'\0');
         std::copy(buffer.begin() + 2, buffer.end(), reinterpret_cast<char*>(&wstr[0]));
         return W2UTF8(wstr);
     }
