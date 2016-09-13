@@ -1,5 +1,7 @@
 
 set(IRProcessorHeaders
+    ../../include/irprocessor/attrproc.hpp
+    ../../include/irprocessor/attrprocfactory.hpp
     ../../include/irprocessor/irprocessor.hpp
 )
 
