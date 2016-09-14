@@ -60,6 +60,7 @@ enum class MessageID : int
     GrammarUntilSingleQuote,
 
     // error_module.hpp
+    GrammarTrapNeitherCompositionNorPhrase,
     GrammarPhrasesAndCompositions,
 
     // grammar_phrase.hpp

@@ -81,7 +81,8 @@ MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
         {Message::MessageID::GrammarUntilSingleQuote, "unterminated string literal (missing single quote)"},
 
         // error_module.hpp
-        {Message::MessageID::GrammarPhrasesAndCompositions, "parse error: GrammarPhrasesAndCompositions"},
+        {Message::MessageID::GrammarTrapNeitherCompositionNorPhrase, "unexpected token '{0}', expecting 'phrase' or 'composition'"},
+        {Message::MessageID::GrammarPhrasesAndCompositions, "expecting 'phrase' or 'composition'"},
 
         // grammar_phrase.hpp
         {Message::MessageID::GrammarNoteSequenceBlockWithoutAttributes, "expecting '{' here"},

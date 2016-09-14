@@ -3,6 +3,7 @@
 
 #include <pegtl.hh>
 
+#include "parser_attribute.hpp"
 #include "parser_composition.hpp"
 #include "parser_phrase.hpp"
 #include "parser_skips.hpp"
@@ -16,7 +17,16 @@ namespace Parser
 namespace Grammar
 {
 
-class PhrasesAndCompositions : public pegtl::star<pegtl::pad<pegtl::sor<Composition, Phrase>, Separator>>
+class TrapNeitherCompositionNorPhrase
+    : public pegtl::seq<
+        pegtl::disable<AttributeOptionalSequence>,
+        pegtl::not_at<pegtl::eof>,
+        pegtl::raise<TrapNeitherCompositionNorPhrase>
+    >
+{
+};
+
+class PhrasesAndCompositions : public pegtl::star<pegtl::pad<pegtl::sor<Composition, Phrase, TrapNeitherCompositionNorPhrase>, Separator>>
 {
 };
 

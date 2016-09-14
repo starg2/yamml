@@ -13,6 +13,9 @@ namespace Parser
 {
 
 template<>
+const Message::MessageID ErrorControl<Grammar::TrapNeitherCompositionNorPhrase>::ID = Message::MessageID::GrammarTrapNeitherCompositionNorPhrase;
+
+template<>
 const Message::MessageID ErrorControl<Grammar::PhrasesAndCompositions>::ID = Message::MessageID::GrammarPhrasesAndCompositions;
 
 template<>
