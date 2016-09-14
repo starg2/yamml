@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include <map>
 #include <string>
-#include <unordered_map>
 
 #include <message/message.hpp>
 
@@ -22,8 +22,8 @@ public:
     bool operator()(const Message::MessageItem& item) const;
 
 private:
-    std::unordered_map<Message::MessageKind, std::string> m_KindTextMap;
-    std::unordered_map<Message::MessageID, std::string> m_IDTextMap;
+    std::map<Message::MessageKind, std::string> m_KindTextMap;
+    std::map<Message::MessageID, std::string> m_IDTextMap;
     IStdErrWriter* m_pStdErrWriter;
 };
 
