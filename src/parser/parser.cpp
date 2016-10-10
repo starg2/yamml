@@ -8,6 +8,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
+#pragma warning(disable: 4244) // conversion from 'const std::streamsize' to 'std::size_t', possible loss of data
 #pragma warning(disable: 4702) // unreachable code
 #endif
 
@@ -49,7 +50,7 @@ bool YAMMLParser::Parse()
     AST::Module ast;
     ast.Name = GetSourceName();
 
-    bool result = pegtl::parse<pegtl::try_catch<Grammar::Module>, pegtl::nothing, Control>(m_Source, m_Name, ast, *this);
+    bool result = pegtl::parse_string<pegtl::try_catch<Grammar::Module>, pegtl::nothing, Control>(m_Source, m_Name, ast, *this);
 
     if (result && !HasErrors())
     {

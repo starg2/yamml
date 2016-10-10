@@ -33,20 +33,20 @@ template<>
 class TokenForErrorMessageAction<TokenForErrorMessage>
 {
 public:
-    static void apply(const pegtl::input& in, std::string& st)
+    template<typename TInput>
+    static void apply(const TInput& in, std::string& st)
     {
         st = in.string();
     }
 };
 
-template<typename TInput>
-auto CreateParseErrorMessage(Message::MessageKind kind, Message::MessageID id, const TInput& in)
+auto CreateParseErrorMessage(Message::MessageKind kind, Message::MessageID id, const pegtl::memory_input& in)
 {
     std::string tokenForErrorMsg;
 
-    bool matched = pegtl::parse<TokenForErrorMessageAndSeparators, TokenForErrorMessageAction>(
+    bool matched = pegtl::parse_memory<TokenForErrorMessageAndSeparators, TokenForErrorMessageAction>(
         in.begin(),
-        in.end(),
+        in.end(0),
         in.source(),
         tokenForErrorMsg
     );
@@ -55,7 +55,7 @@ auto CreateParseErrorMessage(Message::MessageKind kind, Message::MessageID id, c
         kind,
         id,
         in.source(),
-        {in.line(), in.column()},
+        {in.line(), in.byte_in_line()},
         {matched ? tokenForErrorMsg : "<EOF>"}
     };
 }

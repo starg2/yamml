@@ -12,10 +12,10 @@ namespace Parser
 class AssignLocationAction
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TInput, typename TState, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCommonStates&...)
     {
-        st.ASTNode.Location = {in.line(), in.column()};
+        st.ASTNode.Location = {in.line(), in.byte_in_line()};
     }
 };
 

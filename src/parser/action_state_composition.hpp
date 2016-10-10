@@ -46,8 +46,8 @@ template<>
 class CompositionAction<Grammar::Identifier>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, CompositionState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, CompositionState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
@@ -101,8 +101,8 @@ template<>
 class TrackBlockAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename TCompiler, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TrackBlockState& st, TCompiler& compiler, TCommonStates&...)
+    template<typename TInput, typename TCompiler, typename... TCommonStates>
+    static void apply(const TInput& in, TrackBlockState& st, TCompiler& compiler, TCommonStates&...)
     {
         try
         {
@@ -115,7 +115,7 @@ public:
                     Message::MessageKind::Error,
                     Message::MessageID::IntegerOutOfRange,
                     compiler.GetSourceName(),
-                    {in.line(), in.column()},
+                    {in.line(), in.byte_in_line()},
                     {in.string()}
                 }
             );
@@ -149,8 +149,8 @@ template<>
 class TrackItemAction<Grammar::Identifier>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, TrackItemState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, TrackItemState& st, TCommonStates&...)
     {
         st.ASTNode.PhraseName = in.string();
     }
@@ -182,8 +182,8 @@ template<>
 class CommandAction<Grammar::Identifier>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, CommandState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, CommandState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }

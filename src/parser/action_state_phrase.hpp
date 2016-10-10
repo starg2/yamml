@@ -59,8 +59,8 @@ template<>
 class PhraseAction<Grammar::Identifier>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, PhraseState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, PhraseState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
@@ -217,8 +217,8 @@ template<>
 class NoteRepeatEachExpressionAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename TCompiler, typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteRepeatEachExpressionState& st, TCompiler& compiler, TCommonStates&...)
+    template<typename TInput, typename TCompiler, typename... TCommonStates>
+    static void apply(const TInput& in, NoteRepeatEachExpressionState& st, TCompiler& compiler, TCommonStates&...)
     {
         try
         {
@@ -231,7 +231,7 @@ public:
                     Message::MessageKind::Error,
                     Message::MessageID::IntegerOutOfRange,
                     compiler.GetSourceName(),
-                    {in.line(), in.column()},
+                    {in.line(), in.byte_in_line()},
                     {in.string()}
                 }
             );
@@ -270,8 +270,8 @@ template<>
 class NoteRepeatExpressionAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename TCompiler, typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteRepeatExpressionState& st, TCompiler& compiler, TCommonStates&...)
+    template<typename TInput, typename TCompiler, typename... TCommonStates>
+    static void apply(const TInput& in, NoteRepeatExpressionState& st, TCompiler& compiler, TCommonStates&...)
     {
         try
         {
@@ -284,7 +284,7 @@ public:
                     Message::MessageKind::Error,
                     Message::MessageID::IntegerOutOfRange,
                     compiler.GetSourceName(),
-                    {in.line(), in.column()},
+                    {in.line(), in.byte_in_line()},
                     {in.string()}
                 }
             );
@@ -345,8 +345,8 @@ template<>
 class NoteAccentsAction<Grammar::NoteAccents>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteAccentsState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, NoteAccentsState& st, TCommonStates&...)
     {
         AssignLocationAction::apply(in, st);
 
@@ -426,8 +426,8 @@ template<>
 class SimpleDurationModifierDotsAction<Grammar::SimpleDurationModifierDots>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, SimpleDurationModifierDotsState& st, TCommonStates&... commonStates)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, SimpleDurationModifierDotsState& st, TCommonStates&... commonStates)
     {
         AssignLocationAction::apply(in, st, commonStates...);
         st.ASTNode.Count = static_cast<unsigned long>(in.size());
@@ -460,8 +460,8 @@ template<>
 class SimpleDurationModifierAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename TCompiler, typename... TCommonStates>
-    static void apply(const pegtl::input& in, SimpleDurationModifierState& st, TCompiler& compiler, TCommonStates&...)
+    template<typename TInput, typename TCompiler, typename... TCommonStates>
+    static void apply(const TInput& in, SimpleDurationModifierState& st, TCompiler& compiler, TCommonStates&...)
     {
         try
         {
@@ -474,7 +474,7 @@ public:
                     Message::MessageKind::Error,
                     Message::MessageID::IntegerOutOfRange,
                     compiler.GetSourceName(),
-                    {in.line(), in.column()},
+                    {in.line(), in.byte_in_line()},
                     {in.string()}
                 }
             );
@@ -508,8 +508,8 @@ template<>
 class SimpleDurationAction<Grammar::UnsignedInteger>
 {
 public:
-    template<typename TCompiler, typename... TCommonStates>
-    static void apply(const pegtl::input& in, SimpleDurationState& st, TCompiler& compiler, TCommonStates&...)
+    template<typename TInput, typename TCompiler, typename... TCommonStates>
+    static void apply(const TInput& in, SimpleDurationState& st, TCompiler& compiler, TCommonStates&...)
     {
         try
         {
@@ -522,7 +522,7 @@ public:
                     Message::MessageKind::Error,
                     Message::MessageID::IntegerOutOfRange,
                     compiler.GetSourceName(),
-                    {in.line(), in.column()},
+                    {in.line(), in.byte_in_line()},
                     {in.string()}
                 }
             );
@@ -605,8 +605,8 @@ template<>
 class NoteOctaveAction<Grammar::SignedInteger>
 {
 public:
-    template<typename TCompiler, typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteOctaveState& st, TCompiler& compiler, TCommonStates&...)
+    template<typename TInput, typename TCompiler, typename... TCommonStates>
+    static void apply(const TInput& in, NoteOctaveState& st, TCompiler& compiler, TCommonStates&...)
     {
         try
         {
@@ -619,7 +619,7 @@ public:
                     Message::MessageKind::Error,
                     Message::MessageID::IntegerOutOfRange,
                     compiler.GetSourceName(),
-                    {in.line(), in.column()},
+                    {in.line(), in.byte_in_line()},
                     {in.string()}
                 }
             );
@@ -657,8 +657,8 @@ template<>
 class NoteNameAction<Grammar::NoteNameBase>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteNameState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, NoteNameState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string().at(0);
     }
@@ -668,8 +668,8 @@ template<>
 class NoteNameAction<Grammar::NoteNameKey>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, NoteNameState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, NoteNameState& st, TCommonStates&...)
     {
         st.ASTNode.Minor = 0;
 

@@ -65,8 +65,8 @@ template<>
 class ValueAction<Grammar::SignedInteger>
 {
 public:
-    template<typename TState, typename TCompiler, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCompiler& compiler, TCommonStates&...)
+    template<typename TInput, typename TState, typename TCompiler, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCompiler& compiler, TCommonStates&...)
     {
         try
         {
@@ -79,7 +79,7 @@ public:
                     Message::MessageKind::Error,
                     Message::MessageID::IntegerOutOfRange,
                     compiler.GetSourceName(),
-                    {in.line(), in.column()},
+                    {in.line(), in.byte_in_line()},
                     {in.string()}
                 }
             );
@@ -91,8 +91,8 @@ template<>
 class ValueAction<Grammar::Identifier>
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TInput, typename TState, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCommonStates&...)
     {
         st.ASTNode.Value = in.string();
     }
@@ -107,8 +107,8 @@ template<>
 class EscapeAction<Grammar::AnyChar>
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TInput, typename TState, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCommonStates&...)
     {
         pegtl::unescape::append_all::apply(in, st);
     }
@@ -118,8 +118,8 @@ template<>
 class EscapeAction<Grammar::EscapeX2>
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TInput, typename TState, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCommonStates&...)
     {
         pegtl::unescape::unescape_x::apply(in, st);
     }
@@ -129,8 +129,8 @@ template<>
 class EscapeAction<Grammar::EscapeU4>
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TInput, typename TState, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCommonStates&...)
     {
         pegtl::unescape::unescape_u::apply(in, st);
     }
@@ -140,8 +140,8 @@ template<>
 class EscapeAction<Grammar::EscapeU8>
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TInput, typename TState, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCommonStates&...)
     {
         pegtl::unescape::unescape_u::apply(in, st);
     }
@@ -151,8 +151,8 @@ template<>
 class EscapeAction<Grammar::EscapeC>
 {
 public:
-    template<typename TState, typename... TCommonStates>
-    static void apply(const pegtl::input& in, TState& st, TCommonStates&...)
+    template<typename TInput, typename TState, typename... TCommonStates>
+    static void apply(const TInput& in, TState& st, TCommonStates&...)
     {
         pegtl::unescape::unescape_c<Grammar::EscapeC, '\'', '"', '?', '\\', '\a', '\b', '\f', '\n', '\r', '\t', '\v'>::apply(in, st);
     }

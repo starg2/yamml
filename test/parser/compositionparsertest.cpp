@@ -3,6 +3,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
+#pragma warning(disable: 4244) // conversion from 'const std::streamsize' to 'std::size_t', possible loss of data
 #pragma warning(disable: 4702) // unreachable code
 #endif
 
@@ -36,7 +37,7 @@ composition Foo
 
 )";
 
-    bool result = pegtl::parse<pegtl::must<Composition, Separators, pegtl::eof>>(data, "source");
+    bool result = pegtl::parse_string<pegtl::must<Composition, Separators, pegtl::eof>>(data, "source");
     BOOST_CHECK(result);
 }
 

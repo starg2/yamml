@@ -41,8 +41,8 @@ template<>
 class AttributeAction<Grammar::Identifier>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, AttributeState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, AttributeState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
@@ -84,8 +84,8 @@ template<>
 class AttributeKeyAction<Grammar::Identifier>
 {
 public:
-    template<typename... TCommonStates>
-    static void apply(const pegtl::input& in, AttributeArgumentState& st, TCommonStates&...)
+    template<typename TInput, typename... TCommonStates>
+    static void apply(const TInput& in, AttributeArgumentState& st, TCommonStates&...)
     {
         st.ASTNode.Name = in.string();
     }
