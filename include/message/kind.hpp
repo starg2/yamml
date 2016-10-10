@@ -9,7 +9,7 @@ namespace Message
 
 enum class MessageKind
 {
-    FetalError,
+    FatalError,
     Error,
     Warning,
     Note

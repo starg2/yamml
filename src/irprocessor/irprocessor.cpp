@@ -36,7 +36,7 @@ bool IRCompiler::Compile()
     {
         AddMessage(
             Message::MessageItem{
-                Message::MessageKind::FetalError,
+                Message::MessageKind::FatalError,
                 Message::MessageID::UnknownInIRProcessor,
                 GetSourceName(),
                 {0, 0},

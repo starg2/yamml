@@ -102,7 +102,7 @@ bool IR2MIDICompiler::Compile(const std::string& entryPoint)
     {
         AddMessage(
             Message::MessageItem{
-                Message::MessageKind::FetalError,
+                Message::MessageKind::FatalError,
                 Message::MessageID::UnknownInIR2MIDI,
                 m_IR.Name,
                 {0, 0},
@@ -335,7 +335,7 @@ void IR2MIDICompiler::CheckForUnprocessedAttributes(const std::vector<AST::Attri
     {
         throw Exceptions::MessageException(
             Message::MessageItem{
-                Message::MessageKind::FetalError,
+                Message::MessageKind::FatalError,
                 Message::MessageID::UnprocessedAttribute,
                 m_IR.Name,
                 attributes.at(0).Location,
@@ -351,7 +351,7 @@ void IR2MIDICompiler::EnsureTrackInitialized(int number)
     {
         throw Exceptions::MessageException(
             Message::MessageItem{
-                Message::MessageKind::FetalError,
+                Message::MessageKind::FatalError,
                 Message::MessageID::TrackNumberIsOutOfSafeRange,
                 m_IR.Name,
                 {0, 0},

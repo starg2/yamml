@@ -42,7 +42,7 @@ bool Composition2IRCompiler::Compile(const AST::Composition& ast, IR::TrackBlock
     {
         AddMessage(
             Message::MessageItem{
-                Message::MessageKind::FetalError,
+                Message::MessageKind::FatalError,
                 Message::MessageID::UnknownInComposition2IR,
                 m_IR.Name,
                 ast.Location,

@@ -24,7 +24,7 @@ const std::string ICEMessage =
 
 MessagePrinter::MessagePrinter(IStdErrWriter* pStdErrWriter)
     : m_KindTextMap{
-        {Message::MessageKind::FetalError, "fetal error"},
+        {Message::MessageKind::FatalError, "fatal error"},
         {Message::MessageKind::Error, "error"},
         {Message::MessageKind::Warning, "warning"},
         {Message::MessageKind::Note, "note"}

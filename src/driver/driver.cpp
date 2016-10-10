@@ -58,7 +58,7 @@ boost::optional<std::vector<std::uint8_t>> CompileYAMML(
     {
         callback(
             Message::MessageItem{
-                Message::MessageKind::FetalError,
+                Message::MessageKind::FatalError,
                 Message::MessageID::Unknown,
                 sourceName,
                 {0, 0},

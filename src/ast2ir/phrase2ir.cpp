@@ -90,7 +90,7 @@ bool Phrase2IRCompiler::Compile(const AST::Phrase& ast, IR::BlockReference index
     {
         AddMessage(
             Message::MessageItem{
-                Message::MessageKind::FetalError,
+                Message::MessageKind::FatalError,
                 Message::MessageID::UnknownInPhrase2IR,
                 m_IR.Name,
                 ast.Location,

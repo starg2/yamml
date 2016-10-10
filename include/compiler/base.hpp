@@ -60,7 +60,7 @@ public:
         return std::find_if(
             GetMessages().begin(),
             GetMessages().end(),
-            [] (auto&& i) { return i.Kind == Message::MessageKind::Error || i.Kind == Message::MessageKind::FetalError; }
+            [] (auto&& i) { return i.Kind == Message::MessageKind::Error || i.Kind == Message::MessageKind::FatalError; }
         ) != GetMessages().end();
     }
 
